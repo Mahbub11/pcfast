@@ -42,7 +42,7 @@ export default function ContainerTable({ type, list, title,handleQ }) {
       dataIndex: "level",
       key: "level",
       render: (level, record) => (
-        <div className="text-[21px] font-montserrat font-[400] ">
+        <div className="text-[21px] font-montserrat font-[400] ml-1">
           <Tag className="h-6 shadow-sm" color="volcano">
             {level === 1
               ? "Easy < 90"

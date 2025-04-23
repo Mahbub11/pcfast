@@ -9,33 +9,32 @@ import { useSelector } from "react-redux";
 import WordDetailsModel from "../../Components/Helper/WordDetailsModel";
 import SectionAddition from "../../Pages/SectionAddition/SectionAddition";
 import IconsArrowLeft from "../../Assets/SVG/IconsArrowLeft";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 const { Header, Content, Footer } = Layout;
 
 const PracticeLayout = () => {
- 
-  const [closeModal,setCloseModal] = useState(false)
+  const [closeModal, setCloseModal] = useState(false);
   const navigate = useNavigate();
-
-  
 
   return (
     <Layout>
-     
       <div
-        className={`h-auto  md:w-[70%] sm:w-[95%]
+        className={`min-h-screen  md:w-[70%] sm:w-[95%]
        m-auto mt-10 rounded-md `}
       >
-        <div onClick={() => navigate(-1)} className="absolute flex justify-end  px-2 py-2 md:w-[70%] cursor-pointer">
-         <span className="px-3 py-2">
-         <IconsArrowLeft height='1.5rem' width='1.5rem'></IconsArrowLeft>
-         </span>
-          {/* <RollbackOutlined
+        {/* <div
+          onClick={() => navigate(-1)}
+          className="absolute flex justify-end  px-2 py-2 md:w-[70%] cursor-pointer"
+         >
+          <span className="px-3 py-2">
+            <IconsArrowLeft height="1.5rem" width="1.5rem"></IconsArrowLeft>
+          </span>
+          <RollbackOutlined
             label="Back"
             style={{ fontSize: "26px", color: "#08c" }}
             className="h-10 w-10"
-          ></RollbackOutlined> */}
-        </div>
+          ></RollbackOutlined>
+        </div> */}
         <div className=" flex flex-col justify-between gap-[5rem]">
           {/* {
            visibility ? <WordDetailsModel></WordDetailsModel>:''

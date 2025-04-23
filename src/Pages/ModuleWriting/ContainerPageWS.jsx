@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import { Select, Space,Input, Modal } from "antd";
-import ListData from '../../Components/Module/writing/ListData';
-import { useSelector } from 'react-redux';
-import PracticePageWS from '../PracticeWriting/PracticePageWS';
+import React, { useEffect, useState } from "react";
+import { Select, Space, Input, Modal } from "antd";
+import ListData from "../../Components/Module/writing/ListData";
+import { useSelector } from "react-redux";
+import PracticePageWS from "../PracticeWriting/PracticePageWS";
 import "./index.css";
+import { useNavigate } from "react-router-dom";
 const { Search } = Input;
 
 export default function ContainerPageWS() {
-  const {  listWS } = useSelector((state) => state.getWritingList);
+  const { listWS } = useSelector((state) => state.getWritingList);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 720);
   const [index, setIndex] = useState();
   const [show, isShow] = useState(false);
@@ -16,16 +17,20 @@ export default function ContainerPageWS() {
   const [level, setLevel] = useState(false);
   const [fpracUnprac, setFpracUnprac] = useState(false);
   const [markedFilter, setMarkedFilter] = useState(false);
+  const navigate = useNavigate();
+
+
   const config = isMobile
     ? { maxWidth: "98vw", padding: 0 }
     : { maxWidth: "80vw" };
   const handleQ = (id) => {
-    setIndex(id);
-    isShow(true);
+    navigate(`/practice/ws-w/${id}`);
+    // setIndex(id);
+    // isShow(true);
   };
-  const handleCloseModal=()=>{
+  const handleCloseModal = () => {
     isShow(false);
-  }
+  };
 
   const handleSearch = (e) => {
     if (e.target.value.length === 0) {
@@ -74,12 +79,11 @@ export default function ContainerPageWS() {
     setMarkedFilter(e);
   };
 
-
   return (
     <div className="relative">
-    <div>
-      <div className="flex justify-between">
-      <div className="flex justify-between gap-2 flex-wrap">
+      <div>
+        <div className="flex justify-between">
+          <div className="flex justify-between gap-2 flex-wrap">
             <Select
               onChange={(e) => handleLevel(e)}
               defaultValue="All Level"
@@ -117,33 +121,36 @@ export default function ContainerPageWS() {
             onChange={handleSearch}
             enterButton
           />
-      </div>
-
-      <div className=" h-[20rem] w-full mt-10">
-        <ListData
-           list={filterData.length ===0 ? listWS :filterData}
-          title="Writing Sample"
-          type="rc-r"
-          handleQ={handleQ}
-        ></ListData>
-      </div>
-    </div>
-
-    <div className="flex justify-center m-auto">
-      <Modal
-        style={config}
-        footer={null}
-        maskClosable={false}
-        closable={false}
-        width="md:w-[100%] sm:w-full"
-        open={show}
-        className=" top-[1rem] m-auto z-10"
-      >
-        <div>
-          <PracticePageWS handleCloseModal={handleCloseModal} id={index}></PracticePageWS>
         </div>
-      </Modal>
+
+        <div className=" h-[20rem] w-full mt-10">
+          <ListData
+            list={filterData.length === 0 ? listWS : filterData}
+            title="Writing Sample"
+            type="rc-r"
+            handleQ={handleQ}
+          ></ListData>
+        </div>
+      </div>
+
+      {/* <div className="flex justify-center m-auto">
+        <Modal
+          style={config}
+          footer={null}
+          maskClosable={false}
+          closable={false}
+          width="md:w-[100%] sm:w-full"
+          open={show}
+          className=" top-[1rem] m-auto z-10"
+        >
+          <div>
+            <PracticePageWS
+              handleCloseModal={handleCloseModal}
+              id={index}
+            ></PracticePageWS>
+          </div>
+        </Modal>
+      </div> */}
     </div>
-  </div>
-  )
+  );
 }

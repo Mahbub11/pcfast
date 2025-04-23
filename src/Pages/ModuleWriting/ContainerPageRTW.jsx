@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import { Select, Space,Input, Modal } from "antd";
-import ListData from '../../Components/Module/writing/ListData';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import { Select, Space, Input, Modal } from "antd";
+import ListData from "../../Components/Module/writing/ListData";
+import { useSelector } from "react-redux";
 import PracticePageRTW from "../PracticeWriting/PracticePageRTW";
 import "./index.css";
+import { useNavigate } from "react-router-dom";
 const { Search } = Input;
 
 export default function ContainerPageRTW() {
-  const {  listRTW } = useSelector((state) => state.getWritingList);
+  const { listRTW } = useSelector((state) => state.getWritingList);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 720);
   const [filterData, setFilterData] = useState(listRTW);
   const [tableData, setTableData] = useState(listRTW);
@@ -16,16 +17,18 @@ export default function ContainerPageRTW() {
   const [markedFilter, setMarkedFilter] = useState(false);
   const [index, setIndex] = useState();
   const [show, isShow] = useState(false);
+  const navigate = useNavigate();
   const config = isMobile
     ? { maxWidth: "98vw", padding: 0 }
     : { maxWidth: "80vw" };
   const handleQ = (id) => {
-    setIndex(id);
-    isShow(true);
+    navigate(`/practice/rtw-w/${id}`);
+    // setIndex(id);
+    // isShow(true);
   };
-  const handleCloseModal=()=>{
+  const handleCloseModal = () => {
     isShow(false);
-  }
+  };
 
   const handleSearch = (e) => {
     if (e.target.value.length === 0) {
@@ -74,14 +77,11 @@ export default function ContainerPageRTW() {
     setMarkedFilter(e);
   };
 
-
-  
-
   return (
     <div className="relative">
-    <div>
-      <div className="flex justify-between">
-      <div className="flex justify-between gap-2 flex-wrap">
+      <div>
+        <div className="flex justify-between">
+          <div className="flex justify-between gap-2 flex-wrap">
             <Select
               onChange={(e) => handleLevel(e)}
               defaultValue="All Level"
@@ -119,19 +119,19 @@ export default function ContainerPageRTW() {
             onChange={handleSearch}
             enterButton
           />
+        </div>
+
+        <div className=" h-[20rem] w-full mt-10">
+          <ListData
+            list={filterData.length === 0 ? listRTW : filterData}
+            title="Interactive Writing"
+            type="rc-r"
+            handleQ={handleQ}
+          ></ListData>
+        </div>
       </div>
 
-      <div className=" h-[20rem] w-full mt-10">
-        <ListData
-         list={filterData.length ===0 ? listRTW :filterData}
-          title="Interactive Writing"
-          type="rc-r"
-          handleQ={handleQ}
-        ></ListData>
-      </div>
-    </div>
-
-    <div className="flex justify-center m-auto">
+      {/* <div className="flex justify-center m-auto">
       <Modal
         style={config}
         footer={null}
@@ -145,7 +145,7 @@ export default function ContainerPageRTW() {
           <PracticePageRTW handleCloseModal={handleCloseModal} id={index}></PracticePageRTW>
         </div>
       </Modal>
+    </div> */}
     </div>
-  </div>
-  )
+  );
 }

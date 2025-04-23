@@ -2,12 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Input, Modal, Skeleton } from "antd";
 import { Tag, Button, notification, Collapse, Grid } from "antd";
 import { Statistic } from "antd";
-import {
-  Link,
-  useLocation,
-  useParams,
-  useSearchParams,
-} from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getWordDetails } from "../../redux/slices/disctionary";
 import {
@@ -29,17 +24,23 @@ import {
   getAssesmentResult,
 } from "../../redux/slices/assesmentResult";
 import { ShowNotification } from "../../redux/actions";
-import { clearGPTAssesmentResult, getStatResult } from "../../redux/slices/gptAssmentResult";
+import {
+  clearGPTAssesmentResult,
+  getStatResult,
+} from "../../redux/slices/gptAssmentResult";
 import { wordsLen } from "../../utils/HelperFunction";
 import { AssesmentContainer } from "../../Components/AssesmentGPT/AssesmentContainer";
 const { TextArea } = Input;
 const { Countdown } = Statistic;
 const { useBreakpoint } = Grid;
+import { useNavigate } from "react-router-dom";
 
 export default function PracticePageWAP({ id, handleCloseModal }) {
   const dispatch = useDispatch();
+  const { rid } = useParams();
 
-  let [index, setIndex] = useState(id);
+  let [index, setIndex] = useState(rid);
+  const navigate = useNavigate();
 
   const [api, contextHolder] = notification.useNotification();
   const [play, setPlay] = useState(true);
@@ -54,7 +55,6 @@ export default function PracticePageWAP({ id, handleCloseModal }) {
   let [openPanels, setOpenPanels] = useState([]);
   const modalRef = useRef();
 
-  const { rid } = useParams();
   let [data, setData] = useState({});
   const [deadline, setDeadline] = useState(2);
   const [xmTime, setXmTime] = useState(null);
@@ -82,9 +82,9 @@ export default function PracticePageWAP({ id, handleCloseModal }) {
   );
   let dataLength = listWAP.length;
 
-  useEffect(() => {
-    setIndex(id);
-  }, [id]);
+  // useEffect(() => {
+  //   setIndex(id);
+  // }, [id]);
 
   useEffect(() => {
     notification.destroy();
@@ -98,7 +98,7 @@ export default function PracticePageWAP({ id, handleCloseModal }) {
 
   useEffect(() => {
     setImgLink(null);
-    setenableEvaluationBtn(false)
+    setenableEvaluationBtn(false);
     if (id) {
       const data = listWAP.filter((val) => index === val.index);
       setData(data[0]);
@@ -106,7 +106,8 @@ export default function PracticePageWAP({ id, handleCloseModal }) {
       setImgLink(data[0].image);
       setFeedbackState(true);
     } else {
-      const data = listWAP.filter((val) => parseInt(rid) === val.id);
+     
+      const data = listWAP.filter((val) => parseInt(rid) === val.index);
       setData(data[0]);
       setBcolor(data[0].bookmark);
       setImgLink(data[0].image);
@@ -124,30 +125,33 @@ export default function PracticePageWAP({ id, handleCloseModal }) {
 
   const handleNext = () => {
     if (index <= --dataLength) {
-      setXmTime(null);
+      // setXmTime(null);
       setIndex(++index);
-      setLoadingImg(true);
-      setenableEvaluationBtn(false);
-      setInputAvailable(true);
-      setShowEvaluate(false);
-      dispatch(clearGPTAssesmentResult())
-      setFeedbackState(true);
-      setUserAns("");
+      // setLoadingImg(true);
+      // setenableEvaluationBtn(false);
+      // setInputAvailable(true);
+      // setShowEvaluate(false);
+      // dispatch(clearGPTAssesmentResult());
+      // setFeedbackState(true);
+      // setUserAns("");
       handleRetry();
+      navigate(`/practice/wap-w/${index}`);
     }
   };
   const handlePrev = () => {
     if (index > 1) {
-      setXmTime(null);
+      // setXmTime(null);
       setIndex(--index);
-      setLoadingImg(true);
-      setenableEvaluationBtn(false);
-      setShowEvaluate(false);
-      setInputAvailable(true);
-      dispatch(clearGPTAssesmentResult())
-      setFeedbackState(true);
-      setUserAns("");
-      isBusy(true);
+      // setLoadingImg(true);
+      // setenableEvaluationBtn(false);
+      // setShowEvaluate(false);
+      // setInputAvailable(true);
+      // dispatch(clearGPTAssesmentResult());
+      // setFeedbackState(true);
+      // setUserAns("");
+      // isBusy(true);
+      handleRetry();
+      navigate(`/practice/wap-w/${index}`);
     }
   };
 
@@ -165,12 +169,12 @@ export default function PracticePageWAP({ id, handleCloseModal }) {
 
       return;
     } else {
-      const askData ={
+      const askData = {
         message: `
         'sampleAns':${data.qa.a}
         'passage':${userAns}
         `,
-        type:3
+        type: 3,
       };
       setOpenPanels(["1"]);
       setInputAvailable(false);
@@ -237,6 +241,10 @@ export default function PracticePageWAP({ id, handleCloseModal }) {
     }
   };
 
+  const backOrigin = () => {
+    navigate(`/duolingo/module/writing`);
+  };
+
   const openNotification = () => {
     setInputAvailable(false);
     notification.open({
@@ -259,7 +267,7 @@ export default function PracticePageWAP({ id, handleCloseModal }) {
     setInputAvailable(true);
     setenableEvaluationBtn(false);
     setShowEvaluate(false);
-    dispatch(clearGPTAssesmentResult())
+    dispatch(clearGPTAssesmentResult());
     setFeedbackState(true);
     isBusy(true);
 
@@ -288,7 +296,7 @@ export default function PracticePageWAP({ id, handleCloseModal }) {
     setUserAns("");
     setInputAvailable(true);
     setFeedbackState(true);
-    dispatch(clearGPTAssesmentResult())
+    dispatch(clearGPTAssesmentResult());
     setenableEvaluationBtn(false);
     isBusy(true);
     handleCloseModal();
@@ -297,7 +305,7 @@ export default function PracticePageWAP({ id, handleCloseModal }) {
   const handleXmTime = (e) => {
     if (e <= 30000) {
       setTimeDanger(true);
-      if(!enableEvaluationBtn){
+      if (!enableEvaluationBtn) {
         setenableEvaluationBtn(true);
       }
     }
@@ -314,7 +322,6 @@ export default function PracticePageWAP({ id, handleCloseModal }) {
     setFeedbackState(val);
   };
 
-  console.log(enableEvaluationBtn)
   return (
     <div ref={modalRef}>
       {busy ? (
@@ -324,14 +331,14 @@ export default function PracticePageWAP({ id, handleCloseModal }) {
         </div>
       ) : (
         <div className="h-auto w-[99%] m-auto bg-[#fffffff7] md:px-5 md:py-5">
-          <div
+          {/* <div
             onClick={closeModalWindow}
             className="absolute right-0 mr-3 md:mt-[-1rem] sm:mt-[10px] cursor-pointer"
           >
             <span>
               <IconCross height="1rem" width="1rem"></IconCross>
             </span>
-          </div>
+          </div> */}
           <div
             className={`${
               loadingAssesment ? "block" : "hidden"
@@ -355,6 +362,19 @@ export default function PracticePageWAP({ id, handleCloseModal }) {
             </h1> */}
             <div className="md:flex md:flex-row sm:flex sm:flex-col justify-between m-auto w-full mt-5">
               <div className="flex m-auto w-full md:mt-0 sm:mt-5">
+                <div
+                  title="Back to List"
+                  className="mt-[6px] md:pr-4 sm:pr-2 cursor-pointer"
+                  onClick={() => backOrigin()}
+                 >
+                  {" "}
+                  <span>
+                    <IconsArrowLeft
+                      height="1.3rem"
+                      width="1.3rem"
+                    ></IconsArrowLeft>
+                  </span>
+                </div>
                 <div className="self-start">
                   <div className="flex justify-start md:gap-4 sm:gap-2 sm:text-[11px] font-[400] sm:ml-3 md:ml-0">
                     <p className="bg-[#EFECEC] px-2 py-2 rounded-md">
@@ -373,7 +393,7 @@ export default function PracticePageWAP({ id, handleCloseModal }) {
                   </div>
                 </div>
                 <div
-                  className="cursor-pointer px-2 py-2 ml-3 md:mt-[2px] sm:mt-[1px]"
+                  className="cursor-pointer px-2 py-2 ml-3 md:mt-[-1px] sm:mt-[-1px]"
                   onClick={() =>
                     handleBookmark(data.id, data.type, data.inner_type)
                   }
@@ -419,7 +439,7 @@ export default function PracticePageWAP({ id, handleCloseModal }) {
                     onLoad={hanldeOnLoad}
                     loading="eager"
                     className="h-full w-full rounded-md object-fill"
-                    src={`https://practicemania.s3.ap-south-1.amazonaws.com/duolingo/${imgLink}`}
+                    src={`https://res.cloudinary.com/dvz4ewcnu/image/upload/v1745346348/${imgLink}`}
                     alt={"write_about_the_photo"}
                   ></img>
                 </div>
@@ -452,13 +472,13 @@ export default function PracticePageWAP({ id, handleCloseModal }) {
                 Retry
               </button>
               <button
-                 disabled={!enableEvaluationBtn ? true : false}
+                disabled={!enableEvaluationBtn ? true : false}
                 onClick={handleEvaluate}
                 className={`${
                   enableEvaluationBtn ? "opacity-100" : "opacity-50"
                 } bg-[#DDE9F8]  px-6 py-3 rounded-md  drop-shadow-sm`}
               >
-                 {enableEvaluationBtn ?'Evaluate':'Continue after 30 second'}
+                {enableEvaluationBtn ? "Evaluate" : "Continue after 30 second"}
               </button>
             </div>
 
@@ -502,15 +522,14 @@ export default function PracticePageWAP({ id, handleCloseModal }) {
                       children: (
                         <div className="flex flex-col gap-2 justify-between">
                           <div className="md:w-full sm:w-full m-auto md:flex md:flex-row sm:flex-col justify-center ">
-                           <AssesmentContainer
-                           qData={data}
-                            userAns={userAns}
-                            sampleAns={data.qa.a}
-                            feedbackState={feedbackState}
-                            handleFeedbackState={handleFeedbackState}
-                           ></AssesmentContainer>
+                            <AssesmentContainer
+                              qData={data}
+                              userAns={userAns}
+                              sampleAns={data.qa.a}
+                              feedbackState={feedbackState}
+                              handleFeedbackState={handleFeedbackState}
+                            ></AssesmentContainer>
                           </div>
-                         
                         </div>
                       ),
                     },
@@ -519,8 +538,6 @@ export default function PracticePageWAP({ id, handleCloseModal }) {
               </div>
             </div>
           </div>
-
-          
         </div>
       )}
     </div>

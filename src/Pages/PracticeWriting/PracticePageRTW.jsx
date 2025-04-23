@@ -3,7 +3,7 @@ import { Input, Skeleton } from "antd";
 import { Tag, Button, notification, Collapse, Grid } from "antd";
 import { RightOutlined, LeftOutlined } from "@ant-design/icons";
 import { Statistic } from "antd";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getWordDetails } from "../../redux/slices/disctionary";
 import {
@@ -38,12 +38,13 @@ const { useBreakpoint } = Grid;
 
 export default function PracticePageRTW({ id, handleCloseModal }) {
   const dispatch = useDispatch();
-  let [index, setIndex] = useState(id);
+  const navigate = useNavigate();
   const [api, contextHolder] = notification.useNotification();
   const [play, setPlay] = useState(true);
   const [timeDanger, setTimeDanger] = useState(false);
   const [busy, isBusy] = useState(true);
   const { rid } = useParams();
+  let [index, setIndex] = useState(rid);
   const { state } = useLocation();
   let [data, setData] = useState({});
   const [bColor, setBcolor] = useState(true);
@@ -66,9 +67,9 @@ export default function PracticePageRTW({ id, handleCloseModal }) {
   const [feedbackState, setFeedbackState] = useState(true);
   let dataLength = listRTW.length;
 
-  useEffect(() => {
-    setIndex(id);
-  }, [id]);
+  // useEffect(() => {
+  //   setIndex(id);
+  // }, [id]);
 
   useEffect(() => {
     if (id) {
@@ -77,7 +78,7 @@ export default function PracticePageRTW({ id, handleCloseModal }) {
       setBcolor(data[0].bookmark);
       setDeadline(Date.now() + 5 * 60000);
     } else {
-      const data = listRTW.filter((val) => parseInt(rid) === val.id);
+      const data = listRTW.filter((val) => parseInt(rid) === val.index);
       setDeadline(Date.now() + 5 * 60000);
       setData(data[0]);
       setBcolor(data[0].bookmark);
@@ -100,10 +101,11 @@ export default function PracticePageRTW({ id, handleCloseModal }) {
       dispatch(clearGPTAssesmentResult());
       setIndex(++index);
       handleRetry();
-      clearTimeout();
-      setenableEvaluationBtn(false);
-      isBusy(true);
-      setFollowUpShow(false);
+      // clearTimeout();
+      // setenableEvaluationBtn(false);
+      // isBusy(true);
+      // setFollowUpShow(false);
+      navigate(`/practice/rtw-w/${index}`);
     }
   };
   const handlePrev = () => {
@@ -111,9 +113,10 @@ export default function PracticePageRTW({ id, handleCloseModal }) {
       dispatch(clearGPTAssesmentResult());
       setIndex(--index);
       handleRetry();
-      setenableEvaluationBtn(false);
-      isBusy(true);
-      setFollowUpShow(false);
+      // setenableEvaluationBtn(false);
+      // isBusy(true);
+      // setFollowUpShow(false);
+      navigate(`/practice/rtw-w/${index}`);
     }
   };
   const handleEvaluate = () => {
@@ -130,13 +133,13 @@ export default function PracticePageRTW({ id, handleCloseModal }) {
       return;
     } else {
       const askData = {
-        message:`
+        message: `
         'question':${data.qa.q}
         'passage':${userAns}
         'followupQuestion':${data.qa.fq}
         'followupPassage':${followUpAns}
         `,
-        type:2
+        type: 2,
       };
 
       setOpenPanels(["1"]);
@@ -246,7 +249,7 @@ export default function PracticePageRTW({ id, handleCloseModal }) {
     setFollowUpAns("");
     setxmTime(undefined);
     setFollowUpShow(false);
-    setNxtbtn(false)
+    setNxtbtn(false);
     setenableEvaluationBtn(false);
     handleCloseModal();
   };
@@ -304,6 +307,19 @@ export default function PracticePageRTW({ id, handleCloseModal }) {
               Read then Write
             </h1> */}
             <div className="md:flex md:flex-row sm:flex sm:flex-col justify-between m-auto w-full mt-5">
+              <div
+                title="Back to List"
+                className="mt-[6px] md:pr-4 sm:pr-2 cursor-pointer"
+                onClick={() => navigate(`/duolingo/module/writing`)}
+              >
+                {" "}
+                <span>
+                  <IconsArrowLeft
+                    height="1.3rem"
+                    width="1.3rem"
+                  ></IconsArrowLeft>
+                </span>
+              </div>
               <div className="flex m-auto w-full md:mt-0 sm:mt-5">
                 <div className="self-start">
                   <div className="flex justify-start md:gap-4 sm:gap-2 sm:text-[11px] font-[400] sm:ml-3 md:ml-0">
@@ -323,7 +339,7 @@ export default function PracticePageRTW({ id, handleCloseModal }) {
                   </div>
                 </div>
                 <div
-                  className="cursor-pointer px-2 py-2 ml-3 md:mt-[2px] sm:mt-[1px]"
+                  className="cursor-pointer px-2 py-2 ml-3 md:mt-[-2px] sm:mt-[-1px]"
                   onClick={() =>
                     handleBookmark(data.id, data.type, data.inner_type)
                   }
@@ -566,7 +582,7 @@ export default function PracticePageRTW({ id, handleCloseModal }) {
                           <div className="md:w-full sm:w-full m-auto md:flex md:flex-row sm:flex-col justify-center ">
                             <div>
                               <AssesmentContainerIW
-                               qData={data}
+                                qData={data}
                                 userAns={userAns}
                                 followUpAns={followUpAns}
                                 sampleAns={data.qa.a}

@@ -3,10 +3,12 @@ import { Select, Space, Input, Modal } from "antd";
 import ListData from "../../Components/Module/writing/ListData";
 import { useSelector } from "react-redux";
 import PracticePageWAP from "../PracticeWriting/PracticePageWAP";
+import { useNavigate } from "react-router-dom";
 import "./index.css";
 const { Search } = Input;
 
 export default function ContainerPageWAP() {
+  const navigate = useNavigate();
   const { listWAP } = useSelector((state) => state.getWritingList);
 
   const [isMobile, setIsMobile] = useState(window.innerWidth < 720);
@@ -21,8 +23,9 @@ export default function ContainerPageWAP() {
     ? { maxWidth: "98vw", padding: 0 }
     : { maxWidth: "80vw" };
   const handleQ = (id) => {
-    setIndex(id);
-    isShow(true);
+    navigate(`/practice/wap-w/${id}`);
+    // setIndex(id);
+    // isShow(true);
   };
   const handleCloseModal = () => {
     isShow(false);
@@ -127,7 +130,8 @@ export default function ContainerPageWAP() {
         </div>
       </div>
 
-      <div className="flex justify-center m-auto">
+      {/* we turn off the modal mode  */}
+      {/* <div className="flex justify-center m-auto">
         <Modal
           style={config}
           footer={null}
@@ -144,7 +148,7 @@ export default function ContainerPageWAP() {
             ></PracticePageWAP>
           </div>
         </Modal>
-      </div>
+      </div> */}
     </div>
   );
 }

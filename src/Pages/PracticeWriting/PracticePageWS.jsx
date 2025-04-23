@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Input, Skeleton } from "antd";
 import { Tag, Button, notification, Collapse, Grid } from "antd";
 import { Statistic } from "antd";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   DisableVisibility,
@@ -32,10 +32,11 @@ const { useBreakpoint } = Grid;
 
 export default function PracticePageWS({ id, handleCloseModal }) {
   const dispatch = useDispatch();
-  let [index, setIndex] = useState(id);
+  const { rid } = useParams();
+  let [index, setIndex] = useState(rid);
   const [timeDanger, setTimeDanger] = useState(false);
   const [busy, isBusy] = useState(true);
-  const { rid } = useParams();
+  const navigate = useNavigate();
   let [data, setData] = useState({});
   const [bColor, setBcolor] = useState(true);
   const [deadline, setDeadline] = useState(0);
@@ -73,9 +74,9 @@ export default function PracticePageWS({ id, handleCloseModal }) {
     }
   }, [bootCounter]);
 
-  useEffect(() => {
-    setIndex(id);
-  }, [id]);
+  // useEffect(() => {
+  //   setIndex(id);
+  // }, [id]);
 
   useEffect(() => {
     if (id) {
@@ -87,7 +88,7 @@ export default function PracticePageWS({ id, handleCloseModal }) {
       setFeedbackState(true);
       setenableEvaluationBtn(false);
     } else {
-      const data = listWS.filter((val) => parseInt(rid) === val.id);
+      const data = listWS.filter((val) => parseInt(rid) === val.index);
       setDeadline(data[0]?.time * 60000);
       setData(data[0]);
       setBcolor(data[0].bookmark);
@@ -112,27 +113,30 @@ export default function PracticePageWS({ id, handleCloseModal }) {
     if (index <= --dataLength) {
       setIndex(++index);
       handleRetry();
-      clearTimeout();
-      setInputAvailable(true);
-      setenableEvaluationBtn(false);
-      setStartExam(false);
-      isBusy(true);
-      setWordLength(0);
-      dispatch(clearGPTAssesmentResult());
-      setFeedbackState(true);
+      // clearTimeout();
+      // setInputAvailable(true);
+      // setenableEvaluationBtn(false);
+      // setStartExam(false);
+      // isBusy(true);
+      // setWordLength(0);
+      // dispatch(clearGPTAssesmentResult());
+      // setFeedbackState(true);
+
+      navigate(`/practice/ws-w/${index}`);
     }
   };
   const handlePrev = () => {
     if (index > 1) {
       setIndex(--index);
       handleRetry();
-      setInputAvailable(true);
-      setenableEvaluationBtn(false);
-      setStartExam(false);
-      isBusy(true);
-      setWordLength(0);
-      dispatch(clearGPTAssesmentResult());
-      setFeedbackState(true);
+      // setInputAvailable(true);
+      // setenableEvaluationBtn(false);
+      // setStartExam(false);
+      // isBusy(true);
+      // setWordLength(0);
+      // dispatch(clearGPTAssesmentResult());
+      // setFeedbackState(true);
+      navigate(`/practice/ws-w/${index}`);
     }
   };
 
@@ -150,11 +154,11 @@ export default function PracticePageWS({ id, handleCloseModal }) {
       return;
     } else {
       const askData = {
-        message:`
+        message: `
         'question':${data.qa.q}
         'passage':${userAns}
         `,
-        type:1
+        type: 1,
       };
       setOpenPanels(["1"]);
       setInputAvailable(false);
@@ -317,6 +321,19 @@ export default function PracticePageWS({ id, handleCloseModal }) {
              Writing Sample
             </h1> */}
             <div className="md:flex md:flex-row sm:flex sm:flex-col justify-between m-auto w-full mt-5">
+              <div
+                title="Back to List"
+                className="mt-[6px] md:pr-4 sm:pr-2 cursor-pointer"
+                onClick={() => navigate(`/duolingo/module/writing`)}
+              >
+                {" "}
+                <span>
+                  <IconsArrowLeft
+                    height="1.3rem"
+                    width="1.3rem"
+                  ></IconsArrowLeft>
+                </span>
+              </div>
               <div className="flex m-auto w-full md:mt-0 sm:mt-5">
                 <div className="self-start">
                   <div className="flex justify-start md:gap-4 sm:gap-2 sm:text-[11px] font-[400] sm:ml-3 md:ml-0">
@@ -336,7 +353,7 @@ export default function PracticePageWS({ id, handleCloseModal }) {
                   </div>
                 </div>
                 <div
-                  className="cursor-pointer px-2 py-2 ml-3 md:mt-[2px] sm:mt-[1px]"
+                  className="cursor-pointer px-2 py-2 ml-3 md:mt-[-2px] sm:mt-[-1px]"
                   onClick={() =>
                     handleBookmark(data.id, data.type, data.inner_type)
                   }
@@ -485,7 +502,7 @@ export default function PracticePageWS({ id, handleCloseModal }) {
                         <div className="flex flex-col gap-2 justify-between ">
                           <div className="md:w-full sm:w-full m-auto md:flex md:flex-row sm:flex-col justify-center ">
                             <AssesmentContainer
-                            qData={data}
+                              qData={data}
                               userAns={userAns}
                               sampleAns={data.qa.a}
                               feedbackState={feedbackState}

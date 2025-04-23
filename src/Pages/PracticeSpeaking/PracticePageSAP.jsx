@@ -390,7 +390,7 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
                       <img
                         onLoad={() => setLoadingImg(false)}
                         className="h-full w-full rounded-md object-fill"
-                        src={`https://practicemania.s3.ap-south-1.amazonaws.com/duolingo/${data.image}`}
+                        src={`https://res.cloudinary.com/dvz4ewcnu/image/upload/v1745346348/${data.image}`}
                         alt="icondummy1"
                       ></img>
                     </div>

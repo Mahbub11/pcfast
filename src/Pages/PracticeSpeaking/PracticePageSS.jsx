@@ -7,7 +7,7 @@ import "../../Components/Reading/RadioBtn.css";
 import { IconMicrophone } from "../../Assets/SVG/IconMicrophone";
 import { IconMicOffCircle } from "../../Assets/SVG/IconMicOff";
 import { ReactMic } from "react-mic";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { clearStatDataError, saveStatData } from "../../redux/slices/statistic";
 import { getWordDetails } from "../../redux/slices/disctionary";
 import IconsArrowLeft from "../../Assets/SVG/IconsArrowLeft";
@@ -37,19 +37,17 @@ export default function PracticePageSS({ id, handleCloseModal }) {
   const [audioData, setAudioData] = useState();
   const [timeDanger, setTimeDanger] = useState(false);
   const [busy, isBusy] = useState(true);
-  let [index, setIndex] = useState(id);
   const { rid } = useParams();
+  let [index, setIndex] = useState(rid);
   const { listSS } = useSelector((state) => state.getSpeakingList);
   let [data, setData] = useState({});
   let [openPanels, setOpenPanels] = useState([]);
   const modalRef = useRef();
-
   const [deadline, setDeadline] = useState(0);
   const [xmTime, setxmTime] = useState(null);
   const [thinkTime, setThinkTime] = useState(Date.now() + 0.133333 * 60000);
   const [showThinkTime, setShowThinkTime] = useState(true);
   const [enableEvaluationBtn, setenableEvaluationBtn] = useState(true);
-
   let dataLength = listSS.length;
   const [isWorking, setIsWorking] = useState(false);
   const [showEvaluate, setShowEvaluate] = useState(false);
@@ -61,6 +59,7 @@ export default function PracticePageSS({ id, handleCloseModal }) {
   const shouldSendToWhisperRef = useRef(false);
   const [audioText, setAudioText] = useState();
   const [isRecording, setIsRecording] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     notification.destroy();
@@ -70,10 +69,9 @@ export default function PracticePageSS({ id, handleCloseModal }) {
     }
   }, [bootCounter]);
 
-
-  useEffect(() => {
-    setIndex(id);
-  }, [id]);
+  // useEffect(() => {
+  //   setIndex(id);
+  // }, [id]);
 
   useEffect(() => {
     setenableEvaluationBtn(false);
@@ -86,7 +84,7 @@ export default function PracticePageSS({ id, handleCloseModal }) {
       setDeadline(data[0]?.time * 60000);
       setFeedbackState(true);
     } else {
-      const data = listSS.filter((val) => parseInt(rid) === val.id);
+      const data = listSS.filter((val) => parseInt(rid) === val.index);
       setData(data[0]);
       setShowThinkTime(true);
       setBcolor(data[0].bookmark);
@@ -116,38 +114,42 @@ export default function PracticePageSS({ id, handleCloseModal }) {
 
   const handleNext = () => {
     if (index <= --dataLength) {
-      setIsWorking(false);
-      setIsRecording(false);
-      stopRecording(false); // Explicitly stop recording without sending to Whisper
-      setRecordingState(true);
-      dispatch(clearGPTAssesmentResult());
-      setShowThinkTime(true);
-      setThinkTime(Date.now() + 0.333333 * 60000);
-      setenableEvaluationBtn(false);
-      setxmTime(undefined);
-
-      setShowEvaluate(false);
       setIndex(++index);
-      setFeedbackState(true);
-      clearTimeout();
+      dispatch(clearGPTAssesmentResult());
+      navigate(`/practice/ss-s/${index}`);
+      isBusy(true);
+
+      // setIsWorking(false);
+      // setIsRecording(false);
+      // stopRecording(false); // Explicitly stop recording without sending to Whisper
+      // setRecordingState(true);
+      // setShowThinkTime(true);
+      // setThinkTime(Date.now() + 0.333333 * 60000);
+      // setenableEvaluationBtn(false);
+      // setxmTime(undefined);
+      // setShowEvaluate(false);
+      // setFeedbackState(true);
+      // clearTimeout();
     }
   };
   const handlePrev = () => {
     if (index > 1) {
-      setIsWorking(false);
-      setIsRecording(false);
-      stopRecording(false); // Explicitly stop recording without sending to Whisper
-      setRecordingState(true);
-      dispatch(clearGPTAssesmentResult());
-      setShowThinkTime(true);
-      setThinkTime(Date.now() + 0.333333 * 60000);
-      setenableEvaluationBtn(false);
-      setxmTime(undefined);
-
-      setShowEvaluate(false);
       setIndex(--index);
-      setFeedbackState(true);
-      clearTimeout();
+      dispatch(clearGPTAssesmentResult());
+      navigate(`/practice/ss-s/${index}`);
+      isBusy(true);
+
+      // setIsWorking(false);
+      // setIsRecording(false);
+      // stopRecording(false); // Explicitly stop recording without sending to Whisper
+      // setRecordingState(true);
+      // setShowThinkTime(true);
+      // setThinkTime(Date.now() + 0.333333 * 60000);
+      // setenableEvaluationBtn(false);
+      // setxmTime(undefined);
+      // setShowEvaluate(false);
+      // setFeedbackState(true);
+      // clearTimeout();
     }
   };
 
@@ -205,7 +207,7 @@ export default function PracticePageSS({ id, handleCloseModal }) {
   };
 
   const handleEvaluate = () => {
-    setxmTime(0)
+    setxmTime(0);
     setIsRecording(false);
     stopRecording(true); // Explicitly stop recording and send to Whisper
     setenableEvaluationBtn(false);
@@ -213,7 +215,6 @@ export default function PracticePageSS({ id, handleCloseModal }) {
     dispatch(clearGPTAssesmentResult());
     setOpenPanels(["1"]);
     setShowEvaluate(true);
-
 
     setTimeout(() => {
       if (shouldSendToWhisperRef.current) {
@@ -223,7 +224,6 @@ export default function PracticePageSS({ id, handleCloseModal }) {
         });
       }
     }, 3000);
-
 
     modalRef.current?.scrollIntoView({
       behavior: "smooth",
@@ -290,8 +290,7 @@ export default function PracticePageSS({ id, handleCloseModal }) {
   };
 
   const handleXmTime = (e) => {
-
-    console.log(e)
+    console.log(e);
     if (e <= 60000) {
       setTimeDanger(true);
     }
@@ -302,7 +301,7 @@ export default function PracticePageSS({ id, handleCloseModal }) {
   const handleFeedbackState = (val) => {
     setFeedbackState(val);
   };
-const handleMeaning = (val) => {
+  const handleMeaning = (val) => {
     dispatch(getWordDetails(val.target.textContent));
   };
 
@@ -328,6 +327,19 @@ const handleMeaning = (val) => {
               Speaking Sample
             </h1> */}
             <div className="md:flex md:flex-row sm:flex sm:flex-col justify-between m-auto w-full mt-5">
+              <div
+                title="Back to List"
+                className="mt-[6px] md:pr-4 sm:pr-2 cursor-pointer"
+                onClick={() => navigate(`/duolingo/module/speaking`)}
+              >
+                {" "}
+                <span>
+                  <IconsArrowLeft
+                    height="1.3rem"
+                    width="1.3rem"
+                  ></IconsArrowLeft>
+                </span>
+              </div>
               <div className="flex m-auto w-full md:mt-0 sm:mt-5">
                 <div className="self-start">
                   <div className="flex justify-start md:gap-4 sm:gap-2 sm:text-[13px] font-[400] sm:ml-3 md:ml-0">
@@ -474,13 +486,13 @@ const handleMeaning = (val) => {
                 Retry
               </button>
               <button
-                  disabled={!enableEvaluationBtn ? true : false}
+                disabled={!enableEvaluationBtn ? true : false}
                 onClick={handleEvaluate}
                 className={`${
                   enableEvaluationBtn ? "opacity-100" : "opacity-50"
                 } bg-[#DDE9F8]  px-6 py-3 rounded-md  drop-shadow-sm`}
               >
-                {enableEvaluationBtn ?'Evaluate':'Continue after 2 minute'}
+                {enableEvaluationBtn ? "Evaluate" : "Continue after 2 minute"}
               </button>
             </div>
 
@@ -525,7 +537,8 @@ const handleMeaning = (val) => {
                         <div className="flex flex-col gap-2 justify-between">
                           <div className="md:w-full sm:w-full m-auto md:flex md:flex-row sm:flex-col justify-center ">
                             <AssesmentContainer
-                              isfluency={true}   qData={data}
+                              isfluency={true}
+                              qData={data}
                               userAns={audioText}
                               sampleAns={data.qa.a}
                               feedbackState={feedbackState}

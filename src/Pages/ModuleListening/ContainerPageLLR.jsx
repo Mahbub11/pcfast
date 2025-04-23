@@ -4,6 +4,7 @@ import ListData from '../../Components/Module/writing/ListData';
 import PracticePageLLR from "../PracticeListening/PracticePageLLR";
 import { useSelector } from 'react-redux';
 import "./index.css";
+import { useNavigate } from 'react-router-dom';
 const { Search } = Input;
 
 export default function ContainerPageLLR() {
@@ -14,6 +15,7 @@ export default function ContainerPageLLR() {
   
   const [isMobile, setIsMobile] = useState(window.innerWidth < 720);
   const [index, setIndex] = useState();
+   const navigate = useNavigate();
   const [show, isShow] = useState(false);
   const [tableData, setTableData] = useState(listLLR);
   const [filterData, setFilterData] = useState(listLLR);
@@ -24,8 +26,9 @@ export default function ContainerPageLLR() {
     ? { maxWidth: "98vw", padding: 0 }
     : { maxWidth: "80vw" };
   const handleQ = (id) => {
-    setIndex(id);
-    isShow(true);
+    navigate(`/practice/llr-l/${id}`);
+    // setIndex(id);
+    // isShow(true);
   };
 
   const handleCloseModal=()=>{
@@ -147,7 +150,7 @@ export default function ContainerPageLLR() {
       </div>
     </div>
 
-    <div className="flex justify-center m-auto">
+    {/* <div className="flex justify-center m-auto">
       <Modal
         style={config}
         footer={null}
@@ -161,7 +164,7 @@ export default function ContainerPageLLR() {
           <PracticePageLLR handleCloseModal={handleCloseModal} id={index}></PracticePageLLR>
         </div>
       </Modal>
-    </div>
+    </div> */}
   </div>
   )
 }

@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from 'react'
-import { Select, Space,Input, Modal } from "antd";
-import ListData from '../../Components/Module/writing/ListData';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import { Select, Space, Input, Modal } from "antd";
+import ListData from "../../Components/Module/writing/ListData";
+import { useSelector } from "react-redux";
 import PracticePageLLT from "../PracticeListening/PracticePageLLT";
 import "./index.css";
+import { useNavigate } from "react-router-dom";
 const { Search } = Input;
 
 export default function ContainerPageLLT() {
-
-  const { listLLT} = useSelector(
-    (state) => state.getListeningList
-  );
-
+  const { listLLT } = useSelector((state) => state.getListeningList);
+  const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 720);
   const [index, setIndex] = useState();
   const [show, isShow] = useState(false);
@@ -24,13 +22,14 @@ export default function ContainerPageLLT() {
     ? { maxWidth: "98vw", padding: 0 }
     : { maxWidth: "80vw" };
   const handleQ = (id) => {
-    setIndex(id);
-    isShow(true);
+    navigate(`/practice/llt-l/${id}`);
+    // setIndex(id);
+    // isShow(true);
   };
-   const handleCloseModal=()=>{
+  const handleCloseModal = () => {
     isShow(false);
-  }
-   
+  };
+
   const handleSearch = (e) => {
     if (e.target.value.length === 0) {
       setFilterData(tableData);
@@ -43,61 +42,45 @@ export default function ContainerPageLLT() {
     }
   };
 
-  useEffect(()=>{
-   
-        if (level) {
+  useEffect(() => {
+    if (level) {
       const filteredVals = tableData.filter((entry) =>
-        entry.level.toString().includes(level)  
-        
+        entry.level.toString().includes(level)
       );
       setFilterData(filteredVals);
-    }else if (fpracUnprac){
-      const filteredVals = tableData.filter((entry) =>
-     (entry.practice >0)
-      
-    );
-    setFilterData(filteredVals);
-    }else if (markedFilter){
-      const filteredVals = tableData.filter((entry) =>
-      (entry.bookmark === true)
-    );
-    setFilterData(filteredVals);
-    }
-    
-    else {
+    } else if (fpracUnprac) {
+      const filteredVals = tableData.filter((entry) => entry.practice > 0);
+      setFilterData(filteredVals);
+    } else if (markedFilter) {
+      const filteredVals = tableData.filter((entry) => entry.bookmark === true);
+      setFilterData(filteredVals);
+    } else {
       setFilterData(tableData);
     }
+  }, [level, fpracUnprac, markedFilter, tableData]);
 
-  },[level,fpracUnprac,markedFilter,tableData])
+  const handleLevel = (e) => {
+    setLevel(e);
+    setFpracUnprac(false);
+    setMarkedFilter(false);
+  };
+  const handlePracticeFilter = (e) => {
+    setLevel(false);
+    setFpracUnprac(e);
+    setMarkedFilter(false);
+  };
 
-  const handleLevel=(e)=>{
-    setLevel(e)
-    setFpracUnprac(false)
-    setMarkedFilter(false)
-    
-  }
-  const handlePracticeFilter=(e)=>{
-    setLevel(false)
-    setFpracUnprac(e)
-    setMarkedFilter(false)
-    
-  }
-
-  const handleMarked=(e)=>{
-    setLevel(false)
-    setFpracUnprac(false)
-    setMarkedFilter(e)
-  }
-
-
-
-  
+  const handleMarked = (e) => {
+    setLevel(false);
+    setFpracUnprac(false);
+    setMarkedFilter(e);
+  };
 
   return (
     <div className="relative">
-    <div>
-      <div className="flex justify-between">
-      <div className="flex justify-between gap-2 flex-wrap">
+      <div>
+        <div className="flex justify-between">
+          <div className="flex justify-between gap-2 flex-wrap">
             <Select
               onChange={(e) => handleLevel(e)}
               defaultValue="All Level"
@@ -107,11 +90,10 @@ export default function ContainerPageLLT() {
                 { value: "1", label: "Easy" },
                 { value: "2", label: "Medium" },
                 { value: "3", label: "Hard" },
-                
               ]}
             />
             <Select
-            onChange={(e) => handlePracticeFilter(e)}
+              onChange={(e) => handlePracticeFilter(e)}
               defaultValue="Unpracticed"
               style={{ width: 120 }}
               options={[
@@ -120,8 +102,8 @@ export default function ContainerPageLLT() {
               ]}
             />
             <Select
-            title="Bookmark"
-            onChange={(e) => handleMarked(e)}
+              title="Bookmark"
+              onChange={(e) => handleMarked(e)}
               defaultValue="All"
               style={{ width: 120 }}
               options={[
@@ -136,33 +118,36 @@ export default function ContainerPageLLT() {
             onChange={handleSearch}
             enterButton
           />
-      </div>
-
-      <div className=" h-[20rem] w-full mt-10">
-        <ListData
-            list={filterData.length ===0 ? listLLT :filterData}
-          title="Listen and Type"
-          type="rc-r"
-          handleQ={handleQ}
-        ></ListData>
-      </div>
-    </div>
-
-    <div className="flex justify-center m-auto">
-      <Modal
-        style={config}
-        footer={null}
-        maskClosable={false}
-        closable={false}
-        width="md:w-[100%] sm:w-full"
-        open={show}
-        className=" top-[1rem] m-auto z-10"
-      >
-        <div>
-          <PracticePageLLT  handleCloseModal={handleCloseModal} id={index}></PracticePageLLT>
         </div>
-      </Modal>
+
+        <div className=" h-[20rem] w-full mt-10">
+          <ListData
+            list={filterData.length === 0 ? listLLT : filterData}
+            title="Listen and Type"
+            type="rc-r"
+            handleQ={handleQ}
+          ></ListData>
+        </div>
+      </div>
+
+      {/* <div className="flex justify-center m-auto">
+        <Modal
+          style={config}
+          footer={null}
+          maskClosable={false}
+          closable={false}
+          width="md:w-[100%] sm:w-full"
+          open={show}
+          className=" top-[1rem] m-auto z-10"
+        >
+          <div>
+            <PracticePageLLT
+              handleCloseModal={handleCloseModal}
+              id={index}
+            ></PracticePageLLT>
+          </div>
+        </Modal>
+      </div> */}
     </div>
-  </div>
-  )
+  );
 }

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { notification, Collapse, Skeleton } from "antd";
 import { Statistic } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   ToggleVisibility,
   DisableVisibility,
@@ -26,12 +26,13 @@ import QuestionChangeLoadingScreen from "../../Components/QuestionChangeLoadingS
 const { Countdown } = Statistic;
 
 export default function PracticePageVRS({ id, handleCloseModal }) {
+  const { rid } = useParams();
   const [api, contextHolder] = notification.useNotification();
   const [timeDanger, setTimeDanger] = useState(false);
   const [busy, isBusy] = useState(true);
   const dispatch = useDispatch();
   let [vocData, setVocData] = useState({});
-  let [vocIndex, setVocIndex] = useState(id);
+  let [vocIndex, setVocIndex] = useState(rid);
   const [deadline, setDeadline] = useState(0);
   const { list } = useSelector((state) => state.getVocList);
   const { userChoice, error } = useSelector((state) => state.wordSelect);
@@ -40,8 +41,8 @@ export default function PracticePageVRS({ id, handleCloseModal }) {
   const [showEv, setShowEv] = useState(false);
   const [showModelAns, setShowModelAns] = useState(false);
   const [pushNext, setpushNxt] = useState(false);
-  const { rid } = useParams();
-  const [evPageDelay,setEvPageDelay] = useState(true); 
+  const navigate = useNavigate();
+  const [evPageDelay, setEvPageDelay] = useState(true);
   let [openPanels, setOpenPanels] = useState([]);
   let dataLength = list.length;
 
@@ -56,9 +57,9 @@ export default function PracticePageVRS({ id, handleCloseModal }) {
     //   },
     // });
   };
-  useEffect(() => {
-    setVocIndex(id);
-  }, [id]);
+  // useEffect(() => {
+  //   setVocIndex(id);
+  // }, [id]);
 
   useEffect(() => {
     if (id) {
@@ -66,14 +67,14 @@ export default function PracticePageVRS({ id, handleCloseModal }) {
       setVocData(data[0]);
       setBcolor(data[0].bookmark);
     } else {
-      const data = list.filter((val, index) => parseInt(rid) === val.id);
+      const data = list.filter((val, index) => parseInt(rid) === val.index);
       setBcolor(data[0].bookmark);
       setVocData(data[0]);
     }
 
-    setTimeout(()=>{
+    setTimeout(() => {
       isBusy(false);
-    },1000)
+    }, 1000);
     // setDeadline(Date.now() + 0.1 * 60000);
     dispatch(DisableVisibility());
     dispatch(CleanUserchoice());
@@ -81,22 +82,26 @@ export default function PracticePageVRS({ id, handleCloseModal }) {
 
   const handleNext = () => {
     if (vocIndex <= --dataLength) {
-      isBusy(true);
-      setShowEv(false);
       setVocIndex(++vocIndex);
       dispatch(removeChecked());
-      setShowModelAns(false);
-      setEvPageDelay(true)
+      isBusy(true);
+      navigate(`/practice/vrs-v/${vocIndex}`);
+
+      // setShowEv(false);
+      // setShowModelAns(false);
+      // setEvPageDelay(true);
     }
   };
   const handlePrev = () => {
     if (vocIndex > 1) {
       isBusy(true);
-      setShowEv(false);
       setVocIndex(--vocIndex);
       dispatch(removeChecked());
-      setShowModelAns(false);
-      setEvPageDelay(true)
+      navigate(`/practice/vrs-v/${vocIndex}`);
+
+      // setShowModelAns(false);
+      // setEvPageDelay(true);
+      // setShowEv(false);
     }
   };
 
@@ -121,7 +126,7 @@ export default function PracticePageVRS({ id, handleCloseModal }) {
     setDeadline(null);
     setOpenPanels(["1"]);
     dispatch(saveVocStatistic(statData));
-    setEvPageDelay(true)
+    setEvPageDelay(true);
     // dispatch(CleanUserchoice());
   };
   const handleMeaning = (val) => {
@@ -129,7 +134,7 @@ export default function PracticePageVRS({ id, handleCloseModal }) {
   };
 
   const handleRetry = () => {
-    setEvPageDelay(true)
+    setEvPageDelay(true);
     isBusy(true);
     setShowEv(false);
     setShowModelAns(false);
@@ -155,9 +160,9 @@ export default function PracticePageVRS({ id, handleCloseModal }) {
     dispatch(CleanUserchoice());
     dispatch(removeChecked());
     dispatch(DisableVisibility());
-    isBusy(true)
-    setEvPageDelay(true)
-    setVocData(null)
+    isBusy(true);
+    setEvPageDelay(true);
+    setVocData(null);
     handleCloseModal();
   };
 
@@ -168,10 +173,10 @@ export default function PracticePageVRS({ id, handleCloseModal }) {
 
   const setShowEvResult = () => {
     setShowEv(true);
-    setTimeout(()=>{
-      setEvPageDelay(false)
-    },2000)
-    
+    setTimeout(() => {
+      setEvPageDelay(false);
+    }, 2000);
+
     handleEvaluate();
   };
 
@@ -180,7 +185,7 @@ export default function PracticePageVRS({ id, handleCloseModal }) {
       {busy ? (
         <div className="w-full h-[30rem] flex justify-center m-auto sm:px-5 sm:py-10">
           {" "}
-         {/* <IconBubble    width="5rem"
+          {/* <IconBubble    width="5rem"
             height="5rem"
             fill="blue"></IconBubble> */}
           {/* <LoadingBubbleAnimation
@@ -208,6 +213,19 @@ export default function PracticePageVRS({ id, handleCloseModal }) {
             </h1> */}
             <div className="md:flex md:flex-row sm:flex sm:flex-col justify-between m-auto w-full mt-5">
               <div className="flex m-auto w-full md:mt-0 sm:mt-5">
+                <div
+                  title="Back to List"
+                  className="mt-[6px] md:pr-4 sm:pr-2 cursor-pointer"
+                  onClick={() => navigate(`/duolingo/module/vocabulary`)}
+                >
+                  {" "}
+                  <span>
+                    <IconsArrowLeft
+                      height="1.3rem"
+                      width="1.3rem"
+                    ></IconsArrowLeft>
+                  </span>
+                </div>
                 <div className="self-start">
                   <div className="flex justify-start md:gap-4 sm:gap-2 sm:text-[13px] font-[400] sm:ml-3 md:ml-0">
                     <p className="bg-[#EFECEC] px-2 py-2 rounded-md">
@@ -261,14 +279,15 @@ export default function PracticePageVRS({ id, handleCloseModal }) {
             </h1>
 
             {showEv ? (
-              evPageDelay ?
-             <div className="w-[50%]  px-5 py-5 m-auto">
-               <Skeleton active></Skeleton>
-             </div>:
-
-              <div>
-                <SingleWordChoice data={vocData?.qa}></SingleWordChoice>
-              </div>
+              evPageDelay ? (
+                <div className="w-[50%]  px-5 py-5 m-auto">
+                  <Skeleton active></Skeleton>
+                </div>
+              ) : (
+                <div>
+                  <SingleWordChoice data={vocData?.qa}></SingleWordChoice>
+                </div>
+              )
             ) : (
               <div>
                 <WordChoiceSelect

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getVocabularyList } from "../../redux/slices/getVocList";
 import PracticePageVRS from "../PracticeVocabulary/PracticePageVRS";
 import "./index.css";
+import { useNavigate } from "react-router-dom";
 const { Search } = Input;
 
 export default function ContainerPageVRS() {
@@ -18,14 +19,16 @@ export default function ContainerPageVRS() {
   const [filterData, setFilterData] = useState(list);
   const [index, setIndex] = useState();
   const [show, isShow] = useState(false);
+  const navigate = useNavigate();
 
   const config = isMobile
     ? { maxWidth: "98vw", padding: 0 }
     : { maxWidth: "80vw" };
 
   const handleQ = (id) => {
-    setIndex(id);
-    isShow(true);
+    navigate(`/practice/vrs-v/${id}`);
+    // setIndex(id);
+    // isShow(true);
   };
 
   const handleCloseModal = () => {
@@ -156,7 +159,7 @@ export default function ContainerPageVRS() {
         </div>
       </div>
 
-      <div className="flex justify-center m-auto">
+      {/* <div className="flex justify-center m-auto">
         <Modal
           style={config}
           footer={null}
@@ -173,7 +176,7 @@ export default function ContainerPageVRS() {
             ></PracticePageVRS>
           </div>
         </Modal>
-      </div>
+      </div> */}
     </div>
   );
 }

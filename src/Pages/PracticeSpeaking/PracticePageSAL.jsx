@@ -15,7 +15,7 @@ import IconsArrowLeft from "../../Assets/SVG/IconsArrowLeft";
 import IconsArrowRight from "../../Assets/SVG/IconsArrowRight";
 import IconConversationBot from "../../Assets/SVG/IconConversationBot";
 import IconSpeakingAvatar from "../../Assets/SVG/IconSpeakingAvatar";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { StarOutlined, StarFilled } from "@ant-design/icons";
 import { toggleBookmark } from "../../redux/slices/bookmark";
 import IconCross from "../../Assets/SVG/IconCross";
@@ -29,15 +29,16 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
   const synth = window.speechSynthesis;
   let [record, setRecord] = useState(false);
   const [audioData, setAudioData] = useState();
-
+  const navigate = useNavigate();
   const [active, setActive] = useState(false);
   const [recordBtnState, setRecordBtnState] = useState(true);
   const [matching, setMatching] = useState();
   const [timeDanger, setTimeDanger] = useState(false);
   const [busy, isBusy] = useState(true);
-  let [index, setIndex] = useState(id);
+
   const [bColor, setBcolor] = useState(true);
   const { rid } = useParams();
+  let [index, setIndex] = useState(rid);
   // const { error } = useSelector((state) => state.statistic);
   const { listSAL } = useSelector((state) => state.getSpeakingList);
   const { userInfo } = useSelector((state) => state.auth);
@@ -52,9 +53,9 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 720);
   let dataLength = listSAL.length;
 
-  useEffect(() => {
-    setIndex(id);
-  }, [id]);
+  // useEffect(() => {
+  //   setIndex(id);
+  // }, [id]);
 
   useEffect(() => {
     notification.destroy();
@@ -72,7 +73,7 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
       setDeadline(Date.now() + data[0]?.time * 60000);
       setText(data[0].qa.q);
     } else {
-      const data = listSAL.filter((val) => parseInt(rid) === val.id);
+      const data = listSAL.filter((val) => parseInt(rid) === val.index);
       setDeadline(Date.now() + data[0]?.time * 60000);
       setData(data[0]);
       setBcolor(data[0].bookmark);
@@ -106,12 +107,16 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
     if (index <= --dataLength) {
       setIndex(++index);
       handleRetry();
+      navigate(`/practice/sal-s/${index}`);
+      isBusy(true);
     }
   };
   const handlePrev = () => {
     if (index > 1) {
       setIndex(--index);
       handleRetry();
+      navigate(`/practice/sal-s/${index}`);
+      isBusy(true);
     }
   };
 
@@ -206,7 +211,7 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
   const openNotification = () => {
     setActive(false);
     stopRecording();
-    setRecordBtnState(false)
+    setRecordBtnState(false);
     SpeechRecognition.stopListening();
     notification.open({
       message: `Times Up`,
@@ -250,6 +255,19 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
               </h1> */}
               <div className="md:flex md:flex-row sm:flex sm:flex-col justify-between m-auto w-full mt-5">
                 <div className="flex m-auto w-full md:mt-0 sm:mt-5">
+                  <div
+                    title="Back to List"
+                    className="mt-[6px] md:pr-4 sm:pr-2 cursor-pointer"
+                    onClick={() =>navigate(`/duolingo/module/speaking`)}
+                   >
+                    {" "}
+                    <span>
+                      <IconsArrowLeft
+                        height="1.3rem"
+                        width="1.3rem"
+                      ></IconsArrowLeft>
+                    </span>
+                  </div>
                   <div className="self-start">
                     <div className="flex justify-start md:gap-4 sm:gap-2 sm:text-[13px] font-[400] sm:ml-3 md:ml-0">
                       <p className="bg-[#EFECEC] px-2 py-2 rounded-md">

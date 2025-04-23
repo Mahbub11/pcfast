@@ -4,6 +4,7 @@ import ListData from "../../Components/Module/writing/ListData";
 import { useSelector } from "react-redux";
 import PracticePageSRS from "../PracticeSpeaking/PracticePageSRS";
 import "./index.css";
+import { useNavigate } from "react-router-dom";
 const { Search } = Input;
 
 export default function ContainerPageSRS() {
@@ -17,17 +18,20 @@ export default function ContainerPageSRS() {
   const [level, setLevel] = useState(false);
   const [fpracUnprac, setFpracUnprac] = useState(false);
   const [markedFilter, setMarkedFilter] = useState(false);
+   const navigate = useNavigate();
   const config = isMobile
     ? { maxWidth: "98vw", padding: 0 }
     : { maxWidth: "80vw" };
+
   const handleQ = (id) => {
-    setIndex(id);
-    isShow(true);
+    navigate(`/practice/srs-s/${id}`);
+    // setIndex(id);
+    // isShow(true);
   };
   const handleCloseModal = () => {
     isShow(false);
   };
-    
+
   const handleSearch = (e) => {
     if (e.target.value.length === 0) {
       setFilterData(tableData);
@@ -40,57 +44,45 @@ export default function ContainerPageSRS() {
     }
   };
 
-  useEffect(()=>{
-   
-        if (level) {
+  useEffect(() => {
+    if (level) {
       const filteredVals = tableData.filter((entry) =>
-        entry.level.toString().includes(level)  
-        
+        entry.level.toString().includes(level)
       );
       setFilterData(filteredVals);
-    }else if (fpracUnprac){
-      const filteredVals = tableData.filter((entry) =>
-     (entry.practice >0)
-      
-    );
-    setFilterData(filteredVals);
-    }else if (markedFilter){
-      const filteredVals = tableData.filter((entry) =>
-      (entry.bookmark === true)
-    );
-    setFilterData(filteredVals);
-    }
-    
-    else {
+    } else if (fpracUnprac) {
+      const filteredVals = tableData.filter((entry) => entry.practice > 0);
+      setFilterData(filteredVals);
+    } else if (markedFilter) {
+      const filteredVals = tableData.filter((entry) => entry.bookmark === true);
+      setFilterData(filteredVals);
+    } else {
       setFilterData(tableData);
     }
+  }, [level, fpracUnprac, markedFilter, tableData]);
 
-  },[level,fpracUnprac,markedFilter,tableData])
+  const handleLevel = (e) => {
+    setLevel(e);
+    setFpracUnprac(false);
+    setMarkedFilter(false);
+  };
+  const handlePracticeFilter = (e) => {
+    setLevel(false);
+    setFpracUnprac(e);
+    setMarkedFilter(false);
+  };
 
-  const handleLevel=(e)=>{
-    setLevel(e)
-    setFpracUnprac(false)
-    setMarkedFilter(false)
-    
-  }
-  const handlePracticeFilter=(e)=>{
-    setLevel(false)
-    setFpracUnprac(e)
-    setMarkedFilter(false)
-    
-  }
-
-  const handleMarked=(e)=>{
-    setLevel(false)
-    setFpracUnprac(false)
-    setMarkedFilter(e)
-  }
+  const handleMarked = (e) => {
+    setLevel(false);
+    setFpracUnprac(false);
+    setMarkedFilter(e);
+  };
 
   return (
     <div className="relative">
       <div>
         <div className="flex justify-between">
-        <div className="flex justify-between gap-2 flex-wrap">
+          <div className="flex justify-between gap-2 flex-wrap">
             <Select
               onChange={(e) => handleLevel(e)}
               defaultValue="All Level"
@@ -100,11 +92,10 @@ export default function ContainerPageSRS() {
                 { value: "1", label: "Easy" },
                 { value: "2", label: "Medium" },
                 { value: "3", label: "Hard" },
-                
               ]}
             />
             <Select
-            onChange={(e) => handlePracticeFilter(e)}
+              onChange={(e) => handlePracticeFilter(e)}
               defaultValue="Unpracticed"
               style={{ width: 120 }}
               options={[
@@ -113,8 +104,8 @@ export default function ContainerPageSRS() {
               ]}
             />
             <Select
-            title="Bookmark"
-            onChange={(e) => handleMarked(e)}
+              title="Bookmark"
+              onChange={(e) => handleMarked(e)}
               defaultValue="All"
               style={{ width: 120 }}
               options={[
@@ -133,7 +124,7 @@ export default function ContainerPageSRS() {
 
         <div className=" h-[20rem] w-full mt-10">
           <ListData
-            list={filterData.length ===0 ? listSRS :filterData}
+            list={filterData.length === 0 ? listSRS : filterData}
             title="Read then Speak"
             type="rc-r"
             handleQ={handleQ}
@@ -141,7 +132,7 @@ export default function ContainerPageSRS() {
         </div>
       </div>
 
-      <div className="flex justify-center m-auto">
+      {/* <div className="flex justify-center m-auto">
         <Modal
           style={config}
           footer={null}
@@ -156,7 +147,7 @@ export default function ContainerPageSRS() {
             <PracticePageSRS handleCloseModal={handleCloseModal} id={index}></PracticePageSRS>
           </div>
         </Modal>
-      </div>
+      </div> */}
     </div>
   );
 }

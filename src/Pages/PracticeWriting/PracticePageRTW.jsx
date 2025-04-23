@@ -311,7 +311,7 @@ export default function PracticePageRTW({ id, handleCloseModal }) {
                 title="Back to List"
                 className="mt-[6px] md:pr-4 sm:pr-2 cursor-pointer"
                 onClick={() => navigate(`/duolingo/module/writing`)}
-              >
+               >
                 {" "}
                 <span>
                   <IconsArrowLeft

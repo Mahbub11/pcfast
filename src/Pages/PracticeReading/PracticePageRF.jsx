@@ -12,7 +12,7 @@ import { getWordDetails } from "../../redux/slices/disctionary";
 import IconsArrowLeft from "../../Assets/SVG/IconsArrowLeft";
 import IconsArrowRight from "../../Assets/SVG/IconsArrowRight";
 import { clearStatDataError, saveStatData } from "../../redux/slices/statistic";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import IconCross from "../../Assets/SVG/IconCross";
 import { toggleBookmark } from "../../redux/slices/bookmark";
 import { StarOutlined, StarFilled } from "@ant-design/icons";
@@ -26,7 +26,8 @@ export default function PracticePageRF({ id, handleCloseModal }) {
   const [busy, isBusy] = useState(true);
   let [data, setData] = useState({});
   const [deadline, setDeadline] = useState(2);
-  let [index, setIndex] = useState(id);
+  const { rid } = useParams();
+  let [index, setIndex] = useState(rid);
   const { listRF } = useSelector((state) => state.getReadingList);
   const { userInput } = useSelector((state) => state.fillgap);
   const { error } = useSelector((state) => state.statistic);
@@ -35,13 +36,13 @@ export default function PracticePageRF({ id, handleCloseModal }) {
   const [bootCounter, setbootCounter] = useState(true);
   const [enableEvaluationBtn, setenableEvaluationBtn] = useState(true);
   const [showModelAns, setShowModelAns] = useState(false);
-  const { rid } = useParams();
   let [openPanels, setOpenPanels] = useState([]);
+   const navigate = useNavigate()
   let dataLength = listRF.length;
 
-  useEffect(() => {
-    setIndex(id);
-  }, [id]);
+  // useEffect(() => {
+  //   setIndex(id);
+  // }, [id]);
 
   useEffect(() => {
     notification.destroy();
@@ -58,14 +59,14 @@ export default function PracticePageRF({ id, handleCloseModal }) {
       setBcolor(data[0].bookmark);
       setDeadline(Date.now() + data[0]?.time * 60000);
     } else {
-      const data = listRF.filter((val) => parseInt(rid) === val.id);
+      const data = listRF.filter((val) => parseInt(rid) === val.index);
       setDeadline(Date.now() + data[0]?.time * 60000);
       setBcolor(data[0].bookmark);
       setData(data[0]);
     }
-    setTimeout(()=>{
+    setTimeout(() => {
       isBusy(false);
-    },1000)
+    }, 1000);
 
     dispatch(DisableVisibility());
   }, [data, index, busy]);
@@ -76,9 +77,10 @@ export default function PracticePageRF({ id, handleCloseModal }) {
       const fields = Array.from(document.querySelectorAll("#inputBox")) || [];
       fields.map((field) => (field.value = ""));
       dispatch(ClearUserInputs());
-      setenableEvaluationBtn(true);
-      setShowModelAns(false);
-      isBusy(true)
+      // setenableEvaluationBtn(true);
+      // setShowModelAns(false);
+      isBusy(true);
+      navigate(`/practice/rf-r/${index}`);
     }
   };
   const handlePrev = () => {
@@ -87,9 +89,10 @@ export default function PracticePageRF({ id, handleCloseModal }) {
       const fields = Array.from(document.querySelectorAll("#inputBox")) || [];
       fields.map((field) => (field.value = ""));
       dispatch(ClearUserInputs());
-      setenableEvaluationBtn(true);
-      setShowModelAns(false);
-      isBusy(true)
+      // setenableEvaluationBtn(true);
+      // setShowModelAns(false);
+      isBusy(true);
+      navigate(`/practice/rf-r/${index}`);
     }
   };
   const handleEvaluate = () => {
@@ -113,7 +116,6 @@ export default function PracticePageRF({ id, handleCloseModal }) {
     setOpenPanels(["1"]);
     setDeadline(null);
     dispatch(saveStatData(statData));
-   
   };
 
   const handleMeaning = (val) => {
@@ -127,7 +129,7 @@ export default function PracticePageRF({ id, handleCloseModal }) {
     const fields = Array.from(document.querySelectorAll("#inputBox")) || [];
     fields.map((field) => (field.value = ""));
     dispatch(ClearUserInputs());
-    isBusy(true)
+    isBusy(true);
   };
   const handleBookmark = (id, type, inner_type) => {
     setBcolor(!bColor);
@@ -156,7 +158,7 @@ export default function PracticePageRF({ id, handleCloseModal }) {
     dispatch(ClearUserInputs());
     setbootCounter(false);
     setDeadline(null);
-    isBusy(true)
+    isBusy(true);
     handleCloseModal();
   };
   const handleXmTime = (e) => {
@@ -191,6 +193,19 @@ export default function PracticePageRF({ id, handleCloseModal }) {
             </h1> */}
 
             <div className="md:flex md:flex-row sm:flex sm:flex-col justify-between m-auto w-full mt-5">
+              <div
+                title="Back to List"
+                className="mt-[6px] md:pr-4 sm:pr-2 cursor-pointer"
+                onClick={() => navigate(`/duolingo/module/reading`)}
+               >
+                {" "}
+                <span>
+                  <IconsArrowLeft
+                    height="1.3rem"
+                    width="1.3rem"
+                  ></IconsArrowLeft>
+                </span>
+              </div>
               <div className="flex m-auto w-full md:mt-0 sm:mt-5">
                 <div className="self-start">
                   <div className="flex justify-start md:gap-4 sm:gap-2 sm:text-[13px] font-[400] sm:ml-3 md:ml-0">

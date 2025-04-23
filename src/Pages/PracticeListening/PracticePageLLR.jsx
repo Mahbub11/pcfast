@@ -6,7 +6,7 @@ import { Statistic } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import "../../Components/Reading/RadioBtn.css";
 import { getWordDetails } from "../../redux/slices/disctionary";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ConverSationContainer from "../../Components/Listening/ConverSationContainer";
 import {
   EndEvaluateOption,
@@ -39,8 +39,9 @@ export default function PracticePageLLR({ id, handleCloseModal }) {
   const [api, contextHolder] = notification.useNotification();
   const [timeDanger, setTimeDanger] = useState(false);
   const [busy, isBusy] = useState(true);
-  let [index, setIndex] = useState(id);
   const { rid } = useParams();
+  let [index, setIndex] = useState(rid);
+
   const { listLLR } = useSelector((state) => state.getListeningList);
   let [data, setData] = useState({});
   const [deadline, setDeadline] = useState(0);
@@ -72,15 +73,13 @@ export default function PracticePageLLR({ id, handleCloseModal }) {
   const [voiceIndex, setVoiceIndex] = useState(0);
   const [bootCounter, setbootCounter] = useState(true);
   const [avatarState, setAvatarState] = useState(false);
-  const modalRef = useRef();
-  // speech
+  const modalRef = useRef(); 
+  const navigate = useNavigate();
 
-  console.log(listLLR);
-
-  useEffect(() => {
-    setIndex(id);
-    setxmState(false);
-  }, [id]);
+  // useEffect(() => {
+  //   setIndex(id);
+  //   setxmState(false);
+  // }, [id]);
 
   useEffect(() => {
     notification.destroy();
@@ -105,7 +104,7 @@ export default function PracticePageLLR({ id, handleCloseModal }) {
 
       setQuestionList(pushData);
     } else {
-      const data = listLLR.filter((val) => parseInt(rid) === val.id);
+      const data = listLLR.filter((val) => parseInt(rid) === val.index);
       setDeadline(Date.now() + data[0]?.time * 60000 - 90000);
       setData(data[0]);
       setBcolor(data[0].bookmark);
@@ -131,7 +130,7 @@ export default function PracticePageLLR({ id, handleCloseModal }) {
       handleRetry();
       dispatch(clearInteractiveListeningResult());
       isBusy(true);
-      clearTimeout();
+      navigate(`/practice/llr-l/${index}`);
     }
   };
   const handlePrev = () => {
@@ -140,6 +139,7 @@ export default function PracticePageLLR({ id, handleCloseModal }) {
       dispatch(clearInteractiveListeningResult());
       isBusy(true);
       handleRetry();
+      navigate(`/practice/llr-l/${index}`);
     }
   };
 
@@ -215,7 +215,7 @@ export default function PracticePageLLR({ id, handleCloseModal }) {
           data: questionList[qCounter],
           currentIndex: qCounter,
           voiceIndex: data.qa.additionalData.voiceActor,
-          sname:data.qa.additionalData.sname
+          sname: data.qa.additionalData.sname,
         })
       );
     }
@@ -280,7 +280,7 @@ export default function PracticePageLLR({ id, handleCloseModal }) {
           <Skeleton></Skeleton>
         </div>
       ) : (
-        <div className="h-auto w-[99%] m-auto bg-[#fffffff7]md:px-5 md:py-5">
+        <div className="h-auto w-[99%] m-auto bg-[#fffffff7] md:px-5 md:py-5">
           <div
             onClick={closeModalWindow}
             className="absolute right-0 mr-3 md:mt-[-1rem] sm:mt-[10px]  cursor-pointer"
@@ -295,6 +295,19 @@ export default function PracticePageLLR({ id, handleCloseModal }) {
             </h1> */}
             <div className="md:flex md:flex-row sm:flex sm:flex-col justify-between m-auto w-full mt-5">
               <div className="flex m-auto w-full md:mt-0 sm:mt-5">
+                <div
+                  title="Back to List"
+                  className="mt-[6px] md:pr-4 sm:pr-2 cursor-pointer"
+                  onClick={() => navigate(`/duolingo/module/listening`)}
+                >
+                  {" "}
+                  <span>
+                    <IconsArrowLeft
+                      height="1.3rem"
+                      width="1.3rem"
+                    ></IconsArrowLeft>
+                  </span>
+                </div>
                 <div className="self-start">
                   <div className="flex justify-start md:gap-4 sm:gap-2 sm:text-[13px] font-[400] sm:ml-3 md:ml-0">
                     <p className="bg-[#EFECEC] px-2 py-2 rounded-md">
@@ -365,9 +378,7 @@ export default function PracticePageLLR({ id, handleCloseModal }) {
               >
                 <div className="sm:hidden md:block">
                   <div className=" rounded-md m-auto mt-10 py-2 opacity-80 md:sticky ">
-
-                    {
-                      data.qa.additionalData.voiceActor===1?
+                    {data.qa.additionalData.voiceActor === 1 ? (
                       !avatarState ? (
                         <TeacherSpeakingAnimation
                           isStopped={true}
@@ -380,21 +391,20 @@ export default function PracticePageLLR({ id, handleCloseModal }) {
                           widht={400}
                           height={500}
                         ></TeacherSpeakingAnimation>
-                      ):!avatarState ? (
-                        <FTeacherSpeakingAnimation
-                          isStopped={true}
-                          widht={400}
-                          height={500}
-                        ></FTeacherSpeakingAnimation>
-                      ) : (
-                        <FTeacherSpeakingAnimation
-                          isStopped={false}
-                          widht={400}
-                          height={500}
-                        ></FTeacherSpeakingAnimation>
                       )
-                    }
-                    
+                    ) : !avatarState ? (
+                      <FTeacherSpeakingAnimation
+                        isStopped={true}
+                        widht={400}
+                        height={500}
+                      ></FTeacherSpeakingAnimation>
+                    ) : (
+                      <FTeacherSpeakingAnimation
+                        isStopped={false}
+                        widht={400}
+                        height={500}
+                      ></FTeacherSpeakingAnimation>
+                    )}
 
                     {/* <img
                       src={TeacherSpeakingMouthOff}

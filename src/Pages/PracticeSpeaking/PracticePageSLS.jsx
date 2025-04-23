@@ -7,7 +7,7 @@ import "../../Components/Reading/RadioBtn.css";
 import { IconMicrophone } from "../../Assets/SVG/IconMicrophone";
 import { IconMicOffCircle } from "../../Assets/SVG/IconMicOff";
 import { ReactMic } from "react-mic";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import IconCross from "../../Assets/SVG/IconCross";
 import { getWordDetails } from "../../redux/slices/disctionary";
 import IconsArrowLeft from "../../Assets/SVG/IconsArrowLeft";
@@ -43,8 +43,8 @@ export default function PracticePageSLS({ id, handleCloseModal }) {
   const [timeDanger, setTimeDanger] = useState(false);
   const [audioData, setAudioData] = useState();
   const [busy, isBusy] = useState(true);
-  let [index, setIndex] = useState(id);
   const { rid } = useParams();
+  let [index, setIndex] = useState(rid);
   const { error } = useSelector((state) => state.statistic);
   const { listSLS } = useSelector((state) => state.getSpeakingList);
   let [data, setData] = useState({});
@@ -62,6 +62,7 @@ export default function PracticePageSLS({ id, handleCloseModal }) {
   const [audioText, setAudioText] = useState();
   const [isWorking, setIsWorking] = useState(false);
   const [deadline, setDeadline] = useState(0);
+  const navigate = useNavigate();
 
   // speech
 
@@ -86,9 +87,9 @@ export default function PracticePageSLS({ id, handleCloseModal }) {
     }
   }, [bootCounter]);
 
-  useEffect(() => {
-    setIndex(id);
-  }, [id]);
+  // useEffect(() => {
+  //   setIndex(id);
+  // }, [id]);
 
   useEffect(() => {
     setenableEvaluationBtn(false);
@@ -101,7 +102,7 @@ export default function PracticePageSLS({ id, handleCloseModal }) {
       setText(data[0].qa.q);
       setShowThinkTime(true);
     } else {
-      const data = listSLS.filter((val) => parseInt(rid) === val.id);
+      const data = listSLS.filter((val) => parseInt(rid) === val.index);
       setDeadline(data[0]?.time * 60000);
       setText(data[0].qa.q);
       setData(data[0]);
@@ -170,42 +171,52 @@ export default function PracticePageSLS({ id, handleCloseModal }) {
 
   const handleNext = () => {
     if (index <= --dataLength) {
-      setPlayLeft(3);
-      setvoiceActive(false);
-      setIsWorking(false);
-      setIsRecording(false);
-      stopRecording(false); // Explicitly stop recording without sending to Whisper
-      setRecordingState(true);
       dispatch(clearGPTAssesmentResult());
-      setShowThinkTime(true);
-      setThinkTime(Date.now() + 0.333333 * 60000);
-      setenableEvaluationBtn(false);
-      setxmTime(undefined);
-
-      setShowEvaluate(false);
       setIndex(++index);
-      setFeedbackState(true);
-      clearTimeout();
+      navigate(`/practice/sls-s/${index}`);
+      isBusy(true);
+
+      // setPlayLeft(3);
+      // setvoiceActive(false);
+      // setIsWorking(false);
+      // setIsRecording(false);
+      // stopRecording(false); // Explicitly stop recording without sending to Whisper
+      // setRecordingState(true);
+
+      // setShowThinkTime(true);
+      // setThinkTime(Date.now() + 0.333333 * 60000);
+      // setenableEvaluationBtn(false);
+      // setxmTime(undefined);
+
+      // setShowEvaluate(false);
+
+      // setFeedbackState(true);
+      // clearTimeout();
     }
   };
   const handlePrev = () => {
     if (index > 1) {
-      setPlayLeft(3);
-      setvoiceActive(false);
-      setIsWorking(false);
-      setIsRecording(false);
-      stopRecording(false); // Explicitly stop recording without sending to Whisper
-      setRecordingState(true);
-      dispatch(clearGPTAssesmentResult());
-      setShowThinkTime(true);
-      setThinkTime(Date.now() + 0.333333 * 60000);
-      setenableEvaluationBtn(false);
-      setxmTime(undefined);
-
-      setShowEvaluate(false);
       setIndex(--index);
-      setFeedbackState(true);
-      clearTimeout();
+      dispatch(clearGPTAssesmentResult());
+      navigate(`/practice/sls-s/${index}`);
+      isBusy(true);
+
+      // setPlayLeft(3);
+      // setvoiceActive(false);
+      // setIsWorking(false);
+      // setIsRecording(false);
+      // stopRecording(false); // Explicitly stop recording without sending to Whisper
+      // setRecordingState(true);
+
+      // setShowThinkTime(true);
+      // setThinkTime(Date.now() + 0.333333 * 60000);
+      // setenableEvaluationBtn(false);
+      // setxmTime(undefined);
+
+      // setShowEvaluate(false);
+
+      // setFeedbackState(true);
+      // clearTimeout();
     }
   };
 
@@ -275,7 +286,6 @@ export default function PracticePageSLS({ id, handleCloseModal }) {
     setOpenPanels(["1"]);
     setShowEvaluate(true);
 
-
     setTimeout(() => {
       if (shouldSendToWhisperRef.current) {
         sendToWhisper(audioData).then((res) => {
@@ -284,7 +294,6 @@ export default function PracticePageSLS({ id, handleCloseModal }) {
         });
       }
     }, 3000);
-
 
     modalRef.current?.scrollIntoView({
       behavior: "smooth",
@@ -391,6 +400,20 @@ export default function PracticePageSLS({ id, handleCloseModal }) {
             </h1> */}
 
             <div className="md:flex md:flex-row sm:flex sm:flex-col justify-between m-auto w-full mt-5">
+              <div
+                title="Back to List"
+                className="mt-[6px] md:pr-4 sm:pr-2 cursor-pointer"
+                onClick={() => navigate(`/duolingo/module/speaking`)}
+              >
+                {" "}
+                <span>
+                  <IconsArrowLeft
+                    height="1.3rem"
+                    width="1.3rem"
+                  ></IconsArrowLeft>
+                </span>
+              </div>
+
               <div className="flex m-auto w-full md:mt-0 sm:mt-5">
                 <div className="self-start">
                   <div className="flex justify-start md:gap-4 sm:gap-2 sm:text-[13px] font-[400] sm:ml-3 md:ml-0">

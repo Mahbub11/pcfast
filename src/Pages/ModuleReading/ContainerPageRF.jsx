@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import PracticePageRC from "../PracticeReading/PracticePageRC";
 import "./index.css";
 import PracticePageRF from "../PracticeReading/PracticePageRF";
+import { useNavigate } from "react-router-dom";
 const { Search } = Input;
 
 export default function ContainerPageRF() {
@@ -15,17 +16,16 @@ export default function ContainerPageRF() {
   const [level, setLevel] = useState(false);
   const [fpracUnprac, setFpracUnprac] = useState(false);
   const [markedFilter, setMarkedFilter] = useState(false);
-
-
-  console.log(listRF)
+  const navigate = useNavigate()
   const [index, setIndex] = useState();
   const [show, isShow] = useState(false);
   const config = isMobile
     ? { maxWidth: "98vw", padding: 0 }
     : { maxWidth: "80vw" };
   const handleQ = (id) => {
-    setIndex(id);
-    isShow(true);
+    navigate(`/practice/rf-r/${id}`);
+    // setIndex(id);
+    // isShow(true);
   };
   const handleCloseModal = () => {
     isShow(false);
@@ -141,7 +141,7 @@ export default function ContainerPageRF() {
         </div>
       </div>
 
-      <div className="flex justify-center m-auto">
+      {/* <div className="flex justify-center m-auto">
         <Modal
           style={config}
           footer={null}
@@ -158,7 +158,7 @@ export default function ContainerPageRF() {
             ></PracticePageRF>
           </div>
         </Modal>
-      </div>
+      </div> */}
     </div>
   );
 }

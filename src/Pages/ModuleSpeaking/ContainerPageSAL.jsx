@@ -10,6 +10,7 @@ import {
   setNotification,
 } from "../../redux/slices/general";
 import "./index.css";
+import { useNavigate } from "react-router-dom";
 const { Search } = Input;
 
 export default function ContainerPageSAL() {
@@ -28,10 +29,13 @@ export default function ContainerPageSAL() {
   const config = isMobile
     ? { maxWidth: "98vw", padding: 0 }
     : { maxWidth: "80vw" };
+  const navigate = useNavigate();
 
   const handleQ = (id) => {
-    setIndex(id);
-    isShow(true);
+
+    navigate(`/practice/sal-s/${id}`);
+    // setIndex(id);
+    // isShow(true);
   };
   const handleCloseModal = () => {
     isShow(false);
@@ -137,7 +141,7 @@ export default function ContainerPageSAL() {
         </div>
       </div>
 
-      <div className="flex justify-center m-auto">
+      {/* <div className="flex justify-center m-auto">
         <Modal
           style={config}
           footer={null}
@@ -154,7 +158,7 @@ export default function ContainerPageSAL() {
             ></PracticePageSAL>
           </div>
         </Modal>
-      </div>
+      </div> */}
     </div>
   );
 }

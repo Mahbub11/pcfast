@@ -11,7 +11,7 @@ import {
 import { Statistic } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import "../../Components/Reading/RadioBtn.css";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import IconsArrowLeft from "../../Assets/SVG/IconsArrowLeft";
 import IconsArrowRight from "../../Assets/SVG/IconsArrowRight";
 import IconMikeOn from "../../Assets/SVG/IconMikeOn";
@@ -33,8 +33,8 @@ export default function PracticePageLLT({ id, handleCloseModal }) {
   const [timeDanger, setTimeDanger] = useState(false);
   const [busy, isBusy] = useState(true);
   const [bColor, setBcolor] = useState(true);
-  let [index, setIndex] = useState(id);
   const { rid } = useParams();
+  let [index, setIndex] = useState(rid);
   const { error } = useSelector((state) => state.statistic);
   const { listLLT } = useSelector((state) => state.getListeningList);
   let [data, setData] = useState({});
@@ -42,7 +42,7 @@ export default function PracticePageLLT({ id, handleCloseModal }) {
   let [playLeft, setPlayLeft] = useState(3);
   let dataLength = listLLT.length;
   const [showEvaluate, setShowEvaluate] = useState(false);
-
+  const navigate = useNavigate();
   // speech
 
   const [text, setText] = useState();
@@ -57,9 +57,9 @@ export default function PracticePageLLT({ id, handleCloseModal }) {
   const { userInfo } = useSelector((state) => state.auth);
   const synth = window.speechSynthesis;
 
-  useEffect(() => {
-    setIndex(id);
-  }, [id]);
+  // useEffect(() => {
+  //   setIndex(id);
+  // }, [id]);
 
   useEffect(() => {
     if (id) {
@@ -69,7 +69,7 @@ export default function PracticePageLLT({ id, handleCloseModal }) {
       setDeadline(Date.now() + data[0]?.time * 60000);
       setText(data[0].qa.q + data[0].qa.qb.join(","));
     } else {
-      const data = listLLT.filter((val) => parseInt(rid) === val.id);
+      const data = listLLT.filter((val) => parseInt(rid) === val.index);
       setDeadline(Date.now() + data[0]?.time * 60000);
       setData(data[0]);
       setBcolor(data[0].bookmark);
@@ -123,21 +123,21 @@ export default function PracticePageLLT({ id, handleCloseModal }) {
     if (index <= --dataLength) {
       setIndex(++index);
       handleRetry();
-      setPlayLeft(3);
-      clearTimeout();
-      setenableEvaluationBtn(true);
       isBusy(true);
-      setvoiceActive(false);
+      navigate(`/practice/llt-l/${index}`);
+
+      // setPlayLeft(3);
+      // clearTimeout();
+      // setenableEvaluationBtn(true);
+      // setvoiceActive(false);
     }
   };
   const handlePrev = () => {
     if (index > 1) {
       setIndex(--index);
       handleRetry();
-      setPlayLeft(3);
-      setenableEvaluationBtn(true);
       isBusy(true);
-      setvoiceActive(false);
+      navigate(`/practice/llt-l/${index}`);
     }
   };
 
@@ -238,6 +238,19 @@ export default function PracticePageLLT({ id, handleCloseModal }) {
             </h1> */}
             <div className="md:flex md:flex-row sm:flex sm:flex-col justify-between m-auto w-full mt-5">
               <div className="flex m-auto w-full md:mt-0 sm:mt-5">
+                <div
+                  title="Back to List"
+                  className="mt-[6px] md:pr-4 sm:pr-2 cursor-pointer"
+                  onClick={() => navigate(`/duolingo/module/listening`)}
+                >
+                  {" "}
+                  <span>
+                    <IconsArrowLeft
+                      height="1.3rem"
+                      width="1.3rem"
+                    ></IconsArrowLeft>
+                  </span>
+                </div>
                 <div className="self-start">
                   <div className="flex justify-start md:gap-4 sm:gap-2 sm:text-[13px] font-[400] sm:ml-3 md:ml-0">
                     <p className="bg-[#EFECEC] px-2 py-2 rounded-md">

@@ -12,21 +12,35 @@ import {
   DisableVisibility,
   ToggleVisibility,
 } from "../../redux/slices/fillgap";
-import { cleanUserReadingInput, cleanUserReadingResult, SaveRCSResult } from "../../redux/slices/readingInput";
+import {
+  cleanUserReadingInput,
+  cleanUserReadingResult,
+  SaveRCSResult,
+} from "../../redux/slices/readingInput";
 import { saveStatData } from "../../redux/slices/statistic";
 import IconCross from "../../Assets/SVG/IconCross";
 import PracticePageRHA2 from "../PracticeReading/PracticePageRHA2";
+import { useNavigate, useParams } from "react-router-dom";
+import IconsArrowLeft from "../../Assets/SVG/IconsArrowLeft";
+import IconsArrowRight from "../../Assets/SVG/IconsArrowRight";
 const { Countdown } = Statistic;
 
-export default function InteractiveReadingPracticeContainer({ data, show,handleCloseModal }) {
+export default function InteractiveReadingPracticeContainer({
+  data1,
+  show,
+  handleCloseModal,
+}) {
+  const { rid } = useParams();
+  let [qIndex, setQIndex] = useState(rid);
   const [busy, isBusy] = useState(true);
   const [api, contextHolder] = notification.useNotification();
-  const { resultRCS, resultRCP, resultRHA,resultRHA2, resultRGP, resultRCI } = useSelector(
-    (state) => state.readingInput
-  );
+  const { resultRCS, resultRCP, resultRHA, resultRHA2, resultRGP, resultRCI } =
+    useSelector((state) => state.readingInput);
   const { userInfo } = useSelector((state) => state.auth);
-  const [bootCounter,setbootCounter]= useState(false);
-  
+  const [bootCounter, setbootCounter] = useState(false);
+  const { listInteractive } = useSelector((state) => state.getReadingList);
+  let dataLength = listInteractive.length;
+  const navigate = useNavigate();
   let [index, setIndex] = useState(0);
   const [listRCS, setRCS] = useState();
   const [listRCP, setRCP] = useState();
@@ -41,25 +55,30 @@ export default function InteractiveReadingPracticeContainer({ data, show,handleC
   const [counter, setCounter] = useState(false);
   const [timeDanger, setTimeDanger] = useState(false);
   const [deadline, setDeadline] = useState(2);
-  const [idata, setIData] = useState(data[0]);
+  const [idata, setIData] = useState();
+  const [data, setData] = useState();
   const dispatch = useDispatch();
   const { userInput } = useSelector((state) => state.fillgap);
 
+  // useEffect(() => {
+  //   setShowPreviousBtn(false);
+  //   setShowEvaluateBtn(false);
+  //   setShowNxtBtn(true);
+  //   // setCounter(true);
+  //   setIndex(0);
+  //   dispatch(DisableVisibility());
+  // }, [show]);
 
   useEffect(() => {
-    setShowPreviousBtn(false);
-    setShowEvaluateBtn(false);
-    setShowNxtBtn(true);
-    // setCounter(true);
-    setIndex(0);
-    dispatch(DisableVisibility());
-  }, [show]);
-
-  
-  useEffect(() => {
-    setDeadline(Date.now() + data[0]?.time * 60000);
-    setBcolor(data[0].bookmark);
-    data[0].interactivereadings.map((val) => {
+    const tempdata = listInteractive.filter(
+      (val) => parseInt(rid) === val.index
+    );
+    setIData(tempdata[0]);
+    setData(tempdata[0]);
+    console.log(tempdata);
+    setDeadline(Date.now() + tempdata[0]?.time * 60000);
+    setBcolor(tempdata[0].bookmark);
+    tempdata[0].interactivereadings.map((val) => {
       if (val.inner_type === 321) {
         setRCS(val);
       }
@@ -74,17 +93,17 @@ export default function InteractiveReadingPracticeContainer({ data, show,handleC
       }
       if (val.inner_type === 325) {
         setRGPT(val);
-      }if (val.inner_type === 326) {
+      }
+      if (val.inner_type === 326) {
         setRHA2(val);
       }
     });
 
     isBusy(false);
   }, [data, busy]);
-  
 
   const list = [
-    <PracticePageRCS  data={listRCS}></PracticePageRCS>,
+    <PracticePageRCS data={listRCS}></PracticePageRCS>,
     <PracticePageRCP index={index} data={listRCP}></PracticePageRCP>,
     <PracticePageRHA index={index} data={listRHA}></PracticePageRHA>,
     <PracticePageRCI data={listRCI}></PracticePageRCI>,
@@ -137,15 +156,19 @@ export default function InteractiveReadingPracticeContainer({ data, show,handleC
   };
 
   const handleEvaluate = () => {
-    setDeadline(null)
+    setDeadline(null);
     dispatch(ToggleVisibility());
     setShowEvaluateBtn(false);
     setShowNxtBtn(false);
     setShowPreviousBtn(true);
     setCounter(true);
-    const readingResult=(parseInt(resultRCS?.result)+parseInt(resultRCP?.result)+ parseInt(resultRHA?.result)
-    +parseInt(resultRHA2?.result)+parseInt(resultRGP?.result)
-    +parseInt(resultRCI?.result))
+    const readingResult =
+      parseInt(resultRCS?.result) +
+      parseInt(resultRCP?.result) +
+      parseInt(resultRHA?.result) +
+      parseInt(resultRHA2?.result) +
+      parseInt(resultRGP?.result) +
+      parseInt(resultRCI?.result);
 
     // console.log((resultRCS?.result))
     // console.log((resultRCP?.result))
@@ -161,60 +184,52 @@ export default function InteractiveReadingPracticeContainer({ data, show,handleC
       type: idata.type,
       inner_type: idata.inner_type,
       time: idata.time,
-      result: readingResult/6
+      result: readingResult / 6,
     };
 
-   
-    dispatch(saveStatData(statData))
+    dispatch(saveStatData(statData));
   };
-
-
 
   const handleNext = () => {
-   
     if (index === 0 || index < 5) {
-      setIndex(index +1)
-      setShowPreviousBtn(true)
+      setIndex(index + 1);
+      setShowPreviousBtn(true);
       setShowNxtBtn(true);
-    
+
       let correct = 0;
-    listRCS.qa.a.map((val, i) => (userInput[i] === val ? ++correct : ""));
-    const ansLength = listRCS.qa.a.length;
-    const statData = {
-      result: ((correct / ansLength) * 100).toFixed(2),
-    };
-    dispatch(SaveRCSResult(statData));
+      listRCS.qa.a.map((val, i) => (userInput[i] === val ? ++correct : ""));
+      const ansLength = listRCS.qa.a.length;
+      const statData = {
+        result: ((correct / ansLength) * 100).toFixed(2),
+      };
+      dispatch(SaveRCSResult(statData));
     }
-    
   };
-  useEffect(()=>{
-    if(index===5){
+  useEffect(() => {
+    if (index === 5) {
       setShowNxtBtn(false);
-      if(!counter){
+      if (!counter) {
         setShowEvaluateBtn(true);
       }
     }
-    if(index>0 && !showEvaluateBtn){
-      setShowPreviousBtn(false)
+    if (index > 0 && !showEvaluateBtn) {
+      setShowPreviousBtn(false);
     }
-    if(index>0 && counter){
-      setShowPreviousBtn(true)
+    if (index > 0 && counter) {
+      setShowPreviousBtn(true);
     }
-    if(index===0){
-      setShowPreviousBtn(false)
+    if (index === 0) {
+      setShowPreviousBtn(false);
     }
-  },[index])
-  
+  }, [index]);
 
   const handlePrevious = () => {
-    if (index >0 || index < 6) {
-       setIndex(index -1)
+    if (index > 0 || index < 6) {
+      setIndex(index - 1);
       setShowNxtBtn(true);
-      setShowPreviousBtn(true)
+      setShowPreviousBtn(true);
     }
-   
   };
-
 
   // const handleNext = () => {
   //   setIndex(++index);
@@ -227,12 +242,27 @@ export default function InteractiveReadingPracticeContainer({ data, show,handleC
   //   dispatch(SaveRCSResult(statData));
   // };
   const closeModalWindow = () => {
-    setbootCounter(false)
+    setbootCounter(false);
     setDeadline(null);
-    dispatch(cleanUserReadingInput())
-    dispatch(cleanUserReadingResult())
-    handleCloseModal();
+    dispatch(cleanUserReadingInput());
+    dispatch(cleanUserReadingResult());
+    // handleCloseModal();
+  };
 
+  const handleQNext = () => {
+    if (qIndex <= --dataLength) {
+      setQIndex(++qIndex);
+      navigate(`/practice/ri-r/${qIndex}`);
+      window.location.reload();
+    }
+  };
+  const handleQPrev = () => {
+    if (qIndex > 1) {
+      setQIndex(--qIndex);
+
+      navigate(`/practice/ri-r/${qIndex}`);
+      window.location.reload();
+    }
   };
   return (
     <div>
@@ -240,14 +270,30 @@ export default function InteractiveReadingPracticeContainer({ data, show,handleC
         <Skeleton></Skeleton>
       ) : (
         <div className="h-auto w-full flex justify-between flex-col bg-transparent">
-         <div
-              onClick={closeModalWindow}
-              className="absolute right-0 mr-3 md:mt-[-1rem] cursor-pointer py-2 px-1"
-            >
-             <span><IconCross height='1rem' width='1rem'></IconCross></span>
-            </div>
-          
-            <div className="md:flex md:flex-row sm:flex sm:flex-col justify-between m-auto w-full mt-5">
+          <div
+            onClick={closeModalWindow}
+            className="absolute right-0 mr-3 md:mt-[-1rem] cursor-pointer py-2 px-1"
+          >
+            <span>
+              <IconCross height="1rem" width="1rem"></IconCross>
+            </span>
+          </div>
+
+          <div className="bg-[#fffffff7] px-4 py-5">
+            <div className="md:flex md:flex-row sm:flex sm:flex-col justify-between m-auto w-full mt-5 ">
+              <div
+                title="Back to List"
+                className="mt-[6px] md:pr-4 sm:pr-2 cursor-pointer"
+                onClick={() => navigate(`/duolingo/module/reading`)}
+              >
+                {" "}
+                <span>
+                  <IconsArrowLeft
+                    height="1.3rem"
+                    width="1.3rem"
+                  ></IconsArrowLeft>
+                </span>
+              </div>
               <div className="flex m-auto w-full md:mt-0 sm:mt-5">
                 <div className="self-start">
                   <div className="flex justify-start md:gap-4 sm:gap-2 sm:text-[13px] font-[400] sm:ml-3 md:ml-0">
@@ -289,7 +335,7 @@ export default function InteractiveReadingPracticeContainer({ data, show,handleC
                 rounded-md md:relative sm:fixed sm:right-0 sm:mt-[15%] md:mt-0"
               >
                 <Countdown
-                       onChange={(e) => (e <= 60000 ? setTimeDanger(true) : "")}
+                  onChange={(e) => (e <= 60000 ? setTimeDanger(true) : "")}
                   valueStyle={timeDanger ? { color: "red" } : { color: "blue" }}
                   onFinish={openNotification}
                   value={deadline}
@@ -298,54 +344,77 @@ export default function InteractiveReadingPracticeContainer({ data, show,handleC
               </div>
             </div>
 
-
-          <div className="">{list[index]}</div>
-
-          <div className=" w-full flex sm:mt-5 md:mt-2">
-            <div className="flex md:justify-end sm:justify-start sm:ml-2 md:ml-0   w-full">
-              <h1 className="border-[2px] h-min  text-[20px] font-[600] border-[#3AB7BF] px-1 py-1 rounded-md">
-                {data[0].index}
-              </h1>
-            </div>
-            <div className="flex md:gap-10 sm:gap-2 md:justify-end sm:justify-center w-full">
-              <div className="mt-2 font-poppins md:text-[18px] sm:text-[14px] font-[500] sm:mr-[5rem] md:mr-0">{`Question ${
-                1 + index
-              } of 6`}</div>
-              <div className="">
-                {showPreviousBtn ? (
-                  <button
-                    className="px-2 py-2 bg-home rounded-md font-[500]"
-                    onClick={handlePrevious}
-                  >
-                    previous
-                  </button>
-                ) : (
-                  ""
-                )}
+            <div>{list[index]}</div>
+            <div className=" w-full flex sm:mt-5 md:mt-2">
+              <div className="flex md:justify-end sm:justify-start sm:ml-2 md:ml-0   w-full">
+                <div className="mr-3">
+                  <div className="flex gap-2 justify-center m-auto w-min">
+                    <span
+                      onClick={handleQPrev}
+                      className="m-auto w-min cursor-pointer"
+                    >
+                      {" "}
+                      <IconsArrowLeft
+                        width="1rem"
+                        height="1rem"
+                      ></IconsArrowLeft>
+                    </span>
+                    <h1 className="border-[2px] text-[20px] font-[600] border-[#3AB7BF] px-2 py-2 rounded-md">
+                      {qIndex}
+                    </h1>
+                    <span
+                      onClick={handleQNext}
+                      className="m-auto w-min cursor-pointer"
+                    >
+                      {" "}
+                      <IconsArrowRight
+                        width="1rem"
+                        height="1rem"
+                      ></IconsArrowRight>
+                    </span>
+                  </div>
+                </div>
               </div>
-              <div>
-                {showEvaluateBtn ? (
-                  <button
-                    className="px-5 py-2 bg-home rounded-md font-[500]"
-                    onClick={handleEvaluate}
-                  >
-                    Evaluate
-                  </button>
-                ) : (
-                  ""
-                )}
-              </div>
-              <div>
-                {showNextbtn ? (
-                  <button
-                    className="px-2 py-2 bg-home rounded-md font-[500]"
-                    onClick={handleNext}
-                  >
-                    Next
-                  </button>
-                ) : (
-                  ""
-                )}
+              <div className="flex md:gap-10 sm:gap-2 md:justify-end sm:justify-center w-full">
+                <div className="mt-2 font-poppins md:text-[18px] sm:text-[14px] font-[500] sm:mr-[5rem] md:mr-0">{`Question ${
+                  1 + index
+                } of 6`}</div>
+                <div className="">
+                  {showPreviousBtn ? (
+                    <button
+                      className="px-2 py-2 bg-home rounded-md font-[500]"
+                      onClick={handlePrevious}
+                    >
+                      previous
+                    </button>
+                  ) : (
+                    ""
+                  )}
+                </div>
+                <div>
+                  {showEvaluateBtn ? (
+                    <button
+                      className="px-5 py-2 bg-home rounded-md font-[500]"
+                      onClick={handleEvaluate}
+                    >
+                      Evaluate
+                    </button>
+                  ) : (
+                    ""
+                  )}
+                </div>
+                <div>
+                  {showNextbtn ? (
+                    <button
+                      className="px-2 py-2 bg-home rounded-md font-[500]"
+                      onClick={handleNext}
+                    >
+                      Next
+                    </button>
+                  ) : (
+                    ""
+                  )}
+                </div>
               </div>
             </div>
           </div>

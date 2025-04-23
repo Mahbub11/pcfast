@@ -119,7 +119,7 @@ export default function PracticePageRHA2({ data,meaning=true  }) {
       {false ? (
         <Skeleton active></Skeleton>
       ) : (
-        <div className="h-auto w-[99%] m-auto bg-[#fffffff7] md:px-5 md:py-5">
+        <div className="h-auto w-[99%] m-auto  md:px-5 md:py-5">
           {contextHolder}
           <div className="flex flex-col gap-5 sm:px-2">
             {/* <h1 className="text-[22px] font-montserrat font-[500] underline self-center">

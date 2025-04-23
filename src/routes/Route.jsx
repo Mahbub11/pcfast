@@ -365,93 +365,70 @@ export default function Router() {
         },
         {
           path: "rc-r/:rid",
+          element: [<PracticePageRC></PracticePageRC>],
+        },
+        {
+          path: "rf-r/:rid",
+          element: [<PracticePageRF></PracticePageRF>],
+        },
+        {
+          path: "ri-r/:rid",
           element: [
-            <PracticePageRC></PracticePageRC>,
-            <SectionAddition></SectionAddition>,
+            <InteractiveReadingPracticeContainer></InteractiveReadingPracticeContainer>,
           ],
         },
         {
           path: "rcs-r/:rid",
-          element: [
-            <PracticePageRCS></PracticePageRCS>,
-            <SectionAddition></SectionAddition>,
-          ],
+          element: [<PracticePageRCS></PracticePageRCS>],
         },
         {
           path: "rcp-r/:rid",
-          element: [
-            <PracticePageRCP></PracticePageRCP>,
-            <SectionAddition></SectionAddition>,
-          ],
+          element: [<PracticePageRCP></PracticePageRCP>],
         },
         {
           path: "rci-r/:rid",
-          element: [
-            <PracticePageRCI></PracticePageRCI>,
-            <SectionAddition></SectionAddition>,
-          ],
+          element: [<PracticePageRCI></PracticePageRCI>],
         },
         {
           path: "rha-r/:rid",
-          element: [
-            <PracticePageRHA></PracticePageRHA>,
-            <SectionAddition></SectionAddition>,
-          ],
+          element: [<PracticePageRHA></PracticePageRHA>],
         },
         {
           path: "rgpt-r/:rid",
-          element: [
-            <PracticePageRGP></PracticePageRGP>,
-            <SectionAddition></SectionAddition>,
-          ],
+          element: [<PracticePageRGP></PracticePageRGP>],
         },
         {
           path: "sal-s/:rid",
-          element: [
-            <PracticePageSAL></PracticePageSAL>,
-            <SectionAddition></SectionAddition>,
-          ],
+          element: [<PracticePageSAL></PracticePageSAL>],
         },
         {
           path: "sap-s/:rid",
-          element: [
-            <PracticePageSAP></PracticePageSAP>,
-            <SectionAddition></SectionAddition>,
-          ],
+          element: [<PracticePageSAP></PracticePageSAP>],
         },
         {
           path: "srs-s/:rid",
-          element: [
-            <PracticePageSRS></PracticePageSRS>,
-            <SectionAddition></SectionAddition>,
-          ],
+          element: [<PracticePageSRS></PracticePageSRS>],
         },
         {
           path: "sls-s/:rid",
-          element: [
-            <PracticePageSLS></PracticePageSLS>,
-            <SectionAddition></SectionAddition>,
-          ],
+          element: [<PracticePageSLS></PracticePageSLS>],
         },
         {
           path: "ss-s/:rid",
-          element: [
-            <PracticePageSS></PracticePageSS>,
-            // <SectionAddition></SectionAddition>,
-          ],
+          element: [<PracticePageSS></PracticePageSS>],
         },
         {
           path: "llt-l/:rid",
           element: [
             <PracticePageLLT></PracticePageLLT>,
-            <SectionAddition></SectionAddition>,
+           
           ],
         },
         {
           path: "llr-l/:rid",
           element: [
             <PracticePageLLR></PracticePageLLR>,
-            <SectionAddition></SectionAddition>,
+           
           ],
         },
 
@@ -459,7 +436,7 @@ export default function Router() {
           path: "vrs-v/:rid",
           element: [
             <PracticePageVRS></PracticePageVRS>,
-            <SectionAddition></SectionAddition>,
+           
           ],
         },
         { path: "404", element: <Page404></Page404> },
@@ -674,6 +651,14 @@ const SectionAddition = Loadable(
 );
 const PracticePageRC = Loadable(
   lazy(() => import("../Pages/PracticeReading/PracticePageRC"))
+);
+const PracticePageRF = Loadable(
+  lazy(() => import("../Pages/PracticeReading/PracticePageRF"))
+);
+const InteractiveReadingPracticeContainer = Loadable(
+  lazy(() =>
+    import("../Pages/ModuleReading/InteractiveReadingPracticeContainer")
+  )
 );
 const PracticePageRCS = Loadable(
   lazy(() => import("../Pages/PracticeReading/PracticePageRCS"))

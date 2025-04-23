@@ -4,105 +4,96 @@ import ListData from "../../Components/Module/writing/ListData";
 import { useDispatch, useSelector } from "react-redux";
 import InteractiveReadingPracticeContainer from "./InteractiveReadingPracticeContainer";
 import { cleanUserReadingInput } from "../../redux/slices/readingInput";
+import { useNavigate } from "react-router-dom";
 const { Search } = Input;
 
 export default function ContainerPageInteractiveReading() {
   const dispatch = useDispatch();
   const { listInteractive } = useSelector((state) => state.getReadingList);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 720);
-  const [data,setData]= useState()
+  const [data, setData] = useState();
   const [index, setIndex] = useState();
-  const [show,isShow]= useState(false)
-  const [counter,setCounter] = useState(true)
+  const [show, isShow] = useState(false);
+  const [counter, setCounter] = useState(true);
   const [tableData, setTableData] = useState(listInteractive);
   const [filterData, setFilterData] = useState(listInteractive);
   const [level, setLevel] = useState(false);
   const [fpracUnprac, setFpracUnprac] = useState(false);
   const [markedFilter, setMarkedFilter] = useState(false);
+  const navigate = useNavigate();
 
   const config = isMobile
     ? { maxWidth: "98vw", padding: 0 }
     : { maxWidth: "80vw" };
 
   const handleQ = (id) => {
-    setIndex(id);
-    const tempdata = listInteractive.filter((val) => id === val.index);
-    setData(tempdata)
-    isShow(true)
+    navigate(`/practice/ri-r/${id}`);
+    // setIndex(id);
+    // const tempdata = listInteractive.filter((val) => id === val.index);
+    // setData(tempdata);
+    // isShow(true);
   };
 
-  useEffect(()=>{
-     dispatch(cleanUserReadingInput())
-  },[show,counter])
+  useEffect(() => {
+    dispatch(cleanUserReadingInput());
+  }, [show, counter]);
 
-  const handleCloseModal=()=>{
-    dispatch(cleanUserReadingInput())
+  const handleCloseModal = () => {
+    dispatch(cleanUserReadingInput());
     isShow(false);
-    setCounter(!counter)
-  }
-  useEffect(()=>{
-   
+    setCounter(!counter);
+  };
+  useEffect(() => {
     if (level) {
-       console.log('dd')
-  const filteredVals = tableData.filter((entry) =>
-    entry.level.toString().includes(level)  
-    
-  );
-  setFilterData(filteredVals);
-}else if (fpracUnprac){
-  const filteredVals = tableData.filter((entry) =>
- (entry.practice >0)
-  
-);
-setFilterData(filteredVals);
-}else if (markedFilter){
-  const filteredVals = tableData.filter((entry) =>
-  (entry.bookmark === true)
-);
-setFilterData(filteredVals);
-}
+      console.log("dd");
+      const filteredVals = tableData.filter((entry) =>
+        entry.level.toString().includes(level)
+      );
+      setFilterData(filteredVals);
+    } else if (fpracUnprac) {
+      const filteredVals = tableData.filter((entry) => entry.practice > 0);
+      setFilterData(filteredVals);
+    } else if (markedFilter) {
+      const filteredVals = tableData.filter((entry) => entry.bookmark === true);
+      setFilterData(filteredVals);
+    } else {
+      setFilterData(tableData);
+    }
+  }, [level, fpracUnprac, markedFilter, tableData]);
 
-else {
-  setFilterData(tableData);
-}
+  const handleLevel = (e) => {
+    setLevel(e);
+    setFpracUnprac(false);
+    setMarkedFilter(false);
+  };
+  const handlePracticeFilter = (e) => {
+    setLevel(false);
+    setFpracUnprac(e);
+    setMarkedFilter(false);
+  };
 
-},[level,fpracUnprac,markedFilter,tableData])
+  const handleMarked = (e) => {
+    setLevel(false);
+    setFpracUnprac(false);
+    setMarkedFilter(e);
+  };
+  const handleSearch = (e) => {
+    if (e.target.value.length === 0) {
+      setFilterData(tableData);
+    } else {
+      const newData = tableData.filter(
+        (val) => val.index === parseInt(e.target.value)
+      );
 
-const handleLevel=(e)=>{
-setLevel(e)
-setFpracUnprac(false)
-setMarkedFilter(false)
-
-}
-const handlePracticeFilter=(e)=>{
-setLevel(false)
-setFpracUnprac(e)
-setMarkedFilter(false)
-
-}
-
-const handleMarked=(e)=>{
-setLevel(false)
-setFpracUnprac(false)
-setMarkedFilter(e)
-}
-const handleSearch = (e) => {
-  if (e.target.value.length === 0) {
-    setFilterData(tableData);
-  } else {
-    const newData = tableData.filter(
-      (val) => val.index === parseInt(e.target.value)
-    );
-
-    setFilterData(newData);
-  }
-};
+      setFilterData(newData);
+    }
+  };
 
   return (
     <div>
       <div>
         <div className="flex justify-between">
-        <div className="flex justify-between gap-2 flex-wrap">
+          <div className="flex justify-between gap-2 flex-wrap">
             <Select
               onChange={(e) => handleLevel(e)}
               defaultValue="All Level"
@@ -112,11 +103,10 @@ const handleSearch = (e) => {
                 { value: "1", label: "Easy" },
                 { value: "2", label: "Medium" },
                 { value: "3", label: "Hard" },
-                
               ]}
             />
             <Select
-            onChange={(e) => handlePracticeFilter(e)}
+              onChange={(e) => handlePracticeFilter(e)}
               defaultValue="Unpracticed"
               style={{ width: 120 }}
               options={[
@@ -125,8 +115,8 @@ const handleSearch = (e) => {
               ]}
             />
             <Select
-            title="Bookmark"
-            onChange={(e) => handleMarked(e)}
+              title="Bookmark"
+              onChange={(e) => handleMarked(e)}
               defaultValue="All"
               style={{ width: 120 }}
               options={[
@@ -145,14 +135,14 @@ const handleSearch = (e) => {
 
         <div className=" h-[20rem] w-full mt-10">
           <ListData
-             handleQ={handleQ}
-             list={filterData.length ===0 ? listInteractive :filterData}
+            handleQ={handleQ}
+            list={filterData.length === 0 ? listInteractive : filterData}
             title="Interactive Reading"
             type="rcs-r"
           ></ListData>
         </div>
       </div>
-      <div className="flex justify-center m-auto">
+      {/* <div className="flex justify-center m-auto">
         <Modal
           style={config}
           footer={null}
@@ -161,12 +151,16 @@ const handleSearch = (e) => {
           width="md:w-[100%] sm:w-full"
           open={show}
           className=" top-[1rem] m-auto z-10"
-         >
+        >
           <div>
-            <InteractiveReadingPracticeContainer handleCloseModal={handleCloseModal} show={counter} data={data}></InteractiveReadingPracticeContainer>
+            <InteractiveReadingPracticeContainer
+              handleCloseModal={handleCloseModal}
+              show={counter}
+              data={data}
+            ></InteractiveReadingPracticeContainer>
           </div>
         </Modal>
-      </div>
+      </div> */}
     </div>
   );
 }

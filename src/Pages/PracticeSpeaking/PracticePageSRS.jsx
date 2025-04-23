@@ -7,7 +7,7 @@ import "../../Components/Reading/RadioBtn.css";
 import { IconMicrophone } from "../../Assets/SVG/IconMicrophone";
 import { IconMicOffCircle } from "../../Assets/SVG/IconMicOff";
 import { ReactMic } from "react-mic";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { clearStatDataError, saveStatData } from "../../redux/slices/statistic";
 import { getWordDetails } from "../../redux/slices/disctionary";
 import IconsArrowLeft from "../../Assets/SVG/IconsArrowLeft";
@@ -37,8 +37,8 @@ export default function PracticePageSRS({ id, handleCloseModal }) {
   const [audioData, setAudioData] = useState();
   const [timeDanger, setTimeDanger] = useState(false);
   const [busy, isBusy] = useState(true);
-  let [index, setIndex] = useState(id);
   const { rid } = useParams();
+  let [index, setIndex] = useState(rid);
   const { listSRS } = useSelector((state) => state.getSpeakingList);
   let [data, setData] = useState({});
   let [openPanels, setOpenPanels] = useState([]);
@@ -60,6 +60,7 @@ export default function PracticePageSRS({ id, handleCloseModal }) {
   const [recordingState, setRecordingState] = useState(true);
   const shouldSendToWhisperRef = useRef(false);
   const [audioText, setAudioText] = useState();
+  const navigate = useNavigate();
   const [isRecording, setIsRecording] = useState(false);
 
   useEffect(() => {
@@ -70,9 +71,9 @@ export default function PracticePageSRS({ id, handleCloseModal }) {
     }
   }, [bootCounter]);
 
-  useEffect(() => {
-    setIndex(id);
-  }, [id]);
+  // useEffect(() => {
+  //   setIndex(id);
+  // }, [id]);
 
   useEffect(() => {
     setenableEvaluationBtn(false);
@@ -85,7 +86,7 @@ export default function PracticePageSRS({ id, handleCloseModal }) {
       setDeadline(data[0]?.time * 60000);
       setFeedbackState(true);
     } else {
-      const data = listSRS.filter((val) => parseInt(rid) === val.id);
+      const data = listSRS.filter((val) => parseInt(rid) === val.index);
       setData(data[0]);
       setShowThinkTime(true);
       setBcolor(data[0].bookmark);
@@ -115,38 +116,45 @@ export default function PracticePageSRS({ id, handleCloseModal }) {
 
   const handleNext = () => {
     if (index <= --dataLength) {
-      setIsWorking(false);
-      setIsRecording(false);
-      stopRecording(false); // Explicitly stop recording without sending to Whisper
-      setRecordingState(true);
       dispatch(clearGPTAssesmentResult());
-      setShowThinkTime(true);
-      setThinkTime(Date.now() + 0.333333 * 60000);
-      setenableEvaluationBtn(false);
-      setxmTime(undefined);
-
-      setShowEvaluate(false);
       setIndex(++index);
-      setFeedbackState(true);
-      clearTimeout();
+      navigate(`/practice/srs-s/${index}`);
+      isBusy(true)
+
+      // setIsWorking(false);
+      // setIsRecording(false);
+      // stopRecording(false); // Explicitly stop recording without sending to Whisper
+      // setRecordingState(true);
+      // setShowThinkTime(true);
+      // setThinkTime(Date.now() + 0.333333 * 60000);
+      // setenableEvaluationBtn(false);
+      // setxmTime(undefined);
+      // setShowEvaluate(false);
+      // setFeedbackState(true);
+      // clearTimeout();
     }
   };
   const handlePrev = () => {
     if (index > 1) {
-      setIsWorking(false);
-      setIsRecording(false);
-      stopRecording(false); // Explicitly stop recording without sending to Whisper
-      setRecordingState(true);
-      dispatch(clearGPTAssesmentResult());
-      setShowThinkTime(true);
-      setThinkTime(Date.now() + 0.333333 * 60000);
-      setenableEvaluationBtn(false);
-      setxmTime(undefined);
-
-      setShowEvaluate(false);
       setIndex(--index);
-      setFeedbackState(true);
-      clearTimeout();
+      dispatch(clearGPTAssesmentResult());
+      navigate(`/practice/srs-s/${index}`);
+      isBusy(true)
+
+      // setIsWorking(false);
+      // setIsRecording(false);
+      // stopRecording(false); // Explicitly stop recording without sending to Whisper
+      // setRecordingState(true);
+
+      // setShowThinkTime(true);
+      // setThinkTime(Date.now() + 0.333333 * 60000);
+      // setenableEvaluationBtn(false);
+      // setxmTime(undefined);
+
+      // setShowEvaluate(false);
+
+      // setFeedbackState(true);
+      // clearTimeout();
     }
   };
 
@@ -323,6 +331,19 @@ export default function PracticePageSRS({ id, handleCloseModal }) {
             </h1> */}
 
             <div className="md:flex md:flex-row sm:flex sm:flex-col justify-between m-auto w-full mt-5">
+              <div
+                title="Back to List"
+                className="mt-[6px] md:pr-4 sm:pr-2 cursor-pointer"
+                onClick={() => navigate(`/duolingo/module/speaking`)}
+               >
+                {" "}
+                <span>
+                  <IconsArrowLeft
+                    height="1.3rem"
+                    width="1.3rem"
+                  ></IconsArrowLeft>
+                </span>
+              </div>
               <div className="flex m-auto w-full md:mt-0 sm:mt-5">
                 <div className="self-start">
                   <div className="flex justify-start md:gap-4 sm:gap-2 sm:text-[13px] font-[400] sm:ml-3 md:ml-0">

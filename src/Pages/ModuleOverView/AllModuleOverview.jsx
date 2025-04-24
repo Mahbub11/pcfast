@@ -255,7 +255,7 @@ export default function AllModuleOverview() {
               <div className="w-full mt-5 ">
                 <img
                   className="md:w-[80%] sm:w-[95%] h-auto self-center"
-                  src={`${S3_BASE_URL}/duolingo/module/read and complete duolingo.png`}
+                  src={`${S3_BASE_URL}/read_and_complete_duolingo.png`}
                   alt="read and complete duolingo"
                 ></img>
 
@@ -296,7 +296,7 @@ export default function AllModuleOverview() {
               <div className="w-full mt-5 ">
                 <img
                   className="md:w-[80%] sm:w-[95%] h-auto self-center"
-                  src={`${S3_BASE_URL}/duolingo/module/read and select duolingo.png`}
+                  src={`${S3_BASE_URL}/read_and_select_duolingo.png`}
                   alt="read and select duolingo"
                 ></img>
 
@@ -356,7 +356,7 @@ export default function AllModuleOverview() {
               <div className="w-full mt-5 ">
                 <img
                   className="md:w-[80%] sm:w-[95%] h-auto self-center"
-                  src={`${S3_BASE_URL}/duolingo/module/complete the sentence duolingo.png`}
+                  src={`${S3_BASE_URL}/complete_the_sentence_duolingo.png`}
                   alt="complete the sentence duolingo"
                 ></img>
 
@@ -392,7 +392,7 @@ export default function AllModuleOverview() {
               <div className="w-full mt-5 ">
                 <img
                   className="md:w-[80%] sm:w-[95%] h-auto self-center"
-                  src={`${S3_BASE_URL}/duolingo/module/complete-the-passage-duolingo-english-test.png`}
+                  src={`${S3_BASE_URL}/complete-the-passage-duolingo-english-test.png`}
                   alt="complete-the-passage-duolingo-english-test"
                 ></img>
 
@@ -424,7 +424,7 @@ export default function AllModuleOverview() {
               <div className="w-full mt-5 ">
                 <img
                   className="md:w-[80%] sm:w-[95%] h-auto self-center"
-                  src={`${S3_BASE_URL}/duolingo/module/highlight-the-answer-duolingo-english-test.png`}
+                  src={`${S3_BASE_URL}/highlight-the-answer-duolingo-english-test.png`}
                   alt="highlight-the-answer-duolingo-english-test"
                 ></img>
 
@@ -455,7 +455,7 @@ export default function AllModuleOverview() {
               <div className="w-full mt-5 ">
                 <img
                   className="md:w-[80%] sm:w-[95%] h-auto self-center"
-                  src={`${S3_BASE_URL}/duolingo/module/identify-the-idea-duolingo-english-test.png`}
+                  src={`${S3_BASE_URL}/identify-the-idea-duolingo-english-test.png`}
                   alt="identify-the-idea-duolingo-english-test"
                 ></img>
 
@@ -487,7 +487,7 @@ export default function AllModuleOverview() {
               <div className="w-full mt-5 ">
                 <img
                   className="md:w-[80%] sm:w-[95%] h-auto self-center"
-                  src={`${S3_BASE_URL}/duolingo/module/title-the-passage-duolingo-english-test.png`}
+                  src={`${S3_BASE_URL}/title-the-passage-duolingo-english-test.png`}
                   alt="title-the-passage-duolingo-english-test"
                 ></img>
 
@@ -517,7 +517,7 @@ export default function AllModuleOverview() {
               <div className="w-full mt-5 ">
                 <img
                   className="md:w-[80%] sm:w-[95%] h-auto self-center"
-                  src={`${S3_BASE_URL}/duolingo/module/write about the photo duolingo.png`}
+                  src={`${S3_BASE_URL}/write_about_the_photo_duolingo.png`}
                   alt="write about the photo duolingo"
                 ></img>
 
@@ -553,7 +553,7 @@ export default function AllModuleOverview() {
               <div className="w-full mt-5 ">
                 <img
                   className="md:w-[80%] sm:w-[95%] h-auto self-center"
-                  src={`${S3_BASE_URL}/duolingo/module/read then write duolingo.png`}
+                  src={`${S3_BASE_URL}/read_then_write_duolingo.png`}
                   alt="read then write duolingo.png"
                 ></img>
 
@@ -608,7 +608,7 @@ export default function AllModuleOverview() {
               <div className="w-full mt-5 ">
                 <img
                   className="md:w-[80%] sm:w-[95%] h-auto self-center"
-                  src={`${S3_BASE_URL}/duolingo/module/read then write duolingo.png`}
+                  src={`${S3_BASE_URL}/read_then_write_duolingo.png`}
                   alt="read then write duolingo"
                 ></img>
 
@@ -671,7 +671,7 @@ export default function AllModuleOverview() {
               <div className="w-full mt-5 ">
                 <img
                   className="md:w-[80%] sm:w-[95%] h-auto self-center"
-                  src={`${S3_BASE_URL}/duolingo/module/speak about the photo duolingo.png`}
+                  src={`${S3_BASE_URL}/speak_about_the_photo_duolingo.png`}
                   alt="speak about the photo duolingo"
                 ></img>
 
@@ -710,7 +710,7 @@ export default function AllModuleOverview() {
               <div className="w-full mt-5 ">
                 <img
                   className="md:w-[80%] sm:w-[95%] h-auto self-center"
-                  src={`${S3_BASE_URL}/duolingo/module/read aloud duolingo.png`}
+                  src={`${S3_BASE_URL}/read_aloud_duolingo.png`}
                   alt="read aloud duolingo"
                 ></img>
               </div>
@@ -734,7 +734,7 @@ export default function AllModuleOverview() {
               <div className="w-full mt-5 ">
                 <img
                   className="md:w-[80%] sm:w-[95%] h-auto self-center"
-                  src={`${S3_BASE_URL}/duolingo/module/read-then-speak-duolingo-english-test.png`}
+                  src={`${S3_BASE_URL}/read-then-speak-duolingo-english-test.png`}
                   alt="read-then-speak-duolingo-english-test"
                 ></img>
 
@@ -786,7 +786,7 @@ export default function AllModuleOverview() {
               <div className="w-full mt-5 ">
                 <img
                   className="md:w-[80%] sm:w-[95%] h-auto self-center"
-                  src={`${S3_BASE_URL}/duolingo/module/listen then speak.png`}
+                  src={`${S3_BASE_URL}/listen_then_speak.png`}
                   alt="listen then speak"
                 ></img>
               </div>
@@ -872,7 +872,7 @@ export default function AllModuleOverview() {
               <div className="w-full mt-5 ">
                 <img
                   className="md:w-[80%] sm:w-[95%] h-auto self-center"
-                  src={`${S3_BASE_URL}/duolingo/module/listen and type duolingo.png`}
+                  src={`${S3_BASE_URL}/listen_and_type_duolingo.png`}
                   alt="listen and type duolingo"
                 ></img>
 
@@ -904,7 +904,7 @@ export default function AllModuleOverview() {
               <div className="w-full mt-5 ">
                 <img
                   className="md:w-[80%] sm:w-[95%] h-auto self-center border-[3px] rounded-xl border-yellow-200"
-                  src={`${S3_BASE_URL}/duolingo/module/interactive listening duolingo.png`}
+                  src={`${S3_BASE_URL}/interactive_listening_duolingo.png`}
                   alt="interactive listening duolingo"
                 ></img>
               </div>

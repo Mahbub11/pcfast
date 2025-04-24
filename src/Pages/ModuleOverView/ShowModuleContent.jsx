@@ -3,6 +3,8 @@ import { Helmet } from "react-helmet-async";
 import { LIVE_URL } from "../../config";
 
 export default function ShowModuleContent({ data }) {
+
+  console.log(data)
   return (
     <>
       <Helmet>

@@ -111,7 +111,7 @@ export default function RIguideline() {
                     <img
                     title="interactive reading duolingo"
                       className="md:w-[80%] sm:w-[95%] h-auto self-center"
-                      src={`${S3_BASE_URL}/duolingo/module/complete the sentence duolingo.png`}
+                      src={`${S3_BASE_URL}/complete_the_sentence_duolingo.png`}
                       alt="complete the sentence duolingo"
                     ></img>
                   </div>
@@ -142,7 +142,7 @@ export default function RIguideline() {
                     <img
                      title="interactive reading duolingo"
                       className="md:w-[80%] sm:w-[95%] h-auto self-center"
-                      src={`${S3_BASE_URL}/duolingo/module/complete-the-passage-duolingo-english-test.png`}
+                      src={`${S3_BASE_URL}/complete-the-passage-duolingo-english-test.png`}
                       alt="complete-the-passage-duolingo-english-test"
                     ></img>
                   </div>
@@ -173,7 +173,7 @@ export default function RIguideline() {
                     <img
                      title="interactive reading duolingo"
                       className="md:w-[80%] sm:w-[95%] h-auto self-center"
-                      src={`${S3_BASE_URL}/duolingo/module/highlight-the-answer-duolingo-english-test.png`}
+                      src={`${S3_BASE_URL}/highlight-the-answer-duolingo-english-test.png`}
                       alt="highlight-the-answer-duolingo-english-test"
                     ></img>
                   </div>
@@ -204,7 +204,7 @@ export default function RIguideline() {
                     <img
                      title="interactive reading duolingo"
                       className="md:w-[80%] sm:w-[95%] h-auto self-center"
-                      src={`${S3_BASE_URL}/duolingo/module/identify-the-idea-duolingo-english-test.png`}
+                      src={`${S3_BASE_URL}/identify-the-idea-duolingo-english-test.png`}
                       alt="identify-the-idea-duolingo-english-test"
                     ></img>
                   </div>
@@ -233,12 +233,12 @@ export default function RIguideline() {
                     <img
                      title="interactive reading duolingo"
                       className="md:w-[80%] sm:w-[95%] h-auto self-center"
-                      src={`${S3_BASE_URL}/duolingo/module/title-the-passage-duolingo-english-test.png`}
+                      src={`${S3_BASE_URL}/title-the-passage-duolingo-english-test.png`}
                       alt="title-the-passage-duolingo-english-test"
                     ></img>
                   </div>
                   <div className="mt-5">
-                    <h2 className="font-[600] font-[700] text-[30px]">
+                    <h2 className="font-[600]  text-[30px]">
                       Tips & Tricks for Title the Passage
                     </h2>
                     <ul className="ml-10 list-disc space-y-1  mt-5">
@@ -265,7 +265,7 @@ export default function RIguideline() {
                     <img
                      title="interactive reading duolingo"
                       className="md:w-[80%] sm:w-[95%] mt-5 h-auto self-center border-[2px] border-header rounded-xl"
-                      src={`${S3_BASE_URL}/duolingo/module/complete the sentence.png`}
+                      src={`${S3_BASE_URL}/complete_the_sentence.png`}
                       alt="complete the sentence.png"
                     ></img>
                     <h2 className="mt-5 font-[600] text-[22px]">
@@ -274,7 +274,7 @@ export default function RIguideline() {
                     <img
                      title="interactive reading duolingo"
                       className="md:w-[80%] sm:w-[95%] mt-5 h-auto self-center border-[2px] border-header rounded-xl"
-                      src={`${S3_BASE_URL}/duolingo/module/complete the sentence evaluation.png`}
+                      src={`${S3_BASE_URL}/complete_the_sentence_evaluation.png`}
                       alt="complete the sentence evaluation"
                     ></img>
                   </div>
@@ -286,7 +286,7 @@ export default function RIguideline() {
                     <img
                      title="interactive reading duolingo"
                       className="md:w-[80%] sm:w-[95%] mt-5 h-auto self-center border-[2px] border-header rounded-xl"
-                      src={`${S3_BASE_URL}/duolingo/module/complete the passage.png`}
+                      src={`${S3_BASE_URL}/complete_the_passage.png`}
                       alt="complete the passage"
                     ></img>
                     <h2 className="mt-5 font-[600] text-[22px]">
@@ -295,7 +295,7 @@ export default function RIguideline() {
                     <img
                      title="interactive reading duolingo"
                       className="md:w-[80%] mt-5 sm:w-[95%] h-auto self-center border-[2px] border-header rounded-xl"
-                      src={`${S3_BASE_URL}/duolingo/module/complete the passage evaluation.png`}
+                      src={`${S3_BASE_URL}/complete_the_passage_evaluation.png`}
                       alt="complete the passage evaluation"
                     ></img>
                   </div>
@@ -307,7 +307,7 @@ export default function RIguideline() {
                     <img
                      title="interactive reading duolingo"
                       className="md:w-[80%] sm:w-[95%] mt-5 h-auto self-center border-[2px] border-header rounded-xl"
-                      src={`${S3_BASE_URL}/duolingo/module/Highlight the Answer.png`}
+                      src={`${S3_BASE_URL}/Highlight_the_Answer.png`}
                       alt="Highlight the Answer"
                     ></img>
                     <h2 className="mt-5 font-[600] text-[22px]">
@@ -316,7 +316,7 @@ export default function RIguideline() {
                     <img
                      title="interactive reading duolingo"
                       className="md:w-[80%] sm:w-[95%] mt-5 h-auto self-center border-[2px] border-header rounded-xl"
-                      src={`${S3_BASE_URL}/duolingo/module/Highlight the Answer evaluation.png`}
+                      src={`${S3_BASE_URL}/Highlight_the_Answer_evaluation.png`}
                       alt="Highlight the Answer evaluation"
                     ></img>
                   </div>
@@ -328,7 +328,7 @@ export default function RIguideline() {
                     <img
                      title="interactive reading duolingo"
                       className="md:w-[80%] sm:w-[95%] mt-5 h-auto self-center border-[2px] border-header rounded-xl"
-                      src={`${S3_BASE_URL}/duolingo/module/identify the idea.png`}
+                      src={`${S3_BASE_URL}/identify_the_idea.png`}
                       alt="identify the idea"
                     ></img>
                     <h2 className="mt-5 font-[600] text-[22px]">
@@ -337,7 +337,7 @@ export default function RIguideline() {
                     <img
                      title="interactive reading duolingo"
                       className="md:w-[80%] sm:w-[95%] mt-5 h-auto self-center border-[2px] border-header rounded-xl"
-                      src={`${S3_BASE_URL}/duolingo/module/identify the idea evaluation.png`}
+                      src={`${S3_BASE_URL}/dentify_the_idea_evaluation.png`}
                       alt="identify the idea evaluation"
                     ></img>
                   </div>
@@ -358,7 +358,7 @@ export default function RIguideline() {
                     <img
                      title="interactive reading duolingo"
                       className="md:w-[80%] sm:w-[95%] mt-5 h-auto self-center border-[2px] border-header rounded-xl"
-                      src={`${S3_BASE_URL}/duolingo/module/give passage title evaluation.png`}
+                      src={`${S3_BASE_URL}/give_passage_title_evaluation.png`}
                       alt="give passage title evaluation.png"
                     ></img>
                   </div>

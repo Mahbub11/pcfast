@@ -106,7 +106,7 @@ export default function WPguideline() {
                     <img
                     title="write about the photo duolingo"
                       className="md:w-[80%] sm:w-[95%] h-auto self-center"
-                      src={`${S3_BASE_URL}/duolingo/module/write about the photo duolingo.png`}
+                      src={`${S3_BASE_URL}/duolingo/module/write_about_the_photo_duolingo.png`}
                       alt="write about the photo duolingo"
                     ></img>
                   </div>
@@ -145,14 +145,14 @@ export default function WPguideline() {
                       <img
                         title="write about the photo duolingo"
                         className="md:w-[80%] sm:w-[95%] h-auto self-center border-[2px] border-header rounded-xl"
-                        src={`${S3_BASE_URL}/duolingo/module/Write about the Photo.png`}
+                        src={`${S3_BASE_URL}/Write_about_the_Photo.png`}
                         alt="Write about the Photo"
                       ></img>
                       <h2 className="mt-7 font-[600]">Evaluation Page</h2>
                       <img
                         title="write about the photo duolingo"
                         className="md:w-[80%] sm:w-[95%] mt-5 h-auto self-center border-[2px] border-header rounded-xl "
-                        src={`${S3_BASE_URL}/duolingo/module/Write about the Photo Evaluation.png`}
+                        src={`${S3_BASE_URL}/Write_about_the_Photo_Evaluation.png`}
                         alt="Write about the Photo Evaluation"
                       ></img>
                     </div>

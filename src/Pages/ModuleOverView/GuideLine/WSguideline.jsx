@@ -97,7 +97,7 @@ export default function WSguideline() {
                   <div className="mt-5">
                     <img
                       className="md:w-[80%] sm:w-[95%] h-auto self-center"
-                      src={`${S3_BASE_URL}/duolingo/module/read then write duolingo.png`}
+                      src={`${S3_BASE_URL}/read_then_write_duolingo.png`}
                       alt="read then write duolingo"
                     ></img>
                   </div>
@@ -133,13 +133,13 @@ export default function WSguideline() {
                     <div className="mt-5">
                       <img
                         className="md:w-[80%] sm:w-[95%] h-auto self-center border-[2px] border-header rounded-xl"
-                        src={`${S3_BASE_URL}/duolingo/module/Writing Sample.png`}
+                        src={`${S3_BASE_URL}/Writing_Sample.png`}
                         alt="Writing Sample"
                       ></img>
                       <h2 className="mt-5 font-[600]">Evaluation Page</h2>
                       <img
                         className="md:w-[80%] sm:w-[95%] h-auto self-center border-[2px] border-header rounded-xl mt-2"
-                        src={`${S3_BASE_URL}/duolingo/module/Writing Sample Evaluation.png`}
+                        src={`${S3_BASE_URL}/Writing_Sample_Evaluation.png`}
                         alt="Writing Sample Evaluation"
                       ></img>
                     </div>

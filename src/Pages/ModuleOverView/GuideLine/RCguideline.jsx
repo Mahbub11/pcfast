@@ -97,7 +97,7 @@ export default function RCguideline() {
                   <div className="mt-5">
                     <img
                       className="md:w-[80%] sm:w-[95%] h-auto self-center"
-                      src={`${S3_BASE_URL}/duolingo/module/read and complete duolingo.png`}
+                      src={`${S3_BASE_URL}/read_and_complete_duolingo.png`}
                       alt="read and complete duolingo"
                     ></img>
                   </div>
@@ -137,7 +137,7 @@ export default function RCguideline() {
                     <div className="mt-5">
                       <img
                         className="md:w-[80%] sm:w-[95%] h-auto self-center border-[2px] border-header rounded-xl"
-                        src={`${S3_BASE_URL}/duolingo/module/Read and Complete.png`}
+                        src={`${S3_BASE_URL}/Read_and_Complete.png`}
                         alt="Read and Complete"
                       ></img>
                       <h2 className="mt-5 font-[600] text-[22px]">
@@ -146,7 +146,7 @@ export default function RCguideline() {
                       </h2>
                       <img
                         className="md:w-[80%] sm:w-[95%] mt-5 h-auto self-center border-[2px] border-header rounded-xl "
-                        src={`${S3_BASE_URL}/duolingo/module/Read and Complete Evaluation.png`}
+                        src={`${S3_BASE_URL}/Read_and_Complete_Evaluation.png`}
                         alt="Read and Complete Evaluation"
                       ></img>
                     </div>

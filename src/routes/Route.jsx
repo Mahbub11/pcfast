@@ -56,10 +56,10 @@ export default function Router() {
           element: <PasswordResetConfirm></PasswordResetConfirm>,
         },
         //ssl test
-        {
-          path: "pay",
-          element: <PaySSL></PaySSL>,
-        },
+        // {
+        //   path: "pay",
+        //   element: <PaySSL></PaySSL>,
+        // },
 
         { path: "404", element: <Page404></Page404> },
         { path: "*", element: <Navigate to="/404" replace /> },

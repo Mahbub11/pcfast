@@ -97,7 +97,7 @@ export default function LTguideline() {
                     <img
                     title="Listen Then Type Duolingo"
                       className="md:w-[80%] sm:w-[95%] h-auto self-center"
-                      src={`${S3_BASE_URL}/duolingo/module/listen and type duolingo.png`}
+                      src={`${S3_BASE_URL}/listen_and_type_duolingo.png`}
                       alt="listen and type duolingo"
                     ></img>
                   </div>
@@ -130,14 +130,14 @@ export default function LTguideline() {
                       <img
                          title="Listen Then Type Duolingo"
                         className="md:w-[80%] sm:w-[95%] h-auto self-center border-[2px] border-header rounded-xl"
-                        src={`${S3_BASE_URL}/duolingo/module/Listen and type.png`}
+                        src={`${S3_BASE_URL}/Listen_and_type.png`}
                         alt="Listen and type"
                       ></img>
                       <h2 className="mt-5 font-[600]">Evaluation Page</h2>
                       <img
                          title="Listen Then Type Duolingo"
                         className="md:w-[80%] mt-2 sm:w-[95%] h-auto self-center border-[2px] border-header rounded-xl "
-                        src={`${S3_BASE_URL}/duolingo/module/Listen and type evaluation.png`}
+                        src={`${S3_BASE_URL}/Listen_and_type_evaluation.png`}
                         alt="Listen and type evaluation"
                       ></img>
                     </div>

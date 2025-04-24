@@ -96,7 +96,7 @@ export default function LIguideline() {
                     <img
                     title="Interactive Listening"
                       className="md:w-[80%] sm:w-[95%] h-auto self-center"
-                      src={`${S3_BASE_URL}/duolingo/module/interactive listening duolingo.png`}
+                      src={`${S3_BASE_URL}/interactive_listening_duolingo.png`}
                       alt="interactive listening duolingo"
                     ></img>
                   </div>
@@ -142,7 +142,7 @@ export default function LIguideline() {
                       <img
                        title="Interactive Listening"
                         className="md:w-[80%] sm:w-[95%] h-auto self-center border-[2px] border-header rounded-xl"
-                        src={`${S3_BASE_URL}/duolingo/module/listen and respond senario.png`}
+                        src={`${S3_BASE_URL}/listen_and_respond_senario.png`}
                         alt="	
                       listen and respond senario"
                       ></img>
@@ -150,14 +150,14 @@ export default function LIguideline() {
                       <img
                        title="Interactive Listening"
                         className="md:w-[80%] sm:w-[95%] h-auto self-center border-[2px] border-header rounded-xl mt-5"
-                        src={`${S3_BASE_URL}/duolingo/module/listen and respond1.png`}
+                        src={`${S3_BASE_URL}/listen_and_respond1.png`}
                         alt="Listen and respond"
                       ></img>
 
                       <img
                        title="Interactive Listening"
                         className="md:w-[80%] sm:w-[95%] h-auto self-center border-[2px] border-header rounded-xl mt-5"
-                        src={`${S3_BASE_URL}/duolingo/module/listen and respond 2.png`}
+                        src={`${S3_BASE_URL}/listen_and_respond_2.png`}
                         alt="Listen and respond"
                       ></img>
                     </div>
@@ -194,7 +194,7 @@ export default function LIguideline() {
                         <img
                          title="Interactive Listening"
                           className="md:w-[80%] sm:w-[95%] h-auto self-center border-[2px] border-header rounded-xl mt-5"
-                          src={`${S3_BASE_URL}/duolingo/module/summary of conversation.png`}
+                          src={`${S3_BASE_URL}/summary_of_conversation.png`}
                           alt="summary of conversation"
                         ></img>
 
@@ -202,7 +202,7 @@ export default function LIguideline() {
                         <img
                          title="Interactive Listening"
                           className="md:w-[80%] sm:w-[95%] h-auto self-center border-[2px] border-header rounded-xl mt-2"
-                          src={`${S3_BASE_URL}/duolingo/module/summary evaluation.png`}
+                          src={`${S3_BASE_URL}/summary_evaluation.png`}
                           alt="summary evaluation"
                         ></img>
                       </div>

@@ -120,7 +120,7 @@ export default function SAloudguideline() {
                     <img
                     title="read aloud duolngo"
                       className="md:w-[80%] sm:w-[95%] h-auto self-center"
-                      src={`${S3_BASE_URL}/duolingo/module/read aloud duolingo.png`}
+                      src={`${S3_BASE_URL}/read_aloud_duolingo.png`}
                       alt="read aloud duolingo"
                     ></img>
                   </div>
@@ -167,14 +167,14 @@ export default function SAloudguideline() {
                       <img
                       title="read aloud duolngo"
                         className="md:w-[80%] sm:w-[95%] h-auto self-center border-[2px] border-header rounded-xl"
-                        src={`${S3_BASE_URL}/duolingo/module/Read Aloud.png`}
+                        src={`${S3_BASE_URL}/duolingo/module/Read_Aloud.png`}
                         alt="Read Aloud"
                       ></img>
                       <h2 className="mt-5 font-[600]">Evaluation Page</h2>
                       <img
                       title="read aloud duolngo"
                         className="md:w-[80%] sm:w-[95%] mt-2 h-auto self-center border-[2px] border-header rounded-xl "
-                        src={`${S3_BASE_URL}/duolingo/module/Read aloud evaluation.png`}
+                        src={`${S3_BASE_URL}/Read_aloud_evaluation.png`}
                         alt="Read aloud evaluation"
                       ></img>
                     </div>

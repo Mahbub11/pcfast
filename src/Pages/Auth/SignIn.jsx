@@ -43,17 +43,19 @@ export default function SignIn() {
             if (res.status === 200) {
               openNotification("success", "Success !", "Logged In Success");
               localStorage.setItem("access", res.data.token);
-  
+
               // Fetch user data after successful login
-              await  dispatch(getUserInfo());
+              await dispatch(getUserInfo());
               await dispatch(getModuleData());
               await dispatch(getBookmarkList());
               await dispatch(getStatDuolingo());
-  
-              navigate("/");
-              window.location.reload(true);
+
+              setTimeout(() => {
+                navigate("/duolingo/module/reading");
+                 setLoading(false);
+              }, 5000); // 100ms is usually enough
             }
-            setLoading(false);
+           
           })
           .catch((error) => {
             openNotification("error", "Error !", error.error);

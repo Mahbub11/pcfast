@@ -99,7 +99,7 @@ export default function SPguideline() {
                   <img
                   title="speak about the photo Duolngo"
                     className="md:w-[80%] sm:w-[95%] h-auto self-center"
-                    src={`${S3_BASE_URL}/duolingo/module/speak about the photo duolingo.png`}
+                    src={`${S3_BASE_URL}/speak_about_the_photo_duolingo.png`}
                     alt="speak about the photo duolingo"
                   ></img>
                 </div>
@@ -140,13 +140,13 @@ export default function SPguideline() {
                     <img
                      title="speak about the photo Duolngo"
                       className="md:w-[80%] sm:w-[95%] h-auto self-center border-[2px] border-header rounded-xl"
-                      src={`${S3_BASE_URL}/duolingo/module/Speak about the Photo.png`}
+                      src={`${S3_BASE_URL}/Speak_about_the_Photo.png`}
                       alt="Speak about the Photo"
                     ></img>
                     <h2 className="mt-5 font-[600]">Evaluation Page</h2>
                      <img title="speak about the photo Duolngo"
                      className="md:w-[80%] sm:w-[95%] h-auto self-center border-[2px] border-header rounded-xl "
-                     src={`${S3_BASE_URL}/duolingo/module/Speak about the Picture.png`}
+                     src={`${S3_BASE_URL}/Speak_about_the_Picture.png`}
                      alt="Speak about the Picture"
                   ></img>
                   </div>

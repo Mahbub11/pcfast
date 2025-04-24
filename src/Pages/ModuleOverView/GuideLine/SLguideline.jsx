@@ -126,7 +126,7 @@ export default function SLguideline() {
                   <div className="mt-5">
                     <img
                       className="md:w-[80%] sm:w-[95%] h-auto self-center"
-                      src={`${S3_BASE_URL}/duolingo/module/listen then speak.png`}
+                      src={`${S3_BASE_URL}/listen_then_speak.png`}
                       alt="listen then speak"
                     ></img>
                   </div>
@@ -163,14 +163,14 @@ export default function SLguideline() {
                       <img
                       title="Listen then Speak Duolingo"
                         className="md:w-[80%] sm:w-[95%] h-auto self-center border-[2px] border-header rounded-xl"
-                        src={`${S3_BASE_URL}/duolingo/module/Listen then Speak.png`}
+                        src={`${S3_BASE_URL}/Listen_then_Speak.png`}
                         alt="Listen then Speak"
                       ></img>
                       <h2 className="mt-5 font-[600]">Evaluation Page</h2>
                       <img
                         title="Listen then Speak Duolingo"
                         className="md:w-[80%] mt-2 sm:w-[95%] h-auto self-center border-[2px] border-header rounded-xl "
-                        src={`${S3_BASE_URL}/duolingo/module/Listen then Speak evalation.png`}
+                        src={`${S3_BASE_URL}/Listen_then_Speak_evalation.png`}
                         alt="Listen then Speak evalation"
                       ></img>
                     </div>

@@ -95,7 +95,7 @@ export default function RSguideline() {
                     <img
                     title="Read and Select Duolingo"
                       className="md:w-[80%] sm:w-[95%] h-auto self-center"
-                      src={`${S3_BASE_URL}/duolingo/module/read and select duolingo.png`}
+                      src={`${S3_BASE_URL}/read_and_select_duolingo.png`}
                       alt="read and select duolingo"
                     ></img>
                   </div>
@@ -130,14 +130,14 @@ export default function RSguideline() {
                       <img
                         title="Read and Select Duolingo"
                         className="md:w-[80%] sm:w-[95%] h-auto self-center border-[2px] border-header rounded-xl"
-                        src={`${S3_BASE_URL}/duolingo/module/read and select.png`}
+                        src={`${S3_BASE_URL}/read_and_select.png`}
                         alt="read and select"
                       ></img>
                       <h2 className="mt-7  ">Practice question page</h2>
                       <img
                         title="Read and Select Duolingo"
                         className="md:w-[80%] sm:w-[95%] h-auto self-center border-[2px] border-header rounded-xl mt-2"
-                        src={`${S3_BASE_URL}/duolingo/module/read and select evaluation.png`}
+                        src={`${S3_BASE_URL}/read_and_select_evaluation.png`}
                         alt="read and select evaluation"
                       ></img>
                     </div>

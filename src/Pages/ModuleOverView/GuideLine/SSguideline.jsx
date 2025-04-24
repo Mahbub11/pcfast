@@ -124,14 +124,14 @@ export default function SSguideline() {
                       <img
                         title="Speaking Sample Duolingo"
                         className="md:w-[80%] sm:w-[95%] h-auto self-center border-[2px] border-header rounded-xl"
-                        src={`${S3_BASE_URL}/duolingo/module/speaking sample.png`}
+                        src={`${S3_BASE_URL}/speaking_sample.png`}
                         alt="speaking sample"
                       ></img>
                       <h2 className="mt-5 font-[600]">Evaluation Page</h2>
                       <img
                         title="Speaking Sample Duolingo"
                         className="md:w-[80%] mt-2 sm:w-[95%] h-auto self-center border-[2px] border-header rounded-xl "
-                        src={`${S3_BASE_URL}/duolingo/module/speaking sample evalation.png`}
+                        src={`${S3_BASE_URL}/speaking_sample_evalation.png`}
                         alt="speaking sample evalation"
                       ></img>
                     </div>

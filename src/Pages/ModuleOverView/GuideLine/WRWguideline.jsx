@@ -98,7 +98,7 @@ export default function WRWguideline() {
                     <img
                     title="duolingo rea then write"
                       className="md:w-[80%] sm:w-[95%] h-auto self-center"
-                      src={`${S3_BASE_URL}/duolingo/module/read then write duolingo.png`}
+                      src={`${S3_BASE_URL}/read_then_write_duolingo.png`}
                       alt="read then write duolingo.png"
                     ></img>
                   </div>
@@ -135,14 +135,14 @@ export default function WRWguideline() {
                       <img
                           title="duolingo rea then write"
                         className="md:w-[80%] sm:w-[95%] h-auto self-center border-[2px] border-header rounded-xl"
-                        src={`${S3_BASE_URL}/duolingo/module/Read then Write.png`}
+                        src={`${S3_BASE_URL}/Read_then_Write.png`}
                         alt="Read then Write"
                       ></img>
                       <h2 className="mt-5 font-[600]">Evaluation Page</h2>
                       <img
                           title="duolingo rea then write"
                         className="md:w-[80%] sm:w-[95%] h-auto self-center border-[2px] border-header rounded-xl mt-2"
-                        src={`${S3_BASE_URL}/duolingo/module/Read then write Evaluation.png`}
+                        src={`${S3_BASE_URL}/Read_then_write_Evaluation.png`}
                         alt="Read then Write Evaluation"
                       ></img>
                     </div>

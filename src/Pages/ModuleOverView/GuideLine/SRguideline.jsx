@@ -164,14 +164,14 @@ export default function SRguideline() {
                       <img
                         title="Read then Speak Duolingo"
                         className="md:w-[80%] sm:w-[95%] h-auto self-center border-[2px] border-header rounded-xl"
-                        src={`${S3_BASE_URL}/duolingo/module/Read then Speak.png`}
+                        src={`${S3_BASE_URL}/Read_then_Speak.png`}
                         alt="Read then Speak"
                       ></img>
                       <h2 className="mt-5 font-[600]">Evaluation Page</h2>
                       <img
                         title="Read then Speak Duolingo"
                         className="md:w-[80%] mt-2 sm:w-[95%] h-auto self-center border-[2px] border-header rounded-xl "
-                        src={`${S3_BASE_URL}/duolingo/module/Read then Speak evaluation.png`}
+                        src={`${S3_BASE_URL}/Read_then_Speak_evaluation.png`}
                         alt="Read then Speak evaluation"
                       ></img>
                     </div>

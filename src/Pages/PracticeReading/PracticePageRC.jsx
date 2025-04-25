@@ -79,7 +79,7 @@ export default function PracticePageRC({ id, handleCloseModal }) {
       fields.map((field) => (field.value = ""));
       dispatch(ClearUserInputs());
       // setenableEvaluationBtn(true);
-      // setShowModelAns(false);
+       setShowModelAns(false);
       isBusy(true);
       navigate(`/practice/rc-r/${index}`);
     }
@@ -91,7 +91,7 @@ export default function PracticePageRC({ id, handleCloseModal }) {
       fields.map((field) => (field.value = ""));
       dispatch(ClearUserInputs());
       // setenableEvaluationBtn(true);
-      // setShowModelAns(false);
+      setShowModelAns(false);
       isBusy(true);
       navigate(`/practice/rc-r/${index}`);
     }

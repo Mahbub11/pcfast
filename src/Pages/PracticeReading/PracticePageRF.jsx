@@ -79,6 +79,7 @@ export default function PracticePageRF({ id, handleCloseModal }) {
       dispatch(ClearUserInputs());
       // setenableEvaluationBtn(true);
       // setShowModelAns(false);
+      setShowModelAns(false);
       isBusy(true);
       navigate(`/practice/rf-r/${index}`);
     }
@@ -90,7 +91,7 @@ export default function PracticePageRF({ id, handleCloseModal }) {
       fields.map((field) => (field.value = ""));
       dispatch(ClearUserInputs());
       // setenableEvaluationBtn(true);
-      // setShowModelAns(false);
+     setShowModelAns(false);
       isBusy(true);
       navigate(`/practice/rf-r/${index}`);
     }

@@ -12,7 +12,7 @@ const askToChatGPT = async (currentChatGPTMessages,makeRequest) => {
   
   try {
     const json_data = {
-      model: "gpt-3.5-turbo-0125",
+      model: "gpt-4o-mini",
       messages: [...currentChatGPTMessages],
       temperature: 1,
       top_p: 1,

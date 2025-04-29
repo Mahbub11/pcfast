@@ -33,7 +33,7 @@ function MockListManagement(props) {
   const [planid, setPlanid] = useState();
   const [fetch, setFetch] = useState(true);
   const vocList = useSelector((state) => state.getVocList);
-  const { listRC } = useSelector((state) => state.getReadingList);
+  const { listRC,listRF } = useSelector((state) => state.getReadingList);
   const { listInteractive } = useSelector((state) => state.getReadingList);
 
   const { listSAL } = useSelector((state) => state.getSpeakingList);
@@ -52,6 +52,7 @@ function MockListManagement(props) {
   const [moduleItem, setModuleItem] = useState();
   const [nameInType, setNameType] = useState({});
   const [sectionOne, setSectionOne] = useState({
+    33: [],
     31: [],
     51: [],
     11: [],
@@ -96,7 +97,7 @@ function MockListManagement(props) {
       setData(listWAP);
     } else if (moduleItem === 22) {
       setNameType({
-        title: "Read then Write",
+        title: "InterActive Writing",
         inner_type: 22,
         link: "rtw-w",
       });
@@ -150,6 +151,13 @@ function MockListManagement(props) {
         link: "rc-r",
       });
       setData(listRC);
+    }else if (moduleItem === 33) {
+      setNameType({
+        title: "Fill the Blanks",
+        inner_type: 33,
+        link: "rf-r",
+      });
+      setData(listRF);
     } else if (moduleItem === 32) {
       setNameType({
         title: "Interactive Reading",
@@ -253,6 +261,7 @@ function MockListManagement(props) {
     const data = {
       pro_plan: modulePermission,
       set: {
+        33: sectionOne[33],
         31: sectionOne[31],
         51: sectionOne[51],
         11: sectionOne[11],
@@ -281,6 +290,7 @@ function MockListManagement(props) {
       id: planid,
       pro_plan: modulePermission,
       set: {
+        33: sectionOne[33],
         31: sectionOne[31],
         51: sectionOne[51],
         11: sectionOne[11],
@@ -305,6 +315,7 @@ function MockListManagement(props) {
 
   const handlePackageItem = (item) => {
     setSectionOne({
+      33: item.set[33],
       31: item.set[31],
       51: item.set[51],
       11: item.set[11],
@@ -430,6 +441,9 @@ function MockListManagement(props) {
                           value={moduleItem}
                           onChange={handleModuleChange}
                         >
+                          <Radio.Button value={33}>
+                            Fill the Blanks
+                          </Radio.Button>
                           <Radio.Button value={31}>
                             Read and Complete
                           </Radio.Button>
@@ -485,7 +499,7 @@ function MockListManagement(props) {
                           onChange={handleModuleChange}
                         >
                           <Radio.Button value={22}>
-                            Read then Write
+                           Interactive Writing
                           </Radio.Button>
                           <Radio.Button value={44}>
                             Listen then Speak
@@ -556,7 +570,20 @@ function MockListManagement(props) {
                   </div>
 
                   <div className="overflow-scroll h-[15rem] bg-header flex-col gap-3">
-                    <div className="bg-pink-300 rounded-md px-2 py-2 ">
+                  <div className="bg-pink-300 rounded-md px-2 py-2 ">
+                      <p>Fill the Blanks</p>
+                      <div className="flex gap-5 flex-wrap">
+                        {sectionOne[33]?.map((item, index) => (
+                          <div className="flex gap-1">
+                            {item}
+                            <DeleteOutlined
+                              onClick={() => removeItem(item, 33)}
+                            ></DeleteOutlined>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="bg-pink-300 rounded-md px-2 py-2 mt-2">
                       <p>Read & Complete</p>
                       <div className="flex gap-5 flex-wrap">
                         {sectionOne[31].map((item, index) => (
@@ -729,7 +756,7 @@ function MockListManagement(props) {
 
                   <div>
                     <div className="bg-pink-300 rounded-md px-2 py-2 ">
-                      <p>Read then Write</p>
+                      <p>Interactive Writing</p>
                       <div className="flex gap-5 flex-wrap">
                         {sectionForth[22].map((item, index) => (
                           <div className="flex gap-1">

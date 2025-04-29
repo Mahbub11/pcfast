@@ -14,7 +14,7 @@ export default function MockContainer() {
     mockTestUserAns,
   } = useSelector((state) => state.mockTest);
 
-  // console.log(mockData);
+   console.log(mockData);
 
   const [currentSection, setCurrentSection] = useState(firstSectionQuestions);
   let [current, setCurrent] = useState(0);

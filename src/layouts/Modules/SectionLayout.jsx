@@ -15,13 +15,19 @@ import { CloseNotification } from "../../redux/actions";
 import { getBookmarkList } from "../../redux/slices/bookmark";
 import { getStatDuolingo } from "../../redux/slices/statistic";
 import { setEvPermissionData } from "../../redux/slices/subscription";
-import { SmileOutlined,ExclamationOutlined,CheckOutlined  } from '@ant-design/icons';
+import {
+  SmileOutlined,
+  ExclamationOutlined,
+  CheckOutlined,
+} from "@ant-design/icons";
 const { Header, Sider, Content } = Layout;
 
 export default function SectionLayout() {
   const dispatch = useDispatch();
   const [api, contextHolder] = notification.useNotification();
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(
+    window.innerWidth < 720 ? true : false
+  );
   const { common } = useSelector((state) => state.app);
   const { userInfo } = useSelector((state) => state.auth);
   const { statWriting, statSpeaking } = useSelector((state) => state.statistic);
@@ -42,29 +48,36 @@ export default function SectionLayout() {
   }, []);
 
   useEffect(() => {
-   
-    if (common?.message && common.severity !== 'error') {
-       openNotificationWithIcon(common.severity);
+    if (common?.message && common.severity !== "error") {
+      openNotificationWithIcon(common.severity);
     }
-      dispatch(CloseNotification());
+    dispatch(CloseNotification());
   }, [common?.message]);
 
   const openNotificationWithIcon = (type) => {
     api.open({
-      message:  common.severity ==='Attention'? <strong className="text-yellow-400">{common.severity}</strong>:'',
+      message:
+        common.severity === "Attention" ? (
+          <strong className="text-yellow-400">{common.severity}</strong>
+        ) : (
+          ""
+        ),
       description: common.message,
       placement: "top",
-      icon: (
-        common.severity ==='Attention'?
-        <ExclamationOutlined style={{
-          color: 'yellow',
-        }}></ExclamationOutlined>:
-        <CheckOutlined
-          style={{
-            color: '#108ee9',
-          }}
-        />
-      ),
+      icon:
+        common.severity === "Attention" ? (
+          <ExclamationOutlined
+            style={{
+              color: "yellow",
+            }}
+          ></ExclamationOutlined>
+        ) : (
+          <CheckOutlined
+            style={{
+              color: "#108ee9",
+            }}
+          />
+        ),
     });
   };
 
@@ -89,7 +102,8 @@ export default function SectionLayout() {
               mode="inline"
               className="md:mt-[5rem] bg-transparent"
               defaultSelectedKeys={["1"]}
-              inlineCollapsed={collapsed}
+              defaultOpenKeys={["access-control"]}
+            
               items={[
                 {
                   label: (

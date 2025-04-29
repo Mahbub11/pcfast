@@ -453,13 +453,13 @@ export default function Router() {
           path: "mock/:id",
           element: [<MockContainer></MockContainer>],
         },
-        // {
-        //   path: "mocktest",
-        //   children: [
-        //     { path: "", element: <MockContainer></MockContainer> },
-        //     { path: "set", element: <MockList></MockList> },
-        //   ],
-        // },
+        {
+          path: "mocktest",
+          children: [
+            { path: "", element: <MockContainer></MockContainer> },
+            { path: "set", element: <MockList></MockList> },
+          ],
+        },
 
         { path: "404", element: <Page404></Page404> },
         { path: "*", element: <Navigate to="/404" replace /> },

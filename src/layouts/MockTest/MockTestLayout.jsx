@@ -13,6 +13,7 @@ import {
   saveThirdSectionQuestion,
 } from "../../redux/slices/mockTest";
 import { getModuleData } from "../../redux/slices/auth";
+import { getUserMockList } from "../../redux/slices/mockData";
 
 const secondSectionPrepData = {
   inner_type: 101,
@@ -42,6 +43,8 @@ export default function MockTestLayout() {
     (state) => state.getWritingList
   );
 
+  console.log(mockList)
+
   const [rcList, setRCList] = useState([]);
   const [rfList, setRFList] = useState([]);
   const [vocList, setVocList] = useState([]);
@@ -59,9 +62,10 @@ export default function MockTestLayout() {
   // console.log(mockList[0].set[31])
 
   useEffect(() => {
+    console.log('ddd')
     const mockIndex = id.split("-")[1];
     dispatch(getModuleData());
-    // dispatch(getUserMockList())
+     dispatch(getUserMockList())
     setMockListData(
       mockList.filter((item) => {
         return item.index === parseInt(mockIndex);
@@ -70,7 +74,7 @@ export default function MockTestLayout() {
     setModuleDataLoaded(false);
   }, [moduleDataLoaded]);
 
-  console.log(mockListData);
+  console.log(mockList);
 
   const filterData = (dataList, mockSet) => {
     let list = [];

@@ -277,7 +277,7 @@ export default function PracticePageRHA({ data,meaning=true  }) {
                 </div>
               </div>
             </div>
-            <div className={`${visibility ? "block" : "hidden"}`}>
+            {/* <div className={`${visibility ? "block" : "hidden"}`}>
               <div className="h-auto w-[95%] m-auto">
                 <Collapse
                   accordion
@@ -302,7 +302,7 @@ export default function PracticePageRHA({ data,meaning=true  }) {
                   ]}
                 />
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       )}

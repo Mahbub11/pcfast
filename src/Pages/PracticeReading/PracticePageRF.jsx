@@ -180,14 +180,14 @@ export default function PracticePageRF({ id, handleCloseModal }) {
         </div>
       ) : (
         <div className="h-auto sm:w-full md:w-[99%] m-auto bg-[#fffffff7] md:px-5 md:py-5 ">
-          <div
+          {/* <div
             onClick={closeModalWindow}
             className="absolute right-0 mr-3 md:mt-[-25px] sm:mt-[10px] cursor-pointer"
           >
             <span>
               <IconCross height="1rem" width="1rem"></IconCross>
             </span>
-          </div>
+          </div> */}
           <div className="flex flex-col md:gap-5 sm:gap-2">
             {/* <h1 className="text-[22px] font-montserrat font-[500] underline self-center">
               Read and Complete

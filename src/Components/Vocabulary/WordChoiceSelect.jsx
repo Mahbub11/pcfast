@@ -35,6 +35,7 @@ export default function WordChoiceSelect({
     }
   }, [userChoice]);
   useEffect(() => {
+    console.log(choice);
     dispatch(saveUserchoice(choice));
   }, [choice]);
 
@@ -52,23 +53,23 @@ export default function WordChoiceSelect({
     console.log(val);
     return setChoice((prev) => [...prev, val]);
   };
-  console.log(words);
+ 
   function handleClick(type) {
     const k = words.length;
+
+    if (type) {
+      handleInputVal(words[i]);
+    }
+
     if (i < k - 1) {
-      console.log(i, words[i]);
-
-      // show evaluation
       setDeadline(0.1);
-
-      if (type) {
-        handleInputVal(words[i]);
-      }
-
       setHeadingText(`${words[i + 1]}`);
       incrementIndex(i + 1);
     } else {
-      setShowEvResult();
+      // Ensure final choice is saved before moving to result
+      setTimeout(() => {
+        setShowEvResult();
+      }, 100); // small delay to ensure state update
     }
   }
 

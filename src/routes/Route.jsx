@@ -391,7 +391,7 @@ export default function Router() {
         },
         {
           path: "rha-r/:rid",
-          element: [<PracticePageRHA></PracticePageRHA>],
+          element: [<PracticePageRHA ></PracticePageRHA>],
         },
         {
           path: "rgpt-r/:rid",

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const apiKey = import.meta.env.OPEN_AI_WHISPER_API_KEY;
+const apiKey = import.meta.env.VITE_OPEN_AI_WHISPER_API_KEY;
 const sendToWhisper = async (audioBlobUrl) => {
   try {
     const response = await fetch(audioBlobUrl.blobURL);
@@ -8,13 +8,15 @@ const sendToWhisper = async (audioBlobUrl) => {
     const formData = new FormData();
     formData.append("file", audioBlob, "recording.wav");
     formData.append("language", "en");
+    formData.append("temperature", "0");
     formData.append("model", "whisper-1");
+    formData.append("response_format", "text"); 
 
     const apiUrl = "https://api.openai.com/v1/audio/transcriptions";
     const config = {
       headers: {
         Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "multipart/form-data",
+       
       },
       withCredentials: false,
     };

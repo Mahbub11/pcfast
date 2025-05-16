@@ -112,44 +112,57 @@ export default function PracticePageSS({ id, handleCloseModal }) {
     }
   }, [recordingState]);
 
+  // const handleNext = () => {
+  //   if (index <= --dataLength) {
+  //     setIndex(++index);
+  //     dispatch(clearGPTAssesmentResult());
+  //     navigate(`/practice/ss-s/${index}`);
+  //     isBusy(true);
+
+  //     // setIsWorking(false);
+  //     // setIsRecording(false);
+  //     // stopRecording(false); // Explicitly stop recording without sending to Whisper
+  //     // setRecordingState(true);
+  //     // setShowThinkTime(true);
+  //     // setThinkTime(Date.now() + 0.333333 * 60000);
+  //     // setenableEvaluationBtn(false);
+  //     // setxmTime(undefined);
+  //     // setShowEvaluate(false);
+  //     // setFeedbackState(true);
+  //     // clearTimeout();
+  //   }
+  // };
+  // const handlePrev = () => {
+  //   if (index > 1) {
+  //     setIndex(--index);
+  //     dispatch(clearGPTAssesmentResult());
+  //     navigate(`/practice/ss-s/${index}`);
+  //     isBusy(true);
+
+  //     // setIsWorking(false);
+  //     // setIsRecording(false);
+  //     // stopRecording(false); // Explicitly stop recording without sending to Whisper
+  //     // setRecordingState(true);
+  //     // setShowThinkTime(true);
+  //     // setThinkTime(Date.now() + 0.333333 * 60000);
+  //     // setenableEvaluationBtn(false);
+  //     // setxmTime(undefined);
+  //     // setShowEvaluate(false);
+  //     // setFeedbackState(true);
+  //     // clearTimeout();
+  //   }
+  // };
+
   const handleNext = () => {
     if (index <= --dataLength) {
-      setIndex(++index);
-      dispatch(clearGPTAssesmentResult());
-      navigate(`/practice/ss-s/${index}`);
-      isBusy(true);
-
-      // setIsWorking(false);
-      // setIsRecording(false);
-      // stopRecording(false); // Explicitly stop recording without sending to Whisper
-      // setRecordingState(true);
-      // setShowThinkTime(true);
-      // setThinkTime(Date.now() + 0.333333 * 60000);
-      // setenableEvaluationBtn(false);
-      // setxmTime(undefined);
-      // setShowEvaluate(false);
-      // setFeedbackState(true);
-      // clearTimeout();
+      const nextIndex = parseInt(index) + 1;
+      window.location.href = `/practice/ss-s/${nextIndex}`;
     }
   };
   const handlePrev = () => {
     if (index > 1) {
-      setIndex(--index);
-      dispatch(clearGPTAssesmentResult());
-      navigate(`/practice/ss-s/${index}`);
-      isBusy(true);
-
-      // setIsWorking(false);
-      // setIsRecording(false);
-      // stopRecording(false); // Explicitly stop recording without sending to Whisper
-      // setRecordingState(true);
-      // setShowThinkTime(true);
-      // setThinkTime(Date.now() + 0.333333 * 60000);
-      // setenableEvaluationBtn(false);
-      // setxmTime(undefined);
-      // setShowEvaluate(false);
-      // setFeedbackState(true);
-      // clearTimeout();
+      const nextIndex = parseInt(index) - 1;
+      window.location.href = `/practice/ss-s/${nextIndex}`;
     }
   };
 
@@ -314,14 +327,14 @@ export default function PracticePageSS({ id, handleCloseModal }) {
         </div>
       ) : (
         <div className="h-auto w-[99%] m-auto bg-[#fffffff7] md:px-5 md:py-5">
-          <div
+          {/* <div
             onClick={closeModalWindow}
             className="absolute right-0 mr-3 md:mt-[-1rem] sm:mt-[10px]  cursor-pointer"
           >
             <span>
               <IconCross height="1rem" width="1rem"></IconCross>
             </span>
-          </div>
+          </div> */}
           <div className="flex flex-col gap-5 sm:px-2">
             {/* <h1 className="text-[22px] font-montserrat font-[500] underline self-center">
               Speaking Sample

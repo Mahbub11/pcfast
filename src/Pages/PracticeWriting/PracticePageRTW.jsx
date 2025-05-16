@@ -161,46 +161,46 @@ export default function PracticePageRTW({ id, handleCloseModal }) {
       }, 1000);
     }
 
-    return;
-    if (userAns.length > 30) {
-      setxmTime(null);
-      setOpenPanels(["1"]);
-      setShowEvaluate(true);
-      dispatch(clearAssesmentResult());
-      setFinalUserAns(userAns.replace(/\s*([,.!?:;]+)(?!\s*$)\s*/g, "$1 "));
-      setFinalFollowUpAns(
-        followUpAns.replace(/\s*([,.!?:;]+)(?!\s*$)\s*/g, "$1 ")
-      );
-      dispatch(
-        getAssesmentResult(userAns.replace(/\s*([,.!?:;]+)(?!\s*$)\s*/g, "$1 "))
-      );
-      dispatch(
-        getSecondAssesmentResult(
-          followUpAns.replace(/\s*([,.!?:;]+)(?!\s*$)\s*/g, "$1 ")
-        )
-      );
+    // return;
+    // if (userAns.length > 30) {
+    //   setxmTime(null);
+    //   setOpenPanels(["1"]);
+    //   setShowEvaluate(true);
+    //   dispatch(clearAssesmentResult());
+    //   setFinalUserAns(userAns.replace(/\s*([,.!?:;]+)(?!\s*$)\s*/g, "$1 "));
+    //   setFinalFollowUpAns(
+    //     followUpAns.replace(/\s*([,.!?:;]+)(?!\s*$)\s*/g, "$1 ")
+    //   );
+    //   dispatch(
+    //     getAssesmentResult(userAns.replace(/\s*([,.!?:;]+)(?!\s*$)\s*/g, "$1 "))
+    //   );
+    //   dispatch(
+    //     getSecondAssesmentResult(
+    //       followUpAns.replace(/\s*([,.!?:;]+)(?!\s*$)\s*/g, "$1 ")
+    //     )
+    //   );
 
-      modalRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-        inline: "nearest",
-      });
+    //   modalRef.current?.scrollIntoView({
+    //     behavior: "smooth",
+    //     block: "end",
+    //     inline: "nearest",
+    //   });
 
-      setTimeout(() => {
-        modalRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "end",
-          inline: "nearest",
-        });
-      }, 1000);
-    } else {
-      dispatch(
-        ShowNotification({
-          severity: "info",
-          message: "Please write more Information",
-        })
-      );
-    }
+    //   setTimeout(() => {
+    //     modalRef.current?.scrollIntoView({
+    //       behavior: "smooth",
+    //       block: "end",
+    //       inline: "nearest",
+    //     });
+    //   }, 1000);
+    // } else {
+    //   dispatch(
+    //     ShowNotification({
+    //       severity: "info",
+    //       message: "Please write more Information",
+    //     })
+    //   );
+    // }
   };
 
   const openNotification = (placement) => {
@@ -294,14 +294,14 @@ export default function PracticePageRTW({ id, handleCloseModal }) {
         </div>
       ) : (
         <div className="h-auto w-[99%] m-auto bg-[#fffffff7] md:px-5 md:py-5">
-          <div
+          {/* <div
             onClick={closeModalWindow}
             className="absolute right-0 mr-3 md:mt-[-1rem] sm:mt-[10px] cursor-pointer"
           >
             <span>
               <IconCross height="1rem" width="1rem"></IconCross>
             </span>
-          </div>
+          </div> */}
           <div className="flex flex-col gap-5 sm:px-2">
             {/* <h1 className="text-[22px] font-montserrat font-[500] underline self-center">
               Read then Write
@@ -311,7 +311,7 @@ export default function PracticePageRTW({ id, handleCloseModal }) {
                 title="Back to List"
                 className="mt-[6px] md:pr-4 sm:pr-2 cursor-pointer"
                 onClick={() => navigate(`/duolingo/module/writing`)}
-               >
+              >
                 {" "}
                 <span>
                   <IconsArrowLeft
@@ -399,18 +399,19 @@ export default function PracticePageRTW({ id, handleCloseModal }) {
             <div className="w-[95%] m-auto sm:mt-3">
               <div className="flex md:flex-row sm:flex-col justify-between h-full md:gap-10 sm:gap-4">
                 <div className=" md:w-full sm:w-[95%] sm:m-auto h-full flex flex-col justify-between">
-                  <div className="flex gap-10 mt-2">
+                  <div className="flex gap-10 mt-2 sm:flex-col md:flex-row">
                     <div
                       className={`${
                         !followUpShow ? "opacity-100" : "opacity-50"
                       } md:w-[45%] sm:w-full sm:m-auto sm:mt-5 md:mt-0`}
                     >
-                      <h1 className="font-poppins font-[700] text-[20px] px-2 py-3 ml-[-2.5rem]">
-                        <span className="bg-blue-400 rounded-full px-[2.1%] mr-[8px] text-white">
+                      <h1 className="flex  font-poppins font-[700] text-[20px] justify-center w-full py-4">
+                        <span className="flex items-center justify-center bg-blue-400 rounded-full text-white h-[2rem] md:w-[2.2rem] sm:w-[2.8rem] mr-2">
                           1
                         </span>
-                        Write about the topic below for 5 minutes
+                        <span>Write about the topic below for 5 minutes</span>
                       </h1>
+
                       <h1
                         className=" md:text-[18px] sm:text-[15px]
                        font-poppins font-[500] px-1"
@@ -455,12 +456,13 @@ export default function PracticePageRTW({ id, handleCloseModal }) {
                         followUpShow ? "opacity-100" : "opacity-50"
                       } md:w-[45%] sm:w-full sm:m-auto sm:mt-5 md:mt-0`}
                     >
-                      <h1 className="font-poppins font-[700] text-[20px] px-2 py-3 ml-[-2.5rem]">
-                        <span className="bg-blue-400 rounded-full px-[1.5%]  mr-[8px] text-white">
+                      <h1 className="flex  font-poppins font-[700] text-[20px] justify-center w-full py-4">
+                        <span className="flex items-center justify-center bg-blue-400 rounded-full text-white h-[2rem]  md:w-[2.2rem] sm:w-[2.8rem] mr-2">
                           2
                         </span>
-                        Write a follow-up response for 3 minutes.
+                        <span>Write a follow-up response for 3 minutes.</span>
                       </h1>
+
                       <h1
                         className=" md:text-[18px] sm:text-[15px]
                        font-poppins font-[500] px-1"

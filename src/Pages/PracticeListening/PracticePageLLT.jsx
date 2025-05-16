@@ -224,14 +224,14 @@ export default function PracticePageLLT({ id, handleCloseModal }) {
         </div>
       ) : (
         <div className="h-auto w-[99%] m-auto bg-[#fffffff7] md:px-5 md:py-5">
-          <div
+          {/* <div
             onClick={closeModalWindow}
             className="absolute right-0 mr-3 md:mt-[-1rem] sm:mt-[10px]  cursor-pointer"
           >
             <span>
               <IconCross height="1rem" width="1rem"></IconCross>
             </span>
-          </div>
+          </div> */}
           <div className="flex flex-col gap-5">
             {/* <h1 className="text-[22px] font-montserrat font-[500] underline self-center">
               Listen and Type

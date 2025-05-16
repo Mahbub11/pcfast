@@ -1,256 +1,136 @@
-import React, { useEffect, useState } from "react";
-
-import { notification, Grid, Skeleton, Radio, Collapse } from "antd";
-import { Statistic } from "antd";
+import React, { useState, useCallback } from "react";
+import { notification, Grid, Skeleton, Radio } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  DisableVisibility,
-  ToggleVisibility,
-} from "../../redux/slices/fillgap";
-import "../../Components/Reading/RadioBtn.css";
-import { getWordDetails } from "../../redux/slices/disctionary";
-import { useLocation, useParams } from "react-router-dom";
-import { DisableOptionView } from "../../redux/slices/app";
-import { ReactComponent as Tick } from "../../Assets/SVG/tick.svg";
-import IconsArrowLeft from "../../Assets/SVG/IconsArrowLeft";
-import IconsArrowRight from "../../Assets/SVG/IconsArrowRight";
-import { clearStatDataError, saveStatData } from "../../redux/slices/statistic";
-import { StarOutlined, StarFilled } from "@ant-design/icons";
-import { toggleBookmark } from "../../redux/slices/bookmark";
 import { SaveRCPInput, SaveRCPResult } from "../../redux/slices/readingInput";
-const { Countdown } = Statistic;
+import { getWordDetails } from "../../redux/slices/disctionary";
+import "../../Components/Reading/RadioBtn.css";
+import { useParams } from "react-router-dom";
+
 const { useBreakpoint } = Grid;
 
-export default function PracticePageRCP({ data,meaning=true }) {
+export default function PracticePageRCP({ data, meaning = true }) {
   const [api, contextHolder] = notification.useNotification();
-
-  // let [index, setIndex] = useState(id);
   const { md } = useBreakpoint();
   const dispatch = useDispatch();
-  const { visibility } = useSelector((state) => state.fillgap);
-  const { listRCP } = useSelector((state) => state.getReadingList);
-  const { userInfo } = useSelector((state) => state.auth);
-  const { error } = useSelector((state) => state.statistic);
-  const { inputRCP } = useSelector((state) => state.readingInput);
-  const [selectVal, setSelectVal] = useState(inputRCP);
-  const [bColor, setBcolor] = useState(true);
   const { rid } = useParams();
 
-  const [timeDanger, setTimeDanger] = useState(false);
-  const [busy, isBusy] = useState(true);
+  const { visibility } = useSelector((state) => state.fillgap);
+  const { inputRCP } = useSelector((state) => state.readingInput);
 
-  const handleMeaning = (val) => {
-   if(meaning){
-    dispatch(getWordDetails(val.target.textContent));
-   }
-  };
+  const [selectedOption, setSelectedOption] = useState(inputRCP);
 
-  const saveUserInput = (e) => {
-    dispatch(SaveRCPInput(e));
-    setSelectVal(e);
+  const handleWordClick = useCallback(
+    (e) => {
+      if (meaning) {
+        dispatch(getWordDetails(e.target.textContent));
+      }
+    },
+    [dispatch, meaning]
+  );
+
+  const handleOptionSelect = (value) => {
+    setSelectedOption(value);
+    dispatch(SaveRCPInput(value));
 
     const statData = {
-      result: e === data.qa.a[0] ? 100 : 0,
+      result: value === data.qa.a[0] ? 100 : 0,
     };
-
-  
     dispatch(SaveRCPResult(statData));
   };
 
+  const getOptionClass = (option) => {
+    if (!visibility) {
+      return selectedOption === option ? "bg-[#3ab6bf5f]" : "bg-white";
+    }
+
+    if (option === data.qa.a[0]) {
+      return "bg-green-300";
+    }
+
+    if (option === selectedOption && option !== data.qa.a[0]) {
+      return "bg-red-400";
+    }
+
+    return "bg-white";
+  };
+
+  if (!data) {
+    return <Skeleton active />;
+  }
+
   return (
-    <div>
-      {false ? (
-        <Skeleton active></Skeleton>
-      ) : (
-        <div className="h-auto w-[99%] m-auto  md:px-5 md:py-5">
-          {contextHolder}
-          <div className="flex flex-col gap-5 sm:px-2">
-            {/* <h1 className="text-[22px] font-montserrat font-[500] underline self-center">
-              Complete the Passage
-            </h1> */}
-            <div className="flex flex-col gap-3 justify-center  rounded-md">
-              {data.title ? (
-                <h1 className="text-center sm:text-[15px] md:text-[20px] font-[500] font-poppins mt-[2rem] underline">
-                  {data.title}
-                </h1>
-              ) : (
-                ""
-              )}
+    <div className="w-[99%] m-auto md:px-5 md:py-5">
+      {contextHolder}
+      <div className="flex flex-col gap-5 sm:px-2">
+        {data.title && (
+          <h1 className="text-center text-[20px] font-[500] font-poppins mt-8 underline">
+            {data.title}
+          </h1>
+        )}
 
-              <div className="mt-[2rem] w-[98%] md:flex justify-between gap-2 m-auto py-2">
-                <div
-                  className="md:text-[18px] sm:text-[15px]
-                       md:w-[65%] sm:w-full msm:w-[100%] 
-                       rounded-md border-[1px] border-[#3ab6bf5f]"
-                >
-                  <div className="w-full border-b-[1px] border-[#3ab6bf5f]">
-                    <h1 className="text-center font-poppins text-[20px]">
-                      Passage
-                    </h1>{" "}
-                  </div>
+        <div className="mt-8 w-[98%] md:flex justify-between gap-2 m-auto py-2">
+          {/* Passage Section */}
+          <div className="md:w-[65%] sm:w-full rounded-md border border-[#3ab6bf5f]">
+            <div className="border-b border-[#3ab6bf5f]">
+              <h1 className="text-center font-poppins text-[20px]">Passage</h1>
+            </div>
+            <div className="px-5 py-4 text-justify font-[400] text-[18px] font-poppins leading-relaxed flex flex-wrap gap-1">
+              {data.qa.q.split(" ").map((word, i) =>
+                word === "*" ? (
                   <div
-                    className="w-full  flex flex-wrap font-[400] leading-1 m-auto gap-1
-                 px-5 py-4 text-justify font-poppins"
+                    key={i}
+                    className="w-full border-2 p-2 md:py-3 sm:py-1 rounded-md"
                   >
-                    {data.qa.q.split(" ").map((val, index) => {
-                      if (val === "*") {
-                        return (
-                          <div className="border-2  h-auto w-full flex justify-start">
-                            <br></br>
-
-                            <p className=" w-full border-[1px] py-3 h-auto px-1">
-                              {inputRCP?.split(" ").map((val, index) => {
-                                return (
-                                  <span
-                                    className="cursor-pointerb w-full overflow-scroll "
-                                    onClick={handleMeaning}
-                                  >
-                                    {" " + val}
-                                  </span>
-                                );
-                              })}
-                            </p>
-                          </div>
-                        );
-                      }
-                      return (
-                        <div>
-                          <p
-                            className={`cursor-pointer md:hover:text-blue-500 text-justify`}
-                            onClick={handleMeaning}
-                          >
-                            {val}
-                          </p>
-                        </div>
-                      );
-                    })}
+                    {selectedOption?.split(" ").map((part, idx) => (
+                      <span
+                        key={idx}
+                        className="cursor-pointer"
+                        onClick={handleWordClick}
+                      >
+                        {" " + part}
+                      </span>
+                    ))}
                   </div>
-                </div>
-
-                <div
-                  className=" md:w-[35%] sm:w-[90%]  m-auto font-poppins font-[400] 
-                   sm:text-[15px] md:text-[23px] md:ml-5"
-                >
-                  <h1 className="sm:text-[17px] md:text-[20px] md:block self-center font-poppins font-[600]">
-                    Select the best sentence to fill in the blank.
-                  </h1>
-                  {
-                    <Radio.Group
-                      defaultValue={inputRCP ? inputRCP : ""}
-                      // disabled={visibility ? true : false}
-                      onChange={(e) => saveUserInput(e.target.value)}
-                      style={{
-                        marginTop: 16,
-                        fontFamily: "inherit",
-                      }}
-                    >
-                      <div className="flex flex-col mt-2 gap-2 text-[15px]">
-                        <Radio
-                          style={{ fontSize: "17px", fontFamily: "inherit" }}
-                          key={data.qa.options[0]}
-                          className={`${ visibility && data.qa.options[0] === inputRCP && data.qa.a[0] !== data.qa.options[0]
-                            ?' bg-red-400':""}
-                          ${
-                            visibility && data.qa.a[0] === data.qa.options[0]
-                              ? "!bg-green-300 font-montserrat font-[400] rounded-md"
-                              : "font-montserrat font-[400]  rounded-md"
-                          } h-auto w-auto rounded-ms border-[2px] px-2 py-2`}
-                          value={data.qa.options[0]}
-                        >
-                          <div className="flex">
-                            <p> {data.qa.options[0]}</p>
-                            
-                          </div>
-                        </Radio>
-
-                        <Radio
-                          style={{ fontSize: "17px", fontFamily: "inherit" }}
-                          key={data.qa.options[1]}
-                          className={`${ visibility && data.qa.options[1] === inputRCP && data.qa.a[0] !== data.qa.options[1]
-                            ?' bg-red-400':""}
-                            ${
-                            visibility && data.qa.a[0] === data.qa.options[1]
-                              ? "bg-green-300  font-montserrat font-[400] "
-                              : "  font-montserrat font-[400]"
-                          } h-auto rounded-md border-[2px] px-2 py-2`}
-                          value={data.qa.options[1]}
-                        >
-                          <div className="flex">
-                            <p> {data.qa.options[1]}</p>
-                           
-                          </div>
-                        </Radio>
-
-                        <Radio
-                          style={{ fontSize: "17px", fontFamily: "inherit" }}
-                          key={data.qa.options[2]}
-                          className={`${ visibility && data.qa.options[2] === inputRCP && data.qa.a[0] !== data.qa.options[2]
-                            ?' bg-red-400':""}
-                          ${
-                            visibility && data.qa.a[0] === data.qa.options[2]
-                              ? "bg-green-300  font-montserrat font-[400]"
-                              : " font-montserrat font-[400] border-[2px] px-2 py-2"
-                          } h-auto rounded-md`}
-                          value={data.qa.options[2]}
-                        >
-                          <div className="flex">
-                            <p> {data.qa.options[2]}</p>
-                           
-                          </div>
-                        </Radio>
-
-                        <Radio
-                          style={{ fontSize: "17px", fontFamily: "inherit" }}
-                          key={data.qa.options[3]}
-                          className={`${ visibility && data.qa.options[3] === inputRCP && data.qa.a[0] !== data.qa.options[3]
-                            ?' bg-red-400':""}
-                          ${
-                            visibility && data.qa.a[0] === data.qa.options[3]
-                              ? "bg-green-300  font-montserrat font-[400]"
-                              : "font-montserrat font-[400]"
-                          } h-auto rounded-md  border-[2px] px-2 py-2`}
-                          value={data.qa.options[3]}
-                        >
-                          <div className="flex">
-                            <p> {data.qa.options[3]}</p>
-                           
-                          </div>
-                        </Radio>
-                      </div>
-                    </Radio.Group>
-                  }
-                </div>
-              </div>
+                ) : (
+                  <span
+                    key={i}
+                    className="cursor-pointer hover:text-blue-500"
+                    onClick={handleWordClick}
+                  >
+                    {word}{" "}
+                  </span>
+                )
+              )}
             </div>
           </div>
-          <div className={`${visibility ? "block" : "hidden"}`}>
-            <div className="h-auto w-[90%] m-auto mt-5">
-              <Collapse
-                accordion
-                style={{backgroundColor:'#DDE9F8'}}
-                items={[
-                  {
-                    key: "1",
-                    label: "Model Answer",
-                    children: (
-                      <p className=" text-[17px] font-poppins h-auto px-1">
-                      {data.qa.a.map((val) => (
-                        <span
-                          className="cursor-pointer md:hover:text-blue-500 w-full "
-                          onClick={handleMeaning}
-                        >
-                          {" " + val}
-                        </span>
-                      ))}
-                    </p>
-                    ),
-                  },
-                ]}
-              />
-            </div>
+
+          {/* Options Section */}
+          <div className="md:w-[35%] sm:w-[90%] m-auto font-poppins md:ml-5">
+            <h2 className="text-[20px] font-[600] mb-3">
+              Select the best sentence to fill in the blank.
+            </h2>
+            <Radio.Group
+              onChange={(e) => handleOptionSelect(e.target.value)}
+              value={selectedOption}
+            >
+              <div className="flex flex-col gap-2 text-[20px] font-[400]">
+                {data.qa.options.map((option, idx) => (
+                  <Radio
+                    key={idx}
+                    value={option}
+                    className={`rounded-md border-2 px-2 py-2  ${getOptionClass(
+                      option
+                    )}`}
+                    style={{ fontSize: "18px" }}
+                  >
+                    {option}
+                  </Radio>
+                ))}
+              </div>
+            </Radio.Group>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

@@ -103,7 +103,7 @@ export default function PracticePageRCS({ data, meaning = true }) {
               </div>
             </div>
 
-            <div className={`${visibility ? "block" : "hidden"}`}>
+            {/* <div className={`${visibility ? "block" : "hidden"}`}>
               <div className="h-auto w-[75%] m-auto">
                 <Collapse
                   accordion
@@ -128,7 +128,7 @@ export default function PracticePageRCS({ data, meaning = true }) {
                   ]}
                 />
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       )}

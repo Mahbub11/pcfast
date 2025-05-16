@@ -1,15 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Tag, Button, notification, Progress } from "antd";
 import { RightOutlined, LeftOutlined } from "@ant-design/icons";
 import { Statistic, Skeleton, Collapse } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import "../../Components/Reading/RadioBtn.css";
-import { IconMicrophone } from "../../Assets/SVG/IconMicrophone";
-import { IconMicOffCircle } from "../../Assets/SVG/IconMicOff";
 import { ReactMic } from "react-mic";
-import SpeechRecognition, {
-  useSpeechRecognition,
-} from "react-speech-recognition";
 import { clearStatDataError, saveStatData } from "../../redux/slices/statistic";
 import IconsArrowLeft from "../../Assets/SVG/IconsArrowLeft";
 import IconsArrowRight from "../../Assets/SVG/IconsArrowRight";
@@ -20,6 +15,7 @@ import { StarOutlined, StarFilled } from "@ant-design/icons";
 import { toggleBookmark } from "../../redux/slices/bookmark";
 import IconCross from "../../Assets/SVG/IconCross";
 import IconMikeOn from "../../Assets/SVG/IconMikeOn";
+import sendToWhisper from "../../utils/sendToWhisper";
 
 const { fuzzy } = require("fast-fuzzy");
 const { Countdown } = Statistic;
@@ -51,7 +47,11 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
   const [voice, setVoice] = useState(null);
   let [openPanels, setOpenPanels] = useState([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 720);
+  const [userAns, setUserAns] = useState();
+  const [modelWord, setModelWord] = useState();
   let dataLength = listSAL.length;
+  const shouldSendToWhisperRef = useRef(false);
+  // const modelWordsSet = new Set(data.qa.q.toLowerCase().split(/\s+/));
 
   // useEffect(() => {
   //   setIndex(id);
@@ -78,9 +78,11 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
       setData(data[0]);
       setBcolor(data[0].bookmark);
       setText(data[0].qa.q);
+      setModelWord(new Set(data[0].qa.q.toLowerCase().split(/\s+/)));
     }
+    isBusy(false);
     setTimeout(() => {
-      isBusy(false);
+      setRecord(false);
     }, 1000);
   }, [data, index, busy]);
 
@@ -105,31 +107,16 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
 
   const handleNext = () => {
     if (index <= --dataLength) {
-      setIndex(++index);
-      handleRetry();
-      navigate(`/practice/sal-s/${index}`);
-      isBusy(true);
+      const nextIndex = parseInt(index) + 1;
+      window.location.href = `/practice/sal-s/${nextIndex}`;
     }
   };
   const handlePrev = () => {
     if (index > 1) {
-      setIndex(--index);
-      handleRetry();
-      navigate(`/practice/sal-s/${index}`);
-      isBusy(true);
+      const nextIndex = parseInt(index) - 1;
+      window.location.href = `/practice/sal-s/${nextIndex}`;
     }
   };
-
-  const {
-    transcript,
-    listening,
-    resetTranscript,
-    browserSupportsSpeechRecognition,
-  } = useSpeechRecognition();
-
-  if (!browserSupportsSpeechRecognition) {
-    return null;
-  }
 
   const startRecording = () => {
     setRecord(true);
@@ -140,29 +127,57 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
   };
 
   const onStop = (recordedBlob) => {
-    setAudioData(recordedBlob.blobURL);
+    // setAudioData(recordedBlob.blobURL);
+    setAudioData(recordedBlob);
+
+    console.log("State.." + record);
+    console.log(recordedBlob);
+
+    if (shouldSendToWhisperRef.current) {
+      // sendToWhisper(recordedBlob).then((res) => {
+      //   setUserAns(res.data);
+      // });
+    }
   };
 
   const handleEvaluate = () => {
     setRecordBtnState(false);
     setActive(false);
     stopRecording();
-    SpeechRecognition.stopListening();
-    setMatching(fuzzy(data.qa.q.toString(), transcript));
-    setShowEvaluate(true);
-    setOpenPanels(["1"]);
-    setDeadline(null);
-    const statData = {
-      user: userInfo.id,
-      qn: data.id,
-      level: data.level,
-      type: data.type,
-      inner_type: data.inner_type,
-      time: data.time,
-      result: Math.floor(fuzzy(data.qa.q.toString(), transcript) * 100),
-    };
 
-    dispatch(saveStatData(statData));
+    // SpeechRecognition.stopListening();
+    //  setMatching(fuzzy(data.qa.q.toString(), transcript));
+
+    setDeadline(null);
+    console.log(audioData)
+
+    if (audioData) {
+      setTimeout(() => {
+        sendToWhisper(audioData).then((res) => {
+          if (res?.data) {
+            const wordsArray = res.data.trim().split(/\s+/);
+            setUserAns(wordsArray);
+            setShowEvaluate(true);
+            setOpenPanels(["1"]);
+            setMatching(fuzzy(data.qa.q.toString(), res.data));
+          }
+        });
+      }, 3000);
+    } else {
+      // Optional: notify the user or log that audio is missing
+      console.warn("No audio data available to evaluate.");
+    }
+    // const statData = {
+    //   user: userInfo.id,
+    //   qn: data.id,
+    //   level: data.level,
+    //   type: data.type,
+    //   inner_type: data.inner_type,
+    //   time: data.time,
+    //   result: Math.floor(fuzzy(data.qa.q.toString(), transcript) * 100),
+    // };
+
+    // dispatch(saveStatData(statData));
   };
 
   const handleRetry = () => {
@@ -170,24 +185,19 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
     notification.destroy();
     setActive(false);
     stopRecording();
-    SpeechRecognition.stopListening();
     setShowEvaluate(false);
-    setDeadline(Date.now() + data.time * 60000);
   };
 
   const mobileSpeechHandle = () => {
     setActive(true);
-    SpeechRecognition.startListening({ continuous: true });
-    setMatching(fuzzy(data.qa.q.toString(), transcript));
+
+    //  setMatching(fuzzy(data.qa.q.toString(), transcript));
     //  startRecording()
   };
   const handleSpeech = () => {
     setActive(!active);
     !active ? startRecording() : stopRecording();
-    !active
-      ? SpeechRecognition.startListening()
-      : SpeechRecognition.stopListening();
-    setMatching(fuzzy(data.qa.q.toString(), transcript));
+    // setMatching(fuzzy(data.qa.q.toString(), transcript));
   };
   const handleBookmark = (id, type, inner_type) => {
     setBcolor(!bColor);
@@ -202,7 +212,6 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
     setShowEvaluate(false);
     setbootCounter(false);
     setDeadline(0);
-    SpeechRecognition.stopListening();
     setDeadline(null);
     handleCloseModal();
     setActive(false);
@@ -212,7 +221,6 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
     setActive(false);
     stopRecording();
     setRecordBtnState(false);
-    SpeechRecognition.stopListening();
     notification.open({
       message: `Times Up`,
       placement: "top",
@@ -241,14 +249,14 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
       ) : (
         <div>
           <div className="h-auto w-[99%] m-auto bg-[#fffffff7] md:px-5 md:py-5">
-            <div
+            {/* <div
               onClick={closeModalWindow}
               className="absolute right-0 mr-3 md:mt-[-1rem] sm:mt-[10px] cursor-pointer"
             >
               <span>
                 <IconCross height="1rem" width="1rem"></IconCross>
               </span>
-            </div>
+            </div> */}
             <div className="flex flex-col gap-5 sm:px-2">
               {/* <h1 className="text-[22px] font-montserrat font-[500] underline self-center">
                 Read Aloud
@@ -258,8 +266,8 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
                   <div
                     title="Back to List"
                     className="mt-[6px] md:pr-4 sm:pr-2 cursor-pointer"
-                    onClick={() =>navigate(`/duolingo/module/speaking`)}
-                   >
+                    onClick={() => navigate(`/duolingo/module/speaking`)}
+                  >
                     {" "}
                     <span>
                       <IconsArrowLeft
@@ -394,46 +402,69 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
                           key: "1",
                           label: "Evaluation Result",
                           children: (
-                            <div className="md:w-[50%] sm:w-full m-auto md:flex md:flex-row sm:flex-col justify-center gap-5">
-                              <div className=" m-auto flex flex-col">
-                                <div className="sm:m-auto">
-                                  <Progress
-                                    style={{ fontSize: "10px" }}
-                                    type="circle"
-                                    percent={Math.floor(matching * 100)}
-                                    size={70}
-                                  />
+                            <div>
+                              <div className="md:w-[50%] sm:w-full m-auto md:flex md:flex-row sm:flex-col justify-center gap-5">
+                                <div className=" m-auto flex flex-col">
+                                  <div className="sm:m-auto">
+                                    <Progress
+                                      style={{ fontSize: "10px" }}
+                                      type="circle"
+                                      percent={Math.floor(matching * 100)}
+                                      size={70}
+                                    />
+                                  </div>
+                                  <p className="text-[20px] font-[500 text-center">
+                                    Accuracy
+                                  </p>
                                 </div>
-                                <p className="text-[20px] font-[500 text-center">
-                                  Accuracy
-                                </p>
-                              </div>
-                              <div className="sm:ml-[-12px] ">
-                                <div
-                                  className="ml-3 mt-2 flex gap-2 border-[1px]  rounded-md 
+                                <div className="sm:ml-[-12px] ">
+                                  <div
+                                    className="ml-3 mt-2 flex gap-2 border-[1px]  rounded-md 
                                 justify-center m-auto"
-                                >
-                                  <h1 className="mt-[2px] text-[17px] font-poppins font-[500]">
-                                    AI
-                                  </h1>
-                                  <span
-                                    onClick={handleAIsampleVoice}
-                                    className="cursor-pointer"
                                   >
-                                    <IconMikeOn
-                                      height="2rem"
-                                      width="2rem"
-                                    ></IconMikeOn>
-                                  </span>
+                                    <h1 className="mt-[2px] text-[17px] font-poppins font-[500]">
+                                      MENTOR
+                                    </h1>
+                                    <span
+                                      onClick={handleAIsampleVoice}
+                                      className="cursor-pointer"
+                                    >
+                                      <IconMikeOn
+                                        height="2rem"
+                                        width="2rem"
+                                      ></IconMikeOn>
+                                    </span>
+                                  </div>
+                                  <div
+                                    className={`${
+                                      isMobile ? "hidden" : "block"
+                                    } m-auto text-center`}
+                                  >
+                                    <p>Your Answer</p>
+                                    <audio controls src={audioData}></audio>
+                                  </div>
                                 </div>
-                                <div
-                                  className={`${
-                                    isMobile ? "hidden" : "block"
-                                  } m-auto text-center`}
-                                >
-                                  <p>Your Answer</p>
-                                  <audio controls src={audioData}></audio>
-                                </div>
+                              </div>
+
+                              <div>
+                                <p>
+                                  {userAns?.map((word, index) => {
+                                    const isMatch = modelWord.has(
+                                      word.toLowerCase()
+                                    );
+                                    return (
+                                      <span
+                                        key={index}
+                                        style={{
+                                          color: isMatch ? "black" : "red",
+                                          marginRight: 4,
+                                        }}
+                                      >
+                                        {word}
+                                      </span>
+                                    );
+                                  })}
+                                </p>
                               </div>
                             </div>
                           ),

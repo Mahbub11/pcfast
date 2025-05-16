@@ -1,252 +1,107 @@
-import React, { useEffect, useState } from "react";
-import { Radio, notification, Collapse } from "antd";
-
-import { RightOutlined, LeftOutlined } from "@ant-design/icons";
-import { Statistic, Grid, Skeleton } from "antd";
-import SelectBox from "../../Components/Reading/SelectBox";
-import { Selectans } from "../../utils/dummuData";
+import React, { useState } from "react";
+import { Radio, Skeleton, notification } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  DisableVisibility,
-  ToggleVisibility,
-} from "../../redux/slices/fillgap";
-import "../../Components/Reading/RadioBtn.css";
+  SaveRGPInput,
+  SaveRGPResult,
+} from "../../redux/slices/readingInput";
 import { getWordDetails } from "../../redux/slices/disctionary";
-import { DisableOptionView } from "../../redux/slices/app";
-import { useLocation, useParams } from "react-router-dom";
-import { ReactComponent as Tick } from "../../Assets/SVG/tick.svg";
-import IconsArrowLeft from "../../Assets/SVG/IconsArrowLeft";
-import IconsArrowRight from "../../Assets/SVG/IconsArrowRight";
-import { saveStatData } from "../../redux/slices/statistic";
-import { StarOutlined, StarFilled } from "@ant-design/icons";
-import { toggleBookmark } from "../../redux/slices/bookmark";
-import { SaveRGPInput, SaveRGPResult } from "../../redux/slices/readingInput";
-
-const { Countdown } = Statistic;
-const { useBreakpoint } = Grid;
+import { useParams } from "react-router-dom";
+import "../../Components/Reading/RadioBtn.css";
 
 export default function PracticePageRGP({ data, meaning = true }) {
   const [api, contextHolder] = notification.useNotification();
-  // let [index, setIndex] = useState((id));
-  const [play, setPlay] = useState(true);
   const dispatch = useDispatch();
   const { visibility } = useSelector((state) => state.fillgap);
-  const { listRGPT } = useSelector((state) => state.getReadingList);
   const { inputRGP } = useSelector((state) => state.readingInput);
-  const [selectVal, setSelectVal] = useState(inputRGP);
-  const { userInfo } = useSelector((state) => state.auth);
+  const [selectedOption, setSelectedOption] = useState(inputRGP || "");
   const { rid } = useParams();
-  const [timeDanger, setTimeDanger] = useState(false);
-  const [busy, isBusy] = useState(true);
-  const [bColor, setBcolor] = useState(true);
 
-  // A computer *spend-love-a-is  a machine that can be programmed to *carries-carry-a-in  out sequences of arithmetic or *spend-logic-a-in operations (computation) automatically. Modern *spend-digital-a-in  electronic computers can perform generic sets of operations known as programs. These programs
-  // enable computers to perform a wide range of tasks.
-
-  const handleMeaning = (val) => {
+  const handleMeaning = (e) => {
     if (meaning) {
-      dispatch(getWordDetails(val.target.textContent));
+      dispatch(getWordDetails(e.target.textContent));
     }
   };
 
-  const saveUserInput = (e) => {
-    dispatch(SaveRGPInput(e));
-    setSelectVal(e);
-    const statData = {
-      result: e === data.qa.a[0] ? 100 : 0,
-    };
-
-    dispatch(SaveRGPResult(statData));
+  const handleOptionChange = (value) => {
+    setSelectedOption(value);
+    dispatch(SaveRGPInput(value));
+    const result = value === data.qa.a[0] ? 100 : 0;
+    dispatch(SaveRGPResult({ result }));
   };
 
-  console.log(data);
+  const getOptionClass = (option) => {
+    if (!visibility) {
+      return selectedOption === option ? "bg-[#3ab6bf5f]" : "bg-white";
+    }
+
+    if (option === data.qa.a[0]) {
+      return "bg-green-300";
+    }
+
+    if (option === selectedOption && option !== data.qa.a[0]) {
+      return "bg-red-400";
+    }
+
+    return "bg-white";
+  };
+
+  if (!data) return <Skeleton active />;
 
   return (
-    <div>
-      {false ? (
-        <Skeleton active></Skeleton>
-      ) : (
-        <div className="h-auto w-[99%] m-auto  md:px-5 md:py-5">
-          {contextHolder}
-          <div className="flex flex-col gap-5 sm:px-2">
-            {/* <h1 className="text-[22px] font-montserrat font-[500] underline self-center">
-              Give title of a Passage
-            </h1> */}
-            <div className="flex flex-col gap-3 justify-center  rounded-md">
-              <div className="mt-[2rem] w-[98%] md:flex justify-between gap-2 m-auto py-2">
-                <div
-                  className="md:text-[18px] sm:text-[15px]
-                     md:w-[65%] sm:w-full msm:w-[100%] 
-                     rounded-md border-[1px] border-[#3ab6bf5f]"
-                >
-                  <div className="w-full border-b-[1px] border-[#3ab6bf5f]">
-                    <h1 className="text-center font-poppins text-[20px]">
-                      Passage
-                    </h1>{" "}
-                  </div>
-                  <div
-                    className="w-full  flex flex-wrap font-[400] leading-1 m-auto gap-1
-                       px-5 py-4 text-justify font-poppins"
+    <div className="w-[99%] m-auto md:px-5 md:py-5">
+      {contextHolder}
+      <div className="flex flex-col gap-5 sm:px-2">
+        <div className="flex flex-col gap-3 justify-center rounded-md">
+          <div className="mt-8 w-[98%] md:flex justify-between gap-2 m-auto py-2">
+            {/* Passage Section */}
+            <div className="md:w-[65%] sm:w-full rounded-md border border-[#3ab6bf5f]">
+              <div className="border-b border-[#3ab6bf5f]">
+                <h1 className="text-center font-poppins text-[20px]">Passage</h1>
+              </div>
+              <div className="px-5 py-4 text-justify font-[400] text-[18px] font-poppins leading-relaxed flex flex-wrap gap-1">
+                {data?.qa?.passage.split(" ").map((word, index) => (
+                  <span
+                    key={index}
+                    className="cursor-pointer hover:text-blue-500"
+                    onClick={handleMeaning}
                   >
-                    {data?.qa?.passage.split(" ").map((val, index) => {
-                      return (
-                        <div>
-                          <p
-                            className={`cursor-pointer md:hover:text-blue-500 text-justify`}
-                            onClick={handleMeaning}
-                          >
-                            {val}
-                          </p>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div
-                  className="self-start md:w-[35%] sm:w-[90%] m-auto font-poppins font-[400] 
-                 sm:text-[15px] md:text-[23px] md:ml-5 md:mt-0"
-                >
-                  <h1 className="sm:text-[17px] md:text-[20px] md:block self-center font-poppins font-[600]">
-                    Select the best title of the passage
-                  </h1>
-                  {
-                    <Radio.Group
-                      defaultValue={inputRGP ? inputRGP : ""}
-                      onChange={(e) => saveUserInput(e.target.value)}
-                      style={{
-                        marginTop: 16,
-                        fontFamily: "inherit",
-                      }}
-                    >
-                      <div className="flex flex-col mt-2 gap-2 text-[15px]">
-                        <Radio
-                          style={{ fontSize: "17px", fontFamily: "inherit" }}
-                          key={data.qa.options[0]}
-                          className={`${
-                            visibility &&
-                            data.qa.options[0] === inputRGP &&
-                            data.qa.a[0] !== data.qa.options[0]
-                              ? " bg-red-400"
-                              : ""
-                          }
-                          ${
-                            visibility && data.qa.a[0] === data.qa.options[0]
-                              ? "bg-green-300  font-montserrat font-[400] rounded-md"
-                              : "font-montserrat font-[400]  rounded-md"
-                          } h-auto w-auto rounded-ms border-[2px] px-2 py-2`}
-                          value={data.qa.options[0]}
-                        >
-                          <div className="flex">
-                            <p> {data.qa.options[0]}</p>
-                          </div>
-                        </Radio>
-
-                        <Radio
-                          style={{ fontSize: "17px", fontFamily: "inherit" }}
-                          key={data.qa.options[1]}
-                          className={`${
-                            visibility &&
-                            data.qa.options[1] === inputRGP &&
-                            data.qa.a[0] !== data.qa.options[1]
-                              ? " bg-red-400"
-                              : ""
-                          }
-                          ${
-                            visibility && data.qa.a[0] === data.qa.options[1]
-                              ? "bg-green-300  font-montserrat font-[400] "
-                              : "  font-montserrat font-[400]"
-                          } h-auto rounded-md border-[2px] px-2 py-2`}
-                          value={data.qa.options[1]}
-                        >
-                          <div className="flex">
-                            <p> {data.qa.options[1]}</p>
-                          </div>
-                        </Radio>
-
-                        <Radio
-                          style={{ fontSize: "17px", fontFamily: "inherit" }}
-                          key={data.qa.options[2]}
-                          className={`${
-                            visibility &&
-                            data.qa.options[2] === inputRGP &&
-                            data.qa.a[0] !== data.qa.options[2]
-                              ? " bg-red-400"
-                              : ""
-                          }
-                          ${
-                            visibility && data.qa.a[0] === data.qa.options[2]
-                              ? "bg-green-300  font-montserrat font-[400]"
-                              : " font-montserrat font-[400] border-[2px] px-2 py-2"
-                          } h-auto rounded-md`}
-                          value={data.qa.options[2]}
-                        >
-                          <div className="flex">
-                            <p> {data.qa.options[2]}</p>
-                          </div>
-                        </Radio>
-
-                        <Radio
-                          style={{ fontSize: "17px", fontFamily: "inherit" }}
-                          key={data.qa.options[3]}
-                          className={`${
-                            visibility &&
-                            data.qa.options[3] === inputRGP &&
-                            data.qa.a[0] !== data.qa.options[3]
-                              ? " bg-red-400"
-                              : ""
-                          }
-                          ${
-                            visibility && data.qa.a[0] === data.qa.options[3]
-                              ? "bg-green-300  font-montserrat font-[400]"
-                              : "font-montserrat font-[400]"
-                          } h-auto rounded-md  border-[2px] px-2 py-2`}
-                          value={data.qa.options[3]}
-                        >
-                          <div className="flex">
-                            <p> {data.qa.options[3]}</p>
-                          </div>
-                        </Radio>
-                      </div>
-                    </Radio.Group>
-                  }
-                </div>
+                    {word}{" "}
+                  </span>
+                ))}
               </div>
             </div>
 
-            <div className="mr-3">
-              <div
-                className={`${
-                  visibility ? "block" : "hidden"
-                } h-auto w-[95%] m-auto mt-5`}
+            {/* Options Section */}
+            <div className="md:w-[35%] sm:w-[90%] m-auto font-poppins md:ml-5">
+              <h2 className="text-[20px] font-[600] mb-3">
+                Select the best title of the passage
+              </h2>
+
+              <Radio.Group
+                value={selectedOption}
+                onChange={(e) => handleOptionChange(e.target.value)}
+                style={{ marginTop: 16 }}
               >
-                <Collapse
-                  accordion
-                  style={{ backgroundColor: "#DDE9F8" }}
-                  items={[
-                    {
-                      key: "1",
-                      label: "Model Answer",
-                      children: (
-                        <p className=" text-[17px] font-poppins h-auto px-1">
-                          {data.qa.a[0].split(" ").map((val) => (
-                            <span
-                              className="cursor-pointer md:hover:text-blue-500 w-full "
-                              onClick={handleMeaning}
-                            >
-                              {" " + val}
-                            </span>
-                          ))}
-                        </p>
-                      ),
-                    },
-                  ]}
-                />
-              </div>
+                <div className="flex flex-col gap-2">
+                  {data.qa.options.map((option, idx) => (
+                    <Radio
+                      key={idx}
+                      value={option}
+                      className={`rounded-md border-[2px] px-2 py-2 ${getOptionClass(
+                        option
+                      )}`}
+                      style={{ fontSize: "18px" }}
+                    >
+                      {option}
+                    </Radio>
+                  ))}
+                </div>
+              </Radio.Group>
             </div>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

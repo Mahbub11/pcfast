@@ -35,8 +35,8 @@ export const AssesmentContainer = ({
   const [loadingStep, setLoadingStep] = useState(20);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 720);
   const config = isMobile
-  ? { maxWidth: "98vw", padding: 0 }
-  : { maxWidth: "70vw" };
+    ? { maxWidth: "98vw", padding: 0 }
+    : { maxWidth: "70vw" };
 
   useEffect(() => {
     if (isSubscriptionRequired) {
@@ -59,10 +59,10 @@ export const AssesmentContainer = ({
     if (isfluency) {
       const calculateOverall =
         (parseInt(data?.tr?.value) +
-         parseInt( data?.ga?.value) +
-        parseInt(  data?.gc?.value) +
-       parseInt(   data?.ls?.value) +
-        parseInt(  data?.ld?.value) +
+          parseInt(data?.ga?.value) +
+          parseInt(data?.gc?.value) +
+          parseInt(data?.ls?.value) +
+          parseInt(data?.ld?.value) +
           parseInt(data?.fluency?.value)) /
         6;
 
@@ -80,10 +80,10 @@ export const AssesmentContainer = ({
     } else {
       const calculateOverall =
         (parseInt(data?.tr?.value) +
-        parseInt(  data?.ga?.value) +
-         parseInt( data?.gc?.value )+
-        parseInt(  data?.ls?.value )+
-         parseInt( data?.ld?.value )+
+          parseInt(data?.ga?.value) +
+          parseInt(data?.gc?.value) +
+          parseInt(data?.ls?.value) +
+          parseInt(data?.ld?.value) +
           parseInt(getLength)) /
         6;
 

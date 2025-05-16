@@ -85,6 +85,7 @@ export default function PracticePageVRS({ id, handleCloseModal }) {
       setVocIndex(++vocIndex);
       dispatch(removeChecked());
       isBusy(true);
+      handleRetry();
       navigate(`/practice/vrs-v/${vocIndex}`);
 
       // setShowEv(false);
@@ -97,6 +98,7 @@ export default function PracticePageVRS({ id, handleCloseModal }) {
       isBusy(true);
       setVocIndex(--vocIndex);
       dispatch(removeChecked());
+      handleRetry();
       navigate(`/practice/vrs-v/${vocIndex}`);
 
       // setShowModelAns(false);
@@ -199,14 +201,14 @@ export default function PracticePageVRS({ id, handleCloseModal }) {
         </div>
       ) : (
         <div className="h-auto sm:w-full md:w-[99%] m-auto bg-[#fffffff7] md:px-5 md:py-5 ">
-          <div
+          {/* <div
             onClick={closeModalWindow}
             className="absolute right-0 mr-3  sm:mt-[10px] md:mt-[-25px] cursor-pointer"
           >
             <span>
               <IconCross height="1rem" width="1rem"></IconCross>
             </span>
-          </div>
+          </div> */}
           <div className="flex flex-col md:gap-5 sm:gap-2">
             {/* <h1 className="text-[22px] font-montserrat font-[500] underline self-center">
               Read and Select

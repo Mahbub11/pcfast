@@ -34,7 +34,7 @@ const { TextArea } = Input;
 const { Countdown } = Statistic;
 const deadline = Date.now() + 100000;
 
-export default function PracticePageRHA2({ data,meaning=true  }) {
+export default function PracticePageRHA2({ data, meaning = true }) {
   const dispatch = useDispatch();
 
   // let [index, setIndex] = useState(id);
@@ -98,7 +98,7 @@ export default function PracticePageRHA2({ data,meaning=true  }) {
     const statData = {
       result:
         data1.join(" ").replace(/\.$/, "").trim() ===
-        answer.replace(/\./g,' ').trim()
+        answer.replace(/\./g, " ").trim()
           ? 100
           : 0,
     };
@@ -109,9 +109,9 @@ export default function PracticePageRHA2({ data,meaning=true  }) {
   };
 
   const handleMeaning = (val) => {
-   if(meaning){
-    dispatch(getWordDetails(val.target.textContent));
-   }
+    if (meaning) {
+      dispatch(getWordDetails(val.target.textContent));
+    }
   };
 
   return (
@@ -273,8 +273,6 @@ export default function PracticePageRHA2({ data,meaning=true  }) {
                               </div>
                             )}
                           </div>
-
-                         
                         </div>
                       </div>
                     </div>
@@ -282,7 +280,7 @@ export default function PracticePageRHA2({ data,meaning=true  }) {
                 </div>
               </div>
             </div>
-            <div>
+            {/* <div>
               <div className={`${visibility ? "block" : "hidden"}`}>
                 <Collapse
                   accordion
@@ -307,7 +305,7 @@ export default function PracticePageRHA2({ data,meaning=true  }) {
                   ]}
                 />
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       )}

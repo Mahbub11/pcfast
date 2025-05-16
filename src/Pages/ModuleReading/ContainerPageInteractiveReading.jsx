@@ -10,7 +10,6 @@ const { Search } = Input;
 export default function ContainerPageInteractiveReading() {
   const dispatch = useDispatch();
   const { listInteractive } = useSelector((state) => state.getReadingList);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 720);
   const [data, setData] = useState();
   const [index, setIndex] = useState();
   const [show, isShow] = useState(false);
@@ -21,10 +20,6 @@ export default function ContainerPageInteractiveReading() {
   const [fpracUnprac, setFpracUnprac] = useState(false);
   const [markedFilter, setMarkedFilter] = useState(false);
   const navigate = useNavigate();
-
-  const config = isMobile
-    ? { maxWidth: "98vw", padding: 0 }
-    : { maxWidth: "80vw" };
 
   const handleQ = (id) => {
     navigate(`/practice/ri-r/${id}`);
@@ -45,7 +40,6 @@ export default function ContainerPageInteractiveReading() {
   };
   useEffect(() => {
     if (level) {
-      console.log("dd");
       const filteredVals = tableData.filter((entry) =>
         entry.level.toString().includes(level)
       );

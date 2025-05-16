@@ -1,12 +1,15 @@
 import { Skeleton, Statistic, notification } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+
 import PracticePageRCI from "../PracticeReading/PracticePageRCI";
 import PracticePageRCP from "../PracticeReading/PracticePageRCP";
 import PracticePageRCS from "../PracticeReading/PracticePageRCS";
 import PracticePageRGP from "../PracticeReading/PracticePageRGP";
 import PracticePageRHA from "../PracticeReading/PracticePageRHA";
-import { StarOutlined, StarFilled } from "@ant-design/icons";
+import PracticePageRHA2 from "../PracticeReading/PracticePageRHA2";
+
 import { toggleBookmark } from "../../redux/slices/bookmark";
 import {
   DisableVisibility,
@@ -18,267 +21,172 @@ import {
   SaveRCSResult,
 } from "../../redux/slices/readingInput";
 import { saveStatData } from "../../redux/slices/statistic";
+
 import IconCross from "../../Assets/SVG/IconCross";
-import PracticePageRHA2 from "../PracticeReading/PracticePageRHA2";
-import { useNavigate, useParams } from "react-router-dom";
 import IconsArrowLeft from "../../Assets/SVG/IconsArrowLeft";
 import IconsArrowRight from "../../Assets/SVG/IconsArrowRight";
+import { StarOutlined, StarFilled } from "@ant-design/icons";
+
 const { Countdown } = Statistic;
 
-export default function InteractiveReadingPracticeContainer({
-  data1,
-  show,
-  handleCloseModal,
-}) {
+export default function InteractiveReadingPracticeContainer() {
   const { rid } = useParams();
-  let [qIndex, setQIndex] = useState(rid);
-  const [busy, isBusy] = useState(true);
-  const [api, contextHolder] = notification.useNotification();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [index, setIndex] = useState(0);
+  const [busy, setBusy] = useState(true);
+  const [showEvaluateBtn, setShowEvaluateBtn] = useState(false);
+  const [showNextBtn, setShowNextBtn] = useState(true);
+  const [showPreviousBtn, setShowPreviousBtn] = useState(false);
+  const [counter, setCounter] = useState(false);
+  const [deadline, setDeadline] = useState(2);
+  const [timeDanger, setTimeDanger] = useState(false);
+  const [bookmark, setBookmark] = useState(false);
+  const [data, setData] = useState({});
+  const [pages, setPages] = useState([]);
+
+  const { userInfo } = useSelector((state) => state.auth);
+  const { listInteractive } = useSelector((state) => state.getReadingList);
+  const { userInput } = useSelector((state) => state.fillgap);
   const { resultRCS, resultRCP, resultRHA, resultRHA2, resultRGP, resultRCI } =
     useSelector((state) => state.readingInput);
-  const { userInfo } = useSelector((state) => state.auth);
-  const [bootCounter, setbootCounter] = useState(false);
-  const { listInteractive } = useSelector((state) => state.getReadingList);
-  let dataLength = listInteractive.length;
-  const navigate = useNavigate();
-  let [index, setIndex] = useState(0);
-  const [listRCS, setRCS] = useState();
-  const [listRCP, setRCP] = useState();
-  const [listRHA, setRHA] = useState();
-  const [listRHA2, setRHA2] = useState();
-  const [listRCI, setRCI] = useState();
-  const [listRGPT, setRGPT] = useState();
-  const [showPreviousBtn, setShowPreviousBtn] = useState(false);
-  const [showEvaluateBtn, setShowEvaluateBtn] = useState(false);
-  const [bColor, setBcolor] = useState(true);
-  const [showNextbtn, setShowNxtBtn] = useState(true);
-  const [counter, setCounter] = useState(false);
-  const [timeDanger, setTimeDanger] = useState(false);
-  const [deadline, setDeadline] = useState(2);
-  const [idata, setIData] = useState();
-  const [data, setData] = useState();
-  const dispatch = useDispatch();
-  const { userInput } = useSelector((state) => state.fillgap);
-
-  // useEffect(() => {
-  //   setShowPreviousBtn(false);
-  //   setShowEvaluateBtn(false);
-  //   setShowNxtBtn(true);
-  //   // setCounter(true);
-  //   setIndex(0);
-  //   dispatch(DisableVisibility());
-  // }, [show]);
 
   useEffect(() => {
-    const tempdata = listInteractive.filter(
-      (val) => parseInt(rid) === val.index
+    const qData = listInteractive.find((val) => val.index === parseInt(rid));
+    if (!qData) return;
+
+    dispatch(cleanUserReadingInput());
+    dispatch(cleanUserReadingResult());
+    dispatch(DisableVisibility());
+
+    setData(qData);
+    setDeadline(Date.now() + qData.time * 60000);
+    setBookmark(qData.bookmark || false);
+
+    const STEP_ORDER = [321, 322, 323, 324, 325, 326];
+    const sortedReadings = STEP_ORDER.map((type) =>
+      qData.interactivereadings.find((item) => item.inner_type === type)
+    ).filter(Boolean);
+
+    const typeComponents = sortedReadings.map((val, i) => {
+      switch (val.inner_type) {
+        case 322:
+          return <PracticePageRCP data={val} key={`322-${i}`} />;
+        case 321:
+          return <PracticePageRCS data={val} index={index} key={`321-${i}`} />;
+        case 323:
+          return <PracticePageRCI data={val} key={`323-${i}`} />;
+        case 324:
+          return <PracticePageRHA data={val} index={index} key={`324-${i}`} />;
+        case 325:
+          return <PracticePageRGP data={val} key={`325-${i}`} />;
+        case 326:
+          return <PracticePageRHA2 data={val} index={index} key={`326-${i}`} />;
+        default:
+          return null;
+      }
+    });
+
+    setPages(typeComponents);
+    setIndex(0);
+    setCounter(false);
+    setShowEvaluateBtn(false);
+    setShowNextBtn(true);
+    setShowPreviousBtn(false);
+
+    setTimeout(() => setBusy(false), 1000);
+  }, [rid]);
+
+  // Bookmark handler
+  const handleBookmark = () => {
+    setBookmark((prev) => !prev);
+    dispatch(
+      toggleBookmark({
+        id: data.id,
+        type: data.type,
+        inner_type: data.inner_type,
+      })
     );
-    setIData(tempdata[0]);
-    setData(tempdata[0]);
-    console.log(tempdata);
-    setDeadline(Date.now() + tempdata[0]?.time * 60000);
-    setBcolor(tempdata[0].bookmark);
-    tempdata[0].interactivereadings.map((val) => {
-      if (val.inner_type === 321) {
-        setRCS(val);
-      }
-      if (val.inner_type === 322) {
-        setRCP(val);
-      }
-      if (val.inner_type === 323) {
-        setRCI(val);
-      }
-      if (val.inner_type === 324) {
-        setRHA(val);
-      }
-      if (val.inner_type === 325) {
-        setRGPT(val);
-      }
-      if (val.inner_type === 326) {
-        setRHA2(val);
-      }
-    });
-
-    isBusy(false);
-  }, [data, busy]);
-
-  const list = [
-    <PracticePageRCS data={listRCS}></PracticePageRCS>,
-    <PracticePageRCP index={index} data={listRCP}></PracticePageRCP>,
-    <PracticePageRHA index={index} data={listRHA}></PracticePageRHA>,
-    <PracticePageRCI data={listRCI}></PracticePageRCI>,
-    <PracticePageRGP data={listRGPT}></PracticePageRGP>,
-    <PracticePageRHA2 index={index} data={listRHA2}></PracticePageRHA2>,
-  ];
-
-  // useEffect(() => {
-  //   if (index > 0 && showEvaluateBtn) {
-  //     setShowPreviousBtn(true);
-  //   } else if (index === 0) {
-  //     setShowPreviousBtn(false);
-  //   }
-
-  //   if (index <= 5) {
-  //     setShowNxtBtn(true);
-  //   } else if (index === 5) {
-  //     setShowNxtBtn(false);
-  //     setShowPreviousBtn(true);
-  //   }
-  //   if (index === 5) {
-  //     setShowNxtBtn(false);
-  //     setShowPreviousBtn(false);
-  //     if (!showEvaluateBtn && counter) {
-  //       setShowEvaluateBtn(true);
-  //       setShowNxtBtn(false);
-  //     }
-  //   }
-  // }, [index]);
-
-  const openNotification = () => {
-    // handleEvaluate()
-    notification.open({
-      message: `Times Up`,
-      placement: "top",
-      type: "warning",
-      style: {
-        border: "2px solid red",
-      },
-    });
-  };
-  const handleBookmark = (id, type, inner_type) => {
-    setBcolor(!bColor);
-    const data = {
-      id,
-      type,
-      inner_type,
-    };
-    dispatch(toggleBookmark(data));
   };
 
   const handleEvaluate = () => {
     setDeadline(null);
     dispatch(ToggleVisibility());
     setShowEvaluateBtn(false);
-    setShowNxtBtn(false);
+    setShowNextBtn(false);
     setShowPreviousBtn(true);
     setCounter(true);
+
     const readingResult =
-      parseInt(resultRCS?.result) +
-      parseInt(resultRCP?.result) +
-      parseInt(resultRHA?.result) +
-      parseInt(resultRHA2?.result) +
-      parseInt(resultRGP?.result) +
-      parseInt(resultRCI?.result);
+      parseInt(resultRCS?.result || 0) +
+      parseInt(resultRCP?.result || 0) +
+      parseInt(resultRHA?.result || 0) +
+      parseInt(resultRHA2?.result || 0) +
+      parseInt(resultRGP?.result || 0) +
+      parseInt(resultRCI?.result || 0);
 
-    // console.log((resultRCS?.result))
-    // console.log((resultRCP?.result))
-    // console.log((resultRHA?.result))
-    // console.log((resultRHA2?.result))
-    // console.log((resultRGP?.result))
-    // console.log((resultRCI?.result))
-
-    const statData = {
-      user: userInfo.id,
-      qn: idata.id,
-      level: idata.level,
-      type: idata.type,
-      inner_type: idata.inner_type,
-      time: idata.time,
-      result: readingResult / 6,
-    };
-
-    dispatch(saveStatData(statData));
+    dispatch(
+      saveStatData({
+        user: userInfo.id,
+        qn: data.id,
+        level: data.level,
+        type: data.type,
+        inner_type: data.inner_type,
+        time: data.time,
+        result: readingResult / 6,
+      })
+    );
   };
 
   const handleNext = () => {
-    if (index === 0 || index < 5) {
-      setIndex(index + 1);
+    if (index < pages.length - 1) {
+      setIndex((prev) => prev + 1);
       setShowPreviousBtn(true);
-      setShowNxtBtn(true);
 
-      let correct = 0;
-      listRCS.qa.a.map((val, i) => (userInput[i] === val ? ++correct : ""));
-      const ansLength = listRCS.qa.a.length;
-      const statData = {
-        result: ((correct / ansLength) * 100).toFixed(2),
-      };
-      dispatch(SaveRCSResult(statData));
-    }
-  };
-  useEffect(() => {
-    if (index === 5) {
-      setShowNxtBtn(false);
-      if (!counter) {
-        setShowEvaluateBtn(true);
+      if (index === 0 && data.interactivereadings[0].inner_type === 321) {
+        const correct = data.interactivereadings[0].qa.a.filter(
+          (val, i) => userInput[i] === val
+        ).length;
+        const total = data.interactivereadings[0].qa.a.length;
+        dispatch(
+          SaveRCSResult({
+            result: ((correct / total) * 100).toFixed(2),
+          })
+        );
       }
     }
-    if (index > 0 && !showEvaluateBtn) {
-      setShowPreviousBtn(false);
-    }
-    if (index > 0 && counter) {
-      setShowPreviousBtn(true);
-    }
-    if (index === 0) {
-      setShowPreviousBtn(false);
-    }
-  }, [index]);
+  };
 
   const handlePrevious = () => {
-    if (index > 0 || index < 6) {
-      setIndex(index - 1);
-      setShowNxtBtn(true);
-      setShowPreviousBtn(true);
+    if (index > 0) {
+      setIndex((prev) => prev - 1);
     }
   };
 
-  // const handleNext = () => {
-  //   setIndex(++index);
-  //   let correct = 0;
-  //   listRCS.qa.a.map((val, i) => (userInput[i] === val ? ++correct : ""));
-  //   const ansLength = listRCS.qa.a.length;
-  //   const statData = {
-  //     result: ((correct / ansLength) * 100).toFixed(2),
-  //   };
-  //   dispatch(SaveRCSResult(statData));
-  // };
-  const closeModalWindow = () => {
-    setbootCounter(false);
-    setDeadline(null);
-    dispatch(cleanUserReadingInput());
-    dispatch(cleanUserReadingResult());
-    // handleCloseModal();
-  };
-
-  const handleQNext = () => {
-    if (qIndex <= --dataLength) {
-      setQIndex(++qIndex);
-      navigate(`/practice/ri-r/${qIndex}`);
-      window.location.reload();
+  const handleQNav = (dir) => {
+    const nextId = parseInt(rid) + dir;
+    if (listInteractive.some((q) => q.index === nextId)) {
+      setBusy(true);
+      navigate(`/practice/ri-r/${nextId}`);
     }
   };
-  const handleQPrev = () => {
-    if (qIndex > 1) {
-      setQIndex(--qIndex);
 
-      navigate(`/practice/ri-r/${qIndex}`);
-      window.location.reload();
-    }
+  const openNotification = () => {
+    notification.open({
+      message: `Time's Up`,
+      placement: "top",
+      type: "warning",
+      style: { border: "2px solid red" },
+    });
   };
+
   return (
     <div>
       {busy ? (
-        <Skeleton></Skeleton>
+        <Skeleton />
       ) : (
-        <div className="h-auto w-full flex justify-between flex-col bg-transparent">
-          <div
-            onClick={closeModalWindow}
-            className="absolute right-0 mr-3 md:mt-[-1rem] cursor-pointer py-2 px-1"
-          >
-            <span>
-              <IconCross height="1rem" width="1rem"></IconCross>
-            </span>
-          </div>
-
+        <div className="h-auto w-full flex flex-col justify-between bg-transparent">
           <div className="bg-[#fffffff7] px-4 py-5">
             <div className="md:flex md:flex-row sm:flex sm:flex-col justify-between m-auto w-full mt-5 ">
               <div
@@ -318,7 +226,7 @@ export default function InteractiveReadingPracticeContainer({
                     handleBookmark(data.id, data.type, data.inner_type)
                   }
                 >
-                  {bColor ? (
+                  {bookmark ? (
                     <StarFilled
                       style={{ fontSize: "20px", color: "#08c" }}
                     ></StarFilled>
@@ -343,79 +251,64 @@ export default function InteractiveReadingPracticeContainer({
                 />
               </div>
             </div>
+            <div>{pages[index]}</div>
 
-            <div>{list[index]}</div>
-            <div className=" w-full flex sm:mt-5 md:mt-2">
-              <div className="flex md:justify-end sm:justify-start sm:ml-2 md:ml-0   w-full">
-                <div className="mr-3">
-                  <div className="flex gap-2 justify-center m-auto w-min">
-                    <span
-                      onClick={handleQPrev}
-                      className="m-auto w-min cursor-pointer"
-                    >
-                      {" "}
-                      <IconsArrowLeft
-                        width="1rem"
-                        height="1rem"
-                      ></IconsArrowLeft>
-                    </span>
-                    <h1 className="border-[2px] text-[20px] font-[600] border-[#3AB7BF] px-2 py-2 rounded-md">
-                      {qIndex}
-                    </h1>
-                    <span
-                      onClick={handleQNext}
-                      className="m-auto w-min cursor-pointer"
-                    >
-                      {" "}
-                      <IconsArrowRight
-                        width="1rem"
-                        height="1rem"
-                      ></IconsArrowRight>
-                    </span>
-                  </div>
-                </div>
+            <div className="flex justify-end mt-5">
+              {/* <div className="mt-2 text-center text-sm font-medium">
+                Question {index + 1} of {pages.length}
+              </div> */}
+              <div className="flex gap-3">
+                {/* Previous: Show after evaluation */}
+                {counter && (
+                  <button
+                    className="px-5 py-3 bg-home rounded-md text-gray-800 font-semibold"
+                    onClick={handlePrevious}
+                    disabled={index === 0}
+                    style={{ opacity: index === 0 ? 0.5 : 1 }}
+                  >
+                    Previous
+                  </button>
+                )}
+
+                {/* Evaluate: Show only on last question before evaluation */}
+                {!counter && index === pages.length - 1 && (
+                  <button
+                    className="px-6 py-3 bg-home rounded-md text-gray-800 font-semibold"
+                    onClick={handleEvaluate}
+                  >
+                    Evaluate
+                  </button>
+                )}
+
+                {/* Next: Show before evaluation, or after evaluation */}
+                {(counter || (!counter && index < pages.length - 1)) && (
+                  <button
+                    className="px-5 py-3 bg-home rounded-md text-gray-800 font-semibold"
+                    onClick={handleNext}
+                    disabled={counter && index === pages.length - 1}
+                    style={{
+                      opacity: counter && index === pages.length - 1 ? 0.5 : 1,
+                    }}
+                  >
+                    Next
+                  </button>
+                )}
               </div>
-              <div className="flex md:gap-10 sm:gap-2 md:justify-end sm:justify-center w-full">
-                <div className="mt-2 font-poppins md:text-[18px] sm:text-[14px] font-[500] sm:mr-[5rem] md:mr-0">{`Question ${
-                  1 + index
-                } of 6`}</div>
-                <div className="">
-                  {showPreviousBtn ? (
-                    <button
-                      className="px-2 py-2 bg-home rounded-md font-[500]"
-                      onClick={handlePrevious}
-                    >
-                      previous
-                    </button>
-                  ) : (
-                    ""
-                  )}
-                </div>
-                <div>
-                  {showEvaluateBtn ? (
-                    <button
-                      className="px-5 py-2 bg-home rounded-md font-[500]"
-                      onClick={handleEvaluate}
-                    >
-                      Evaluate
-                    </button>
-                  ) : (
-                    ""
-                  )}
-                </div>
-                <div>
-                  {showNextbtn ? (
-                    <button
-                      className="px-2 py-2 bg-home rounded-md font-[500]"
-                      onClick={handleNext}
-                    >
-                      Next
-                    </button>
-                  ) : (
-                    ""
-                  )}
-                </div>
-              </div>
+            </div>
+            <div className="border-b-2  mt-3 border-[#3ab6bf5f]"></div>
+
+            <div className="flex items-center gap-3 mt-5 justify-center">
+              <span className="cursor-pointer" onClick={() => handleQNav(-1)}>
+                {" "}
+                <IconsArrowLeft width="1rem" height="1rem" />
+              </span>
+              <span className="border-[2px] text-[20px] font-[600] border-[#3AB7BF] px-2 py-2 rounded-md">
+                {rid}
+              </span>
+
+              <span className="cursor-pointer" onClick={() => handleQNav(1)}>
+                <IconsArrowRight width="1rem" height="1rem" />
+              </span>
             </div>
           </div>
         </div>

@@ -166,11 +166,15 @@ export default function Header() {
               }
               <span className={` cursor-pointer`}>Home</span>
             </Link>
-            <span
+            <Link to={"/duolingo/module/reading"}>
+              <span className={`cursor-pointer`}>Practice</span>
+            </Link>
+
+            {/* <span
               className=" h-auto"
               onMouseLeave={(e) => setShowDropDown(false)}
               onMouseEnter={(e) => setShowDropDown(true)}
-            >
+             >
               <button>Practice</button>
               <div
                 className={`${
@@ -196,7 +200,7 @@ export default function Header() {
                   </div>
                 </div>
               </div>
-            </span>
+            </span> */}
 
             <Link to={"/materials"}>
               <div
@@ -330,12 +334,13 @@ export default function Header() {
               to={"/profile/dashboard"}
               className={`${
                 userInfo ? "block" : "hidden"
-              } cursor-pointer mt-1 drop-shadow-md border-[2px] rounded-full border-[#3AB7BF]`}
+              } cursor-pointer mt-1 drop-shadow-md border-[2px] rounded-full border-gray-100`}
             >
               <Avatar
+              className="bg-[#3AB7BF]"
                 src={`https://practicemania.s3.ap-south-1.amazonaws.com/user/${userProfile?.avatar}`}
                 size="large"
-                icon={<UserOutlined />}
+                icon={<UserOutlined/>}
               />
             </Link>
             <div className={`${userInfo ? "hidden" : "block"}`}>

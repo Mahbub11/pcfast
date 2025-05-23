@@ -125,11 +125,18 @@ export default function Footer() {
                     <li className=" text-[#19ADB7]   hover:underline cursor-pointer">
                       <Link to={"/privacy-policy"}> Privacy & Policy</Link>
                     </li>
-                    <li className=" text-[#19ADB7] 
-                    hover:underline cursor-pointer">
-                      <Link to={"/terms-and-conditions"}> Terms & Conditions</Link>
+                    <li
+                      className=" text-[#19ADB7] 
+                    hover:underline cursor-pointer"
+                    >
+                      <Link to={"/terms-and-conditions"}>
+                        {" "}
+                        Terms & Conditions
+                      </Link>
                     </li>
-                    
+                    <li className=" text-tahiti   hover:underline cursor-pointer">
+                      <Link to={"/pc/internal/team"}> Team</Link>
+                    </li>
                   </ul>
                 </div>
 
@@ -147,7 +154,7 @@ export default function Footer() {
                         className="text-[#19ADB7] font-[500]
                      cursor-pointer xxl:text-[21px] font-montserrat sm:text-[15px] drop-shadow-sm"
                       >
-                       contact@practicecompanions.com
+                        contact@practicecompanions.com
                       </h2>
 
                       <div className=" sm:w-[40%] w-[50%] h-[5rem] mt-4">
@@ -238,52 +245,62 @@ export default function Footer() {
                       <Link to={"/privacy-policy"}> Privacy & Policy</Link>
                     </li>
                     <li className=" text-tahiti   hover:underline cursor-pointer">
-                      <Link to={"/terms-and-conditions"}> Terms & Conditions</Link>
+                      <Link to={"/terms-and-conditions"}>
+                        {" "}
+                        Terms & Conditions
+                      </Link>
+                    </li>
+                    <li className=" text-tahiti   hover:underline cursor-pointer">
+                      <Link to={"/pc/internal/team"}> Team</Link>
                     </li>
                   </ul>
                 </div>
 
                 <div className="h-auto w-[50%] ml-[-1rem]">
-                 <div className="w-full flex justify-end ml-10">
-                 <div className=" flex flex-col justify-center mt-4">
-                    <h2 className="text-[30px] font-[600] ">Contact</h2>
-                    <p className="text-tahiti  cursor-pointer 
-                     font-[500] text-[14px] text-center">
-                      contact@practicecompanions.com
-                    </p>
-                    <div className=" gap-2  ">
-                      <div className=" h-auto mt-2 ">
-                        <div className=" flex h-[2.8rem] rounded-md">
-                          <div className=" flex gap-5">
-                            <div className="bg-midnight w-[40%]
-                              rounded-md flex justify-start h-min">
-                              <a
-                                href={
-                                  "https://www.facebook.com/groups/1308420916508757/?ref=share&mibextid=NSMWBT"
-                                }
+                  <div className="w-full flex justify-end ml-10">
+                    <div className=" flex flex-col justify-center mt-4">
+                      <h2 className="text-[30px] font-[600] ">Contact</h2>
+                      <p
+                        className="text-tahiti  cursor-pointer 
+                     font-[500] text-[14px] text-center"
+                      >
+                        contact@practicecompanions.com
+                      </p>
+                      <div className=" gap-2  ">
+                        <div className=" h-auto mt-2 ">
+                          <div className=" flex h-[2.8rem] rounded-md">
+                            <div className=" flex gap-5">
+                              <div
+                                className="bg-midnight w-[40%]
+                              rounded-md flex justify-start h-min"
                               >
+                                <a
+                                  href={
+                                    "https://www.facebook.com/groups/1308420916508757/?ref=share&mibextid=NSMWBT"
+                                  }
+                                >
+                                  <span>
+                                    <Facebook className="fill-white w-8 h-7 mt-1"></Facebook>
+                                  </span>
+                                </a>
+                              </div>
+                              <div className="bg-midnight h-min w-[40%] rounded-md flex justify-center">
                                 <span>
-                                  <Facebook className="fill-white w-8 h-7 mt-1"></Facebook>
+                                  <Google className="fill-white  w-8 h-8"></Google>
                                 </span>
-                              </a>
-                            </div>
-                            <div className="bg-midnight h-min w-[40%] rounded-md flex justify-center">
-                              <span>
-                                <Google className="fill-white  w-8 h-8"></Google>
-                              </span>
-                            </div>
+                              </div>
 
-                            <div className="bg-midnight h-min w-[40%] rounded-md flex justify-center">
-                              <span>
-                                <Linkdii className="fill-white  w-8 h-8"></Linkdii>
-                              </span>
+                              <div className="bg-midnight h-min w-[40%] rounded-md flex justify-center">
+                                <span>
+                                  <Linkdii className="fill-white  w-8 h-8"></Linkdii>
+                                </span>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                 </div>
                 </div>
               </div>
             </div>

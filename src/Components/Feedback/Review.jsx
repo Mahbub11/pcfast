@@ -22,7 +22,7 @@ export default function Review({feedback}) {
           <div className="h-full w-full flex mt-5 px-4">
          <div className="mt-3">
          <Avatar
-            className=" m-auto"
+            className=" m-auto bg-[#3AB7BF] border-gray-100"
             src={`https://practicemania.s3.ap-south-1.amazonaws.com/user/${feedback.profile?.avatar}`}
             size="large"
             icon={<UserOutlined />}

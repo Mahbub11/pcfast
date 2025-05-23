@@ -11,9 +11,13 @@ import { API_LEVEL } from "../../config";
 const initialState = {
   loading: true,
   feedbackloading: true,
+  followUpfeedbackloading: true,
   userInput: null,
+  userInputFollowUp: null,
   errorList: [],
+  errorListFollowUp: [],
   correctText: null,
+  correctTextFollowUp: null,
   statistic: null,
   error: null,
   isSubscriptionRequired: false,
@@ -28,6 +32,7 @@ const slice = createSlice({
     },
     getFeedbackResultRequest: (state, action) => {
       state.feedbackloading = true;
+      state.followUpfeedbackloading = true;
     },
     getResultRequestSuccess: (state, action) => {
       state.feedbackloading = false;
@@ -35,13 +40,19 @@ const slice = createSlice({
       state.errorList = action.payload.errorList;
       state.correctText = action.payload.correctText;
     },
+    getFollowUpResultRequestSuccess: (state, action) => {
+      state.followUpfeedbackloading = false;
+      state.userInputFollowUp = action.payload.userInput;
+      state.errorListFollowUp = action.payload.errorList;
+      state.correctTextFollowUp = action.payload.correctText;
+    },
     getStatResultRequestSuccess: (state, action) => {
       state.loading = false;
       state.statistic = action.payload.statistic;
     },
     setIsSubsCriptionRequired: (state, action) => {
       state.loading = false;
-      state.isSubscriptionRequired =true;
+      state.isSubscriptionRequired = true;
     },
 
     clearAssesmentResult: (state, action) => {
@@ -64,7 +75,6 @@ export default slice.reducer;
 
 // ----------------------------------------------------------------------
 //  Actions:
-
 
 export const getFeedbackResult = (message) => async (dispatch) => {
   try {
@@ -91,6 +101,31 @@ export const getFeedbackResult = (message) => async (dispatch) => {
   }
 };
 
+export const getFollowUpFeedbackResult = (message) => async (dispatch) => {
+  try {
+    //  dispatch(slice.actions.getFeedbackResultRequest());
+
+    await axiosInstance
+      .post(`${API_LEVEL}/ev/completion`, { message: message })
+      .then((response) => {
+        dispatch(
+          slice.actions.getFollowUpResultRequestSuccess({
+            errorList: response.data.errorList,
+            userInput: message,
+          })
+        );
+      })
+
+      .catch((error) => {
+        console.log(error);
+      });
+  } catch (error) {
+    slice.actions.getResultRequestFailed({
+      error: error,
+    });
+  }
+};
+
 export const getStatResult = (message) => async (dispatch) => {
   try {
     dispatch(slice.actions.getResultRequest());
@@ -98,7 +133,6 @@ export const getStatResult = (message) => async (dispatch) => {
     await axiosInstance
       .post(`${API_LEVEL}/ev/stat`, { message: message })
       .then((response) => {
-        console.log(response);
         dispatch(
           slice.actions.getStatResultRequestSuccess({
             statistic: response.data.stat,
@@ -107,7 +141,7 @@ export const getStatResult = (message) => async (dispatch) => {
       })
 
       .catch((error) => {
-        if(parseInt(error.status)===402){
+        if (parseInt(error.status) === 402) {
           dispatch(slice.actions.setIsSubsCriptionRequired());
         }
         console.log(error);
@@ -120,4 +154,3 @@ export const clearGPTAssesmentResult = (messages) => async (dispatch) => {
     dispatch(slice.actions.clearAssesmentResult());
   } catch (error) {}
 };
-

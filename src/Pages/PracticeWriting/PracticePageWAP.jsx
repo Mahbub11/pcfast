@@ -82,20 +82,6 @@ export default function PracticePageWAP({ id, handleCloseModal }) {
   );
   let dataLength = listWAP.length;
 
-  // useEffect(() => {
-  //   setIndex(id);
-  // }, [id]);
-
-  useEffect(() => {
-    notification.destroy();
-    if (!bootCounter) {
-      setbootCounter(true);
-      setData(undefined);
-      setDeadline(undefined);
-      setImgLink(undefined);
-    }
-  }, [bootCounter]);
-
   useEffect(() => {
     setImgLink(null);
     setenableEvaluationBtn(false);
@@ -106,7 +92,6 @@ export default function PracticePageWAP({ id, handleCloseModal }) {
       setImgLink(data[0].image);
       setFeedbackState(true);
     } else {
-     
       const data = listWAP.filter((val) => parseInt(rid) === val.index);
       setData(data[0]);
       setBcolor(data[0].bookmark);
@@ -160,12 +145,14 @@ export default function PracticePageWAP({ id, handleCloseModal }) {
     dispatch(clearGPTAssesmentResult());
 
     if (wordsLen(userAns) < 10) {
-      dispatch(
-        ShowNotification({
-          severity: "Attention",
-          message: "Write more Information",
-        })
-      );
+      notification.open({
+        message: `Write more Information`,
+        placement: "top",
+        type: "info",
+        style: {
+          borderBottom: "2px solid blue",
+        },
+      });
 
       return;
     } else {
@@ -257,10 +244,8 @@ export default function PracticePageWAP({ id, handleCloseModal }) {
     });
   };
 
-  const handleMeaning = (val) => {
-    dispatch(getWordDetails(val.target.textContent));
-  };
   const handleRetry = () => {
+    setLoadingImg(true);
     setXmTime(Date.now() + 1000 + deadline);
     setWordLength(0);
     setUserAns("");
@@ -287,19 +272,6 @@ export default function PracticePageWAP({ id, handleCloseModal }) {
   const handleUserAns = (val) => {
     setUserAns(val);
     setWordLength(val.split(" ").length);
-  };
-  const closeModalWindow = () => {
-    setbootCounter(false);
-    setXmTime(0);
-    setImgLink(null);
-    setShowEvaluate(false);
-    setUserAns("");
-    setInputAvailable(true);
-    setFeedbackState(true);
-    dispatch(clearGPTAssesmentResult());
-    setenableEvaluationBtn(false);
-    isBusy(true);
-    handleCloseModal();
   };
 
   const handleXmTime = (e) => {
@@ -366,7 +338,7 @@ export default function PracticePageWAP({ id, handleCloseModal }) {
                   title="Back to List"
                   className="mt-[6px] md:pr-4 sm:pr-2 cursor-pointer"
                   onClick={() => backOrigin()}
-                 >
+                >
                   {" "}
                   <span>
                     <IconsArrowLeft
@@ -430,19 +402,28 @@ export default function PracticePageWAP({ id, handleCloseModal }) {
 
             <div className="md:w-[95%] sm:w-full m-auto mt-[2rem]">
               <div className="flex md:flex-row sm:flex-col justify-between gap-10">
-                <div
-                  className={`${
-                    loadingImage ? "hidden" : "block"
-                  } md:h-[15rem] md:w-[21rem] sm:h-[16rem] sm:w-[95%] self-center mt-[-2rem]`}
-                >
+                <div className="relative md:h-[15rem] md:w-[21rem] sm:h-[16rem] sm:w-[95%] self-center mt-[-2rem]">
                   <img
                     onLoad={hanldeOnLoad}
                     loading="eager"
-                    className="h-full w-full rounded-md object-fill"
+                    className={`h-full w-full rounded-md object-fill transition-opacity duration-300 ${
+                      loadingImage ? "opacity-0" : "opacity-100"
+                    }`}
                     src={`https://res.cloudinary.com/dvz4ewcnu/image/upload/v1745346348/${imgLink}`}
-                    alt={"write_about_the_photo"}
-                  ></img>
+                    alt="write_about_the_photo"
+                  />
+
+                  {/* Show skeleton over image until it's loaded */}
+                  {loadingImage && (
+                    <div className="absolute top-0 w-full h-full">
+                      <Skeleton.Image
+                        style={{ width: 270, height: 240 }}
+                        active={true}
+                      />
+                    </div>
+                  )}
                 </div>
+
                 <div className="md:w-[60%] sm:w-full sm:m-auto">
                   <div>
                     <TextArea

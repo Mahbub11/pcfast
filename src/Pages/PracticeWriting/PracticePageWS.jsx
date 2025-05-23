@@ -144,12 +144,14 @@ export default function PracticePageWS({ id, handleCloseModal }) {
     dispatch(clearGPTAssesmentResult());
 
     if (wordsLen(userAns) < 20) {
-      dispatch(
-        ShowNotification({
-          severity: "Attention",
-          message: "Write more Information",
-        })
-      );
+      notification.open({
+        message: `Write more Information`,
+        placement: "top",
+        type: "info",
+        style: {
+          borderBottom: "2px solid blue",
+        },
+      });
 
       return;
     } else {

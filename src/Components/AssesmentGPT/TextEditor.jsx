@@ -50,7 +50,7 @@ const TextEditor = ({ text, grammarMistakes }) => {
 
   return (
     <>
-      <div className="flex gap-5 w-full h-[500px]">
+      <div className="sm:flex sm:flex-col md:flex md:flex-row gap-5 w-full h-[500px]">
         {/* Passage Section */}
         <div
           className="flex-1 p-4 overflow-y-auto border border-gray-200 rounded-md shadow-sm"
@@ -65,7 +65,7 @@ const TextEditor = ({ text, grammarMistakes }) => {
         {/* Mistake List */}
         <div
           ref={mistakeListRef}
-          className="w-[40%] max-w-[400px] p-4 overflow-y-auto  rounded-md shadow-sm bg-white"
+          className="md:w-[40%] md:max-w-[400px] p-4 overflow-y-auto  rounded-md shadow-sm bg-white md:block sm:w-full sm:flex sm:gap-2"
         >
           {grammarMistakes?.length < 1 ? (
             <div>

@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
 import { Progress, Skeleton, Collapse } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { getFeedbackResult } from "../../redux/slices/gptAssmentResult";
+import {
+  getFeedbackResult,
+  getFollowUpFeedbackResult,
+} from "../../redux/slices/gptAssmentResult";
 import { PassageText } from "./PassageText";
 import TextEditor from "./TextEditor";
 import { EditHolder } from "./EditorHolder";
 import { green, blue, grey } from "@ant-design/colors";
 import { UserInputLengthWS } from "../../utils/HelperFunction";
 import { getWordDetails } from "../../redux/slices/disctionary";
-import {  Radio } from "antd";
+import { Radio } from "antd";
 import { saveStatData } from "../../redux/slices/statistic";
 
 export const AssesmentContainerIW = ({
@@ -20,6 +23,7 @@ export const AssesmentContainerIW = ({
   qData,
 }) => {
   const dispatch = useDispatch();
+  const [resultState, setResultState] = useState(1);
   const [ga, setga] = useState({});
   const [gc, setgc] = useState({});
   const [ls, setls] = useState({});
@@ -29,11 +33,11 @@ export const AssesmentContainerIW = ({
   const [tr, settr] = useState(0);
   const [overall, setOverall] = useState(0);
   const { statistic, loading } = useSelector((state) => state.gptAssmentResult);
+  const { feedbackloading,followUpfeedbackloading } = useSelector((state) => state.gptAssmentResult);
   const { userInfo } = useSelector((state) => state.auth);
   const [loadingStep, setLoadingStep] = useState(20);
   const [sectionName, setSectionName] = useState(1);
 
-  console.log(statistic);
   useEffect(() => {
     if (!statistic) return;
     const data = statistic[0];
@@ -78,11 +82,14 @@ export const AssesmentContainerIW = ({
       setLoadingStep(100);
     }
   }, [loading]);
+
   useEffect(() => {
     if (sectionName === 1) {
-      dispatch(getFeedbackResult(userAns));
+      feedbackloading ? dispatch(getFeedbackResult(userAns)):''
+      setResultState(1);
     } else if (sectionName === 2) {
-      dispatch(getFeedbackResult(followUpAns));
+      followUpfeedbackloading? dispatch(getFollowUpFeedbackResult(followUpAns)):""
+      setResultState(2);
     }
   }, [sectionName]);
 
@@ -375,7 +382,11 @@ export const AssesmentContainerIW = ({
                                 </Radio.Group>
                               </div>
                               <div className="mt-5">
-                                {<EditHolder></EditHolder>}
+                                {
+                                  <EditHolder
+                                    resultState={resultState}
+                                  ></EditHolder>
+                                }
                               </div>
                             </div>
                           </div>

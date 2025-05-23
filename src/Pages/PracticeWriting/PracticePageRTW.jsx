@@ -123,12 +123,14 @@ export default function PracticePageRTW({ id, handleCloseModal }) {
     dispatch(clearGPTAssesmentResult());
 
     if (wordsLen(userAns) < 20) {
-      dispatch(
-        ShowNotification({
-          severity: "Attention",
-          message: "Write more Information",
-        })
-      );
+      notification.open({
+        message: `Write more Information`,
+        placement: "top",
+        type: "info",
+        style: {
+          borderBottom: "2px solid blue",
+        },
+      });
 
       return;
     } else {
@@ -532,7 +534,7 @@ export default function PracticePageRTW({ id, handleCloseModal }) {
                 Retry
               </button>
               <button
-                disabled={!enableEvaluationBtn ? true : false}
+                //  disabled={!enableEvaluationBtn ? true : false}
                 onClick={handleEvaluate}
                 className={`${
                   enableEvaluationBtn ? "opacity-100" : "opacity-50"

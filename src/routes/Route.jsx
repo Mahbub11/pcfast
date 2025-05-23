@@ -41,6 +41,17 @@ const Loadable = (Component) => (props) => {
 export default function Router() {
   return useRoutes([
     {
+      path: "/pc/internal",
+      element: <ContentLayout></ContentLayout>,
+      children: [
+        { path: "team", element: <InternalTeam></InternalTeam> },
+       
+
+        { path: "404", element: <Page404></Page404> },
+        { path: "*", element: <Navigate to="/404" replace /> },
+      ],
+    },
+    {
       path: "/auth",
       element: <AuthLayout></AuthLayout>,
       children: [
@@ -825,3 +836,9 @@ const IeltsContainerPageSpeaking = Loadable(
 const SpeakingModuleContainerIELTS = Loadable(
   lazy(() => import("../Pages/IELTS/Speaking/SpeakingModuleContainer"))
 );
+
+//Team
+const InternalTeam = Loadable(
+  lazy(() => import("../Pages/Team/InternalTeam"))
+);
+

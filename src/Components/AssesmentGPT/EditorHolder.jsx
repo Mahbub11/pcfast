@@ -3,19 +3,14 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import TextEditor from "./TextEditor";
 
-export const EditHolder = () => {
-  const [text, setText] = useState(null);
-  const [error, setErrorList] = useState("");
+export const EditHolder = ({resultState}) => {
   const { feedbackloading, errorList, userInput } = useSelector(
     (state) => state.gptAssmentResult
   );
 
-  useEffect(() => {
-    if (errorList && !feedbackloading) {
-      setErrorList(errorList);
-      setText(userInput);
-    }
-  }, [feedbackloading, errorList]);
+  const { errorListFollowUp, userInputFollowUp } = useSelector(
+    (state) => state.gptAssmentResult
+  );
 
   return (
     <div>
@@ -23,7 +18,10 @@ export const EditHolder = () => {
         <Skeleton active></Skeleton>
       ) : (
         <div>
-          <TextEditor text={userInput} grammarMistakes={errorList}></TextEditor>
+        {
+          resultState==2?  <TextEditor text={userInputFollowUp} grammarMistakes={errorListFollowUp}></TextEditor>: 
+           <TextEditor text={userInput} grammarMistakes={errorList}></TextEditor>
+        }
         </div>
       )}
     </div>

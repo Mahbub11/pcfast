@@ -10,7 +10,7 @@ const data = {
         "Language is more than grammar—it's confidence. My role is to help learners find both",
     },
     {
-      name: "Mr. John Doe",
+      name: "DR. Kamrul Islam",
       degree: "MA in English",
       institute: "Dhaka University, Bangladesh",
       quote:

@@ -22,8 +22,6 @@ export default function SignIn() {
   const [email, setEmail] = useState(false);
   const navigate = useNavigate();
 
-  console.log("ID: "+ apiKey)
-
   const openNotification = (type, message, description) => {
     api[type]({
       message: message,
@@ -82,6 +80,7 @@ export default function SignIn() {
 
   const handleSuccess = async (credentialResponse) => {
     try {
+      setLoading(true);
       const response = await axiosInstance.post(
         `${API_LEVEL}/auth/g-signin`,
         {
@@ -95,9 +94,6 @@ export default function SignIn() {
       );
 
       const data = response.data;
-
-      console.log("JWT from backend:", data.token);
-
       localStorage.setItem("access", data.token);
 
       // Fetch user data after successful login
@@ -107,17 +103,18 @@ export default function SignIn() {
       await dispatch(getStatDuolingo());
 
       setTimeout(() => {
+        setLoading(true);
         navigate("/duolingo/module/reading");
         setLoading(false);
       }, 5000); // Adjust timeout as needed
     } catch (error) {
-      console.error("Google login failed:", error);
-      // Optional: display error message or set error state
+      setLoading(false);
+      openNotification("error", "Error !", "Please try again!");
     }
   };
 
   const handleError = () => {
-    console.error("Google Sign-In was unsuccessful.");
+    openNotification("error", "Error !", "Please try again!");
   };
 
   return (
@@ -182,16 +179,18 @@ export default function SignIn() {
                   >
                     Sign In
                   </button>
-                  <GoogleOAuthProvider clientId={apiKey}>
-                    <div style={{ textAlign: "center", width: "100%" }}>
-                      <GoogleLogin
-                        width="10rem"
-                        theme="filled_blue"
-                        onSuccess={handleSuccess}
-                        onError={handleError}
-                      />
-                    </div>
-                  </GoogleOAuthProvider>
+                  <div className={`${loading ? "hidden" : "block"} w-full`}>
+                    <GoogleOAuthProvider clientId={apiKey}>
+                      <div style={{ textAlign: "center", width: "100%" }}>
+                        <GoogleLogin
+                          width="10rem"
+                          theme="filled_blue"
+                          onSuccess={handleSuccess}
+                          onError={handleError}
+                        />
+                      </div>
+                    </GoogleOAuthProvider>
+                  </div>
                 </div>
               </div>
 

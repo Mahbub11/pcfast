@@ -22,6 +22,8 @@ export default function SignIn() {
   const [email, setEmail] = useState(false);
   const navigate = useNavigate();
 
+  console.log("ID: "+ apiKey)
+
   const openNotification = (type, message, description) => {
     api[type]({
       message: message,

@@ -179,23 +179,19 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
     shouldSendToWhisperRef.current = shouldSendToWhisper; // Update ref value
     setRecord(false);
   };
-
   const onStop = (recordedBlob) => {
-    console.log(
-      "Recording stopped, sendToWhisper: ",
-      shouldSendToWhisperRef.current
-    ); // Debugging message
-
-    if (shouldSendToWhisperRef.current) {
-      sendToWhisper(recordedBlob).then((res) => {
-        setAudioText(res.data.text);
-
-        getGrammarCompletion(res.data.text);
-      });
-    }
-
     setAudioData(recordedBlob);
+    if (shouldSendToWhisperRef.current) {
+      setTimeout(() => {
+        sendToWhisper(recordedBlob).then((res) => {
+          console.log(res.data);
+          setAudioText(res.data);
+          getGrammarCompletion(res.data);
+        });
+      }, 500); // Optional small delay to allow state updates
+    }
   };
+
   const getGrammarCompletion = (text) => {
     const askData = {
       message: `
@@ -222,34 +218,17 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
   const handleEvaluate = () => {
     setxmTime(0);
     setIsRecording(false);
-    stopRecording(true); // Explicitly stop recording and send to Whisper
+    stopRecording(true); // onStop will handle sending
     setenableEvaluationBtn(false);
     setShowThinkTime(false);
     dispatch(clearGPTAssesmentResult());
     setOpenPanels(["1"]);
     setShowEvaluate(true);
 
-    setTimeout(() => {
-      if (shouldSendToWhisperRef.current) {
-        sendToWhisper(audioData).then((res) => {
-          setAudioText(res.data.text);
-          getGrammarCompletion(res.data.text);
-        });
-      }
-    }, 3000);
-
-    modalRef.current?.scrollIntoView({
-      behavior: "smooth",
-      block: "end",
-      inline: "nearest",
-    });
+    modalRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
 
     setTimeout(() => {
-      modalRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-        inline: "nearest",
-      });
+      modalRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
     }, 1000);
   };
 
@@ -281,25 +260,6 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
       inner_type,
     };
     dispatch(toggleBookmark(data));
-  };
-
-  const closeModalWindow = () => {
-    setIsWorking(false);
-    setIsRecording(false);
-    setbootCounter(false);
-    setShowThinkTime(true);
-    stopRecording(false); // Explicitly stop recording without sending to Whisper
-    setRecordingState(true);
-
-    clearTimeout();
-    setxmTime(undefined);
-    setenableEvaluationBtn(false);
-    setShowEvaluate(false);
-    dispatch(clearGPTAssesmentResult());
-    setFeedbackState(true);
-
-    // setData([])
-    handleCloseModal();
   };
 
   const handleXmTime = (e) => {
@@ -341,7 +301,7 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
                 title="Back to List"
                 className="mt-[6px] md:pr-4 sm:pr-2 cursor-pointer"
                 onClick={() => navigate(`/duolingo/module/speaking`)}
-               >
+              >
                 {" "}
                 <span>
                   <IconsArrowLeft
@@ -477,7 +437,7 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
                 Retry
               </button>
               <button
-                disabled={!enableEvaluationBtn ? true : false}
+                //   disabled={!enableEvaluationBtn ? true : false}
                 onClick={handleEvaluate}
                 className={`${
                   enableEvaluationBtn ? "opacity-100" : "opacity-50"

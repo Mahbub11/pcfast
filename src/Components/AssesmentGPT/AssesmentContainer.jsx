@@ -46,7 +46,6 @@ export const AssesmentContainer = ({
   useEffect(() => {
     if (!statistic) return;
     const data = statistic[0];
-    console.log(data);
     settr(data?.tr);
     setga(data?.ga);
     setgc(data?.gc);
@@ -54,6 +53,7 @@ export const AssesmentContainer = ({
     setld(data?.ld);
     setFluency(data?.fluency);
 
+    console.log("UseAns"+ userAns)
     const getLength = UserInputLengthWS(userAns);
     setLength(getLength);
     if (isfluency) {

@@ -12,8 +12,10 @@ import { dispatch } from "../../redux/store";
 import { getBookmarkList } from "../../redux/slices/bookmark";
 import { getStatDuolingo } from "../../redux/slices/statistic";
 import { getModuleData, getUserInfo } from "../../redux/slices/auth";
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 
 export default function SignIn() {
+  const apiKey = import.meta.env.VITE_GOOGLE_CLIENT_ID;
   const [api, contextHolder] = notification.useNotification();
   const [loading, setLoading] = useState(false);
   const [password, setPassword] = useState(false);
@@ -52,10 +54,9 @@ export default function SignIn() {
 
               setTimeout(() => {
                 navigate("/duolingo/module/reading");
-                 setLoading(false);
+                setLoading(false);
               }, 5000); // 100ms is usually enough
             }
-           
           })
           .catch((error) => {
             openNotification("error", "Error !", error.error);
@@ -76,6 +77,46 @@ export default function SignIn() {
     openNotification("error", "Error !", "Invalid email address");
     return false;
   }
+
+  const handleSuccess = async (credentialResponse) => {
+    try {
+      const response = await axiosInstance.post(
+        `${API_LEVEL}/auth/g-signin`,
+        {
+          idToken: credentialResponse.credential,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const data = response.data;
+
+      console.log("JWT from backend:", data.token);
+
+      localStorage.setItem("access", data.token);
+
+      // Fetch user data after successful login
+      await dispatch(getUserInfo());
+      await dispatch(getModuleData());
+      await dispatch(getBookmarkList());
+      await dispatch(getStatDuolingo());
+
+      setTimeout(() => {
+        navigate("/duolingo/module/reading");
+        setLoading(false);
+      }, 5000); // Adjust timeout as needed
+    } catch (error) {
+      console.error("Google login failed:", error);
+      // Optional: display error message or set error state
+    }
+  };
+
+  const handleError = () => {
+    console.error("Google Sign-In was unsuccessful.");
+  };
 
   return (
     <div className="h-full w-full px-2 relative overflow-hidden font-montserrat">
@@ -139,6 +180,16 @@ export default function SignIn() {
                   >
                     Sign In
                   </button>
+                  <GoogleOAuthProvider clientId={apiKey}>
+                    <div style={{ textAlign: "center", width: "100%" }}>
+                      <GoogleLogin
+                        width="10rem"
+                        theme="filled_blue"
+                        onSuccess={handleSuccess}
+                        onError={handleError}
+                      />
+                    </div>
+                  </GoogleOAuthProvider>
                 </div>
               </div>
 

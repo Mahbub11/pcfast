@@ -16,6 +16,8 @@ import { toggleBookmark } from "../../redux/slices/bookmark";
 import IconCross from "../../Assets/SVG/IconCross";
 import IconMikeOn from "../../Assets/SVG/IconMikeOn";
 import sendToWhisper from "../../utils/sendToWhisper";
+import axiosInstance from "../../utils/axios";
+import { API_LEVEL } from "../../config";
 
 const { fuzzy } = require("fast-fuzzy");
 const { Countdown } = Statistic;
@@ -50,7 +52,10 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
   const [userAns, setUserAns] = useState();
   const [modelWord, setModelWord] = useState();
   let dataLength = listSAL.length;
-  const shouldSendToWhisperRef = useRef(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const shouldEvaluateRef = useRef(false);
+  const latestQuestionRef = useRef("");
+
   // const modelWordsSet = new Set(data.qa.q.toLowerCase().split(/\s+/));
 
   // useEffect(() => {
@@ -66,25 +71,32 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
   }, [bootCounter]);
 
   useEffect(() => {
-    if (id) {
-      const data = listSAL.filter((val) => index === val.index);
-      setData(data[0]);
-      setBcolor(data[0].bookmark);
-      setDeadline(Date.now() + data[0]?.time * 60000);
-      setText(data[0].qa.q);
-    } else {
-      const data = listSAL.filter((val) => parseInt(rid) === val.index);
-      setDeadline(Date.now() + data[0]?.time * 60000);
-      setData(data[0]);
-      setBcolor(data[0].bookmark);
-      setText(data[0].qa.q);
-      setModelWord(new Set(data[0].qa.q.toLowerCase().split(/\s+/)));
+    setShowEvaluate(false);
+    setActive(false);
+    stopRecording();
+    setRecord(false);
+    setUserAns(undefined);
+    setMatching(undefined);
+    setRecordBtnState(true);
+    setTimeDanger(false);
+    setOpenPanels([]);
+    setAudioData(undefined);
+    setModelWord(undefined);
+
+    if (listSAL.length > 0) {
+      const data = listSAL.find((val) => parseInt(rid) === val.index);
+      if (data) {
+        setData(data);
+        setBcolor(data.bookmark);
+        setText(data.qa.q);
+        latestQuestionRef.current = data.qa.q;
+        setDeadline(Date.now() + data.time * 60000);
+        setModelWord(new Set(data.qa.q.toLowerCase().split(/\s+/)));
+      }
     }
+
     isBusy(false);
-    setTimeout(() => {
-      setRecord(false);
-    }, 1000);
-  }, [data, index, busy]);
+  }, [rid]);
 
   useEffect(() => {
     const u = new SpeechSynthesisUtterance(text);
@@ -108,7 +120,8 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
   const handleNext = () => {
     if (index <= --dataLength) {
       const nextIndex = parseInt(index) + 1;
-      window.location.href = `/practice/sal-s/${nextIndex}`;
+      setIndex(nextIndex);
+      navigate(`/practice/sal-s/${nextIndex}`);
     }
   };
   const handlePrev = () => {
@@ -127,64 +140,81 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
   };
 
   const onStop = (recordedBlob) => {
-    // setAudioData(recordedBlob.blobURL);
     setAudioData(recordedBlob);
-
-    console.log("State.." + record);
     console.log(recordedBlob);
 
-    if (shouldSendToWhisperRef.current) {
-      // sendToWhisper(recordedBlob).then((res) => {
-      //   setUserAns(res.data);
-      // });
+    if (shouldEvaluateRef.current) {
+      shouldEvaluateRef.current = false;
+      startEvaluation(recordedBlob);
     }
   };
 
   const handleEvaluate = () => {
-    setRecordBtnState(false);
-    setActive(false);
-    stopRecording();
-
-    // SpeechRecognition.stopListening();
-    //  setMatching(fuzzy(data.qa.q.toString(), transcript));
-
-    setDeadline(null);
-    console.log(audioData)
-
-    if (audioData) {
-      setTimeout(() => {
-        sendToWhisper(audioData).then((res) => {
-          if (res?.data) {
-            const wordsArray = res.data.trim().split(/\s+/);
-            setUserAns(wordsArray);
-            setShowEvaluate(true);
-            setOpenPanels(["1"]);
-            setMatching(fuzzy(data.qa.q.toString(), res.data));
-          }
-        });
-      }, 3000);
+    setIsAnalyzing(true);
+    setShowEvaluate(true); // hide old results while analyzing
+    setOpenPanels([1]);
+    if (record) {
+      // User is still recording → stop & wait for audio blob
+      shouldEvaluateRef.current = true;
+      stopRecording();
+      setRecordBtnState(false);
+      setActive(false);
+      setDeadline(null);
+    } else if (audioData) {
+      // Already recorded, just send
+      startEvaluation(audioData);
+      setRecordBtnState(false);
+      setActive(false);
+      setDeadline(null);
     } else {
-      // Optional: notify the user or log that audio is missing
-      console.warn("No audio data available to evaluate.");
+      // No audio recorded yet — show a warning maybe
+      notification.warning({
+        message: "No recording available",
+        description: "Please record your voice first before evaluating.",
+      });
     }
-    // const statData = {
-    //   user: userInfo.id,
-    //   qn: data.id,
-    //   level: data.level,
-    //   type: data.type,
-    //   inner_type: data.inner_type,
-    //   time: data.time,
-    //   result: Math.floor(fuzzy(data.qa.q.toString(), transcript) * 100),
-    // };
+  };
 
-    // dispatch(saveStatData(statData));
+  const startEvaluation = (blobData) => {
+    setAudioData(blobData);
+     
+    sendToWhisper(blobData).then(async (res) => {
+      if (res?.data) {
+        const wordsArray = res.data.trim().split(/\s+/);
+        setUserAns(wordsArray);
+        const message = {
+          userVoice: res.data.trim(),
+          originalOne: latestQuestionRef.current,
+        };
+        console.log(message);
+        await axiosInstance
+          .post(`${API_LEVEL}/ev/completion/sal`, { message: message })
+          .then((response) => {
+            console.log(response);
+          });
+      } else {
+        notification.error({
+          message: "Error",
+          description: "Failed to get evaluation from server.",
+        });
+      }
+     setIsAnalyzing(false);
+    });
   };
 
   const handleRetry = () => {
+    stopRecording();
+    setRecord(false);
+    setUserAns(undefined);
+    setMatching(undefined);
     setRecordBtnState(true);
+    setTimeDanger(false);
+    setOpenPanels([]);
+    setAudioData(undefined);
+
     notification.destroy();
     setActive(false);
-    stopRecording();
+
     setShowEvaluate(false);
   };
 
@@ -208,15 +238,7 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
     };
     dispatch(toggleBookmark(data));
   };
-  const closeModalWindow = () => {
-    setShowEvaluate(false);
-    setbootCounter(false);
-    setDeadline(0);
-    setDeadline(null);
-    handleCloseModal();
-    setActive(false);
-    stopRecording();
-  };
+
   const openNotification = () => {
     setActive(false);
     stopRecording();
@@ -362,7 +384,7 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
 
                         <button
                           disabled={!recordBtnState || active ? true : false}
-                          onClick={isMobile ? mobileSpeechHandle : handleSpeech}
+                          onClick={handleSpeech}
                           className={`${
                             recordBtnState || active
                               ? "opacity-100"
@@ -403,69 +425,75 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
                           label: "Evaluation Result",
                           children: (
                             <div>
-                              <div className="md:w-[50%] sm:w-full m-auto md:flex md:flex-row sm:flex-col justify-center gap-5">
-                                <div className=" m-auto flex flex-col">
-                                  <div className="sm:m-auto">
-                                    <Progress
-                                      style={{ fontSize: "10px" }}
-                                      type="circle"
-                                      percent={Math.floor(matching * 100)}
-                                      size={70}
-                                    />
-                                  </div>
-                                  <p className="text-[20px] font-[500 text-center">
-                                    Accuracy
+                              {isAnalyzing ? (
+                                <div className="flex flex-col items-center gap-2 py-6">
+                                  <p className="text-[18px] font-semibold text-blue-600">
+                                    Analyzing your response...
                                   </p>
                                 </div>
-                                <div className="sm:ml-[-12px] ">
-                                  <div
-                                    className="ml-3 mt-2 flex gap-2 border-[1px]  rounded-md 
-                                justify-center m-auto"
-                                  >
-                                    <h1 className="mt-[2px] text-[17px] font-poppins font-[500]">
-                                      MENTOR
-                                    </h1>
-                                    <span
-                                      onClick={handleAIsampleVoice}
-                                      className="cursor-pointer"
-                                    >
-                                      <IconMikeOn
-                                        height="2rem"
-                                        width="2rem"
-                                      ></IconMikeOn>
-                                    </span>
-                                  </div>
-                                  <div
-                                    className={`${
-                                      isMobile ? "hidden" : "block"
-                                    } m-auto text-center`}
-                                  >
-                                    <p>Your Answer</p>
-                                    <audio controls src={audioData}></audio>
-                                  </div>
-                                </div>
-                              </div>
-
-                              <div>
-                                <p>
-                                  {userAns?.map((word, index) => {
-                                    const isMatch = modelWord.has(
-                                      word.toLowerCase()
-                                    );
-                                    return (
-                                      <span
-                                        key={index}
-                                        style={{
-                                          color: isMatch ? "black" : "red",
-                                          marginRight: 4,
-                                        }}
+                              ) : (
+                                <>
+                                  <div className="md:w-[50%] sm:w-full m-auto md:flex md:flex-row sm:flex-col justify-center gap-5">
+                                    <div className="m-auto flex flex-col">
+                                      <div className="sm:m-auto">
+                                        <Progress
+                                          style={{ fontSize: "10px" }}
+                                          type="circle"
+                                          percent={Math.floor(matching * 100)}
+                                          size={70}
+                                        />
+                                      </div>
+                                      <p className="text-[20px] font-[500] text-center">
+                                        Accuracy
+                                      </p>
+                                    </div>
+                                    <div className="sm:ml-[-12px] ">
+                                      <div className="ml-3 mt-2 flex gap-2 border-[1px] rounded-md justify-center m-auto">
+                                        <h1 className="mt-[2px] text-[17px] font-poppins font-[500]">
+                                          MENTOR
+                                        </h1>
+                                        <span
+                                          onClick={handleAIsampleVoice}
+                                          className="cursor-pointer"
+                                        >
+                                          <IconMikeOn
+                                            height="2rem"
+                                            width="2rem"
+                                          />
+                                        </span>
+                                      </div>
+                                      <div
+                                        className={`${
+                                          isMobile ? "hidden" : "block"
+                                        } m-auto text-center`}
                                       >
-                                        {word}
-                                      </span>
-                                    );
-                                  })}
-                                </p>
-                              </div>
+                                        <p>Your Answer</p>
+                                        <audio controls src={audioData?.blobURL}></audio>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="mt-4">
+                                    <p>
+                                      {userAns?.map((word, index) => {
+                                        const isMatch = modelWord.has(
+                                          word.toLowerCase()
+                                        );
+                                        return (
+                                          <span
+                                            key={index}
+                                            style={{
+                                              color: isMatch ? "black" : "red",
+                                              marginRight: 4,
+                                            }}
+                                          >
+                                            {word}
+                                          </span>
+                                        );
+                                      })}
+                                    </p>
+                                  </div>
+                                </>
+                              )}
                             </div>
                           ),
                         },

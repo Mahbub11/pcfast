@@ -73,7 +73,7 @@ export default function PracticePageLLT({ id, handleCloseModal }) {
       setDeadline(Date.now() + data[0]?.time * 60000);
       setData(data[0]);
       setBcolor(data[0].bookmark);
-      setText(data[0].qa.q + "In Your Writing" + data[0].qa.qb.join(","));
+      setText(data[0].qa.q  + data[0].qa.qb.join(","));
     }
 
     setTimeout(() => {
@@ -193,15 +193,6 @@ export default function PracticePageLLT({ id, handleCloseModal }) {
       inner_type,
     };
     dispatch(toggleBookmark(data));
-  };
-  const closeModalWindow = () => {
-    setUserAns("");
-    setInputAvailable(true);
-    setDeadline(null);
-    setenableEvaluationBtn(true);
-    isBusy(true);
-    setvoiceActive(false);
-    handleCloseModal();
   };
   const handleUserAns = (val) => {
     setUserAns(val);

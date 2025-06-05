@@ -28,6 +28,7 @@ import subscription from './slices/subscription';
 import gptAssmentResult from './slices/gptAssmentResult';
 import ielts_speaking from './adminslice/IELTS/ielts_speaking';
 import ielts_speakingEV from './slices/IELTS/ielts_speakingEV';
+import gptAssmentResultSAL from './slices/gptAssmentResultSAL';
 
 
 // ----------------------------------------------------------------------
@@ -67,7 +68,8 @@ const rootReducer = combineReducers({
   subscription:subscription,
   gptAssmentResult:gptAssmentResult,
   ielts_speaking:ielts_speaking,
-  ielts_speakingEV:ielts_speakingEV
+  ielts_speakingEV:ielts_speakingEV,
+  gptAssmentResultSAL:gptAssmentResultSAL
 
  
   

@@ -2,10 +2,7 @@ import { useEffect, useState } from "react";
 import { Progress, Skeleton, Collapse, Modal } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { getFeedbackResult } from "../../redux/slices/gptAssmentResult";
-import { PassageText } from "./PassageText";
-import TextEditor from "./TextEditor";
 import { EditHolder } from "./EditorHolder";
-import { green, blue, grey } from "@ant-design/colors";
 import { UserInputLengthWS } from "../../utils/HelperFunction";
 import { getWordDetails } from "../../redux/slices/disctionary";
 import { saveStatData } from "../../redux/slices/statistic";
@@ -53,7 +50,7 @@ export const AssesmentContainer = ({
     setld(data?.ld);
     setFluency(data?.fluency);
 
-    console.log("UseAns"+ userAns)
+    console.log("UseAns" + userAns);
     const getLength = UserInputLengthWS(userAns);
     setLength(getLength);
     if (isfluency) {
@@ -180,13 +177,16 @@ export const AssesmentContainer = ({
             >
               <div className="flex justify-center m-auto">
                 <div className="flex flex-col md:gap-5 px-1 py-1 h-full">
-                  <div className="flex flex-col mt-[13px] justify-center gap-3 w-[10rem] h-[5rem] m-auto">
+                  <div className="flex flex-col items-center ml-3  mt-[50px] justify-center gap-3 w-[10rem] h-[5rem] m-auto">
                     <Progress
                       className="m-auto"
-                      type="circle"
+                      type="dashboard"
                       percent={Math.floor(overall)}
+                      strokeLinecap="square"
+                      status="active"
+                      trailColor="#DDE9F8"
                       size={100}
-                      strokeColor="green"
+                      strokeColor="#103f5eb3"
                       strokeWidth={13}
                     />
                     <h1 className="text-center font-[500] font-montserrat">
@@ -195,17 +195,17 @@ export const AssesmentContainer = ({
                   </div>
                   <div className="mt-5 drop-shadow-sm">
                     <Progress
-                      className="text-[18px] font-[600] underline font-poppins"
-                      strokeColor={{
-                        from: "#108ee9",
-                        to: "#87d068",
-                      }}
+                      className="text-[18px] font-[600] font-poppins flex flex-col gap-5  items-center"
+                      strokeLinecap="square"
+                      strokeColor="#103f5eb3"
+                      trailColor="#DDE9F8"
                       percent={overall}
                       format={(percent) =>
                         `${Math.round((percent / 100) * 160)} -160`
                       }
-                      size="mideum"
+                      size="default"
                       status="active"
+                      strokeWidth={10}
                     />
                   </div>
                 </div>
@@ -219,7 +219,11 @@ export const AssesmentContainer = ({
                 <div className="flex flex-col justify-center gap-3 md:w-[10rem]  m-auto">
                   <Progress
                     className="m-auto"
-                    type="circle"
+                    type="dashboard"
+                    strokeLinecap="square"
+                    status="active"
+                    trailColor="#DDE9F8"
+                    strokeColor="#103f5eb3"
                     percent={ga?.value}
                     size={65}
                     strokeWidth={10}
@@ -231,7 +235,11 @@ export const AssesmentContainer = ({
                 <div className="flex flex-col justify-center gap-3 md:w-[10rem] h-auto m-auto">
                   <Progress
                     className="m-auto"
-                    type="circle"
+                    type="dashboard"
+                    strokeLinecap="square"
+                    status="active"
+                    trailColor="#DDE9F8"
+                    strokeColor="#103f5eb3"
                     percent={Math.floor(gc?.value)}
                     size={65}
                     strokeWidth={10}
@@ -243,7 +251,11 @@ export const AssesmentContainer = ({
                 <div className="flex flex-col justify-center gap-3 md:w-[10rem] h-auto m-auto">
                   <Progress
                     className="m-auto"
-                    type="circle"
+                    type="dashboard"
+                    strokeLinecap="square"
+                    status="active"
+                    trailColor="#DDE9F8"
+                    strokeColor="#103f5eb3"
                     percent={Math.floor(ls?.value)}
                     size={65}
                     strokeWidth={10}
@@ -255,7 +267,11 @@ export const AssesmentContainer = ({
                 <div className="flex flex-col justify-center gap-3 md:w-[10rem] mt-[27px] h-auto m-auto">
                   <Progress
                     className="m-auto"
-                    type="circle"
+                    type="dashboard"
+                    strokeLinecap="square"
+                    status="active"
+                    trailColor="#DDE9F8"
+                    strokeColor="#103f5eb3"
                     percent={Math.floor(ld?.value)}
                     size={65}
                     strokeWidth={10}
@@ -272,7 +288,11 @@ export const AssesmentContainer = ({
                   >
                     <Progress
                       className="m-auto"
-                      type="circle"
+                      type="dashboard"
+                      strokeLinecap="square"
+                      status="active"
+                      trailColor="#DDE9F8"
+                      strokeColor="#103f5eb3"
                       percent={length}
                       size={65}
                       strokeWidth={10}
@@ -288,7 +308,11 @@ export const AssesmentContainer = ({
                   >
                     <Progress
                       className="m-auto"
-                      type="circle"
+                      type="dashboard"
+                      strokeLinecap="square"
+                      status="active"
+                      trailColor="#DDE9F8"
+                      strokeColor="#103f5eb3"
                       percent={Math.floor(fluency?.value)}
                       size={65}
                       strokeWidth={10}
@@ -301,7 +325,11 @@ export const AssesmentContainer = ({
                 <div className="flex flex-col justify-center gap-3 md:w-[10rem] h-auto m-auto">
                   <Progress
                     className="m-auto"
-                    type="circle"
+                    type="dashboard"
+                    strokeLinecap="square"
+                    status="active"
+                    trailColor="#DDE9F8"
+                    strokeColor="#103f5eb3"
                     percent={Math.floor(tr?.value)}
                     size={65}
                     strokeWidth={10}

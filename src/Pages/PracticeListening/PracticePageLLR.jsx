@@ -12,8 +12,6 @@ import {
   EndEvaluateOption,
   startEvaluateOption,
 } from "../../redux/slices/converSationHandler";
-import IconConversationBot from "../../Assets/SVG/IconConversationBot";
-
 import IconsArrowLeft from "../../Assets/SVG/IconsArrowLeft";
 import IconsArrowRight from "../../Assets/SVG/IconsArrowRight";
 import SingleConversation from "../../Components/Listening/SingleConversation";
@@ -26,8 +24,6 @@ import {
   clearInteractiveListeningResult,
   getInteractiveResult,
 } from "../../redux/slices/interactiveListening";
-import IconSpeakingDot from "../../Assets/SVG/IconSpeakingDot";
-import TeacherSpeakingMouthOff from "../../Assets/pictures/duolingoModule/teacher_speaking_off.png";
 import TeacherSpeakingAnimation from "../../Components/TeacherSpeakingAnimation";
 import FTeacherSpeakingAnimation from "../../Components/FTeacherSpeakingAnimation";
 
@@ -73,7 +69,7 @@ export default function PracticePageLLR({ id, handleCloseModal }) {
   const [voiceIndex, setVoiceIndex] = useState(0);
   const [bootCounter, setbootCounter] = useState(true);
   const [avatarState, setAvatarState] = useState(false);
-  const modalRef = useRef(); 
+  const modalRef = useRef();
   const navigate = useNavigate();
 
   // useEffect(() => {
@@ -245,21 +241,6 @@ export default function PracticePageLLR({ id, handleCloseModal }) {
     };
     dispatch(toggleBookmark(data));
   };
-  const closeModalWindow = () => {
-    setDeadline(undefined);
-    setxmState(false);
-    setShowSummaryBox(false);
-    setIsStart(false);
-    setBlur(false);
-    handleRetry();
-    setSecondStateTime(null);
-    setDeadline(null);
-    setbootCounter(false);
-    dispatch(clearInteractiveListeningResult());
-    setShowSummaryBtn(false);
-    isBusy(true);
-    handleCloseModal();
-  };
 
   const handleSmmary = () => {
     setShowSummaryInput(true);
@@ -369,26 +350,26 @@ export default function PracticePageLLR({ id, handleCloseModal }) {
               </div>
             </div>
 
-            <div className={`w-[95%] m-auto  rounded-md `}>
+            <div className={`w-[98%] m-auto  rounded-md `}>
               <div
                 disabled={blur ? true : false}
                 className={`${
                   blur ? " blur-sm" : ""
                 } h-auto w-full flex justify-between px-1 py-2 gap-5`}
               >
-                <div className="sm:hidden md:block">
-                  <div className=" rounded-md m-auto mt-10 py-2 opacity-80 md:sticky ">
+                <div className="sm:hidden md:block md:w-[52%]">
+                  <div className=" rounded-md m-auto mt-10 py-2 opacity-80 md:sticky">
                     {data.qa.additionalData.voiceActor === 1 ? (
                       !avatarState ? (
                         <TeacherSpeakingAnimation
                           isStopped={true}
-                          widht={400}
+                          widht={300}
                           height={500}
                         ></TeacherSpeakingAnimation>
                       ) : (
                         <TeacherSpeakingAnimation
                           isStopped={false}
-                          widht={400}
+                          widht={300}
                           height={500}
                         ></TeacherSpeakingAnimation>
                       )
@@ -455,7 +436,7 @@ export default function PracticePageLLR({ id, handleCloseModal }) {
                           onClick={(e) => handleStartQuestion()}
                           className={`${
                             isStart ? "hidden" : "block "
-                          } px-2 py-1 bg-tahiti 
+                          } px-5 py-3 bg-tahiti 
                    font-montserrat rounded-md m-auto text-white w-[5rem] `}
                         >
                           Start

@@ -4,26 +4,13 @@ import { RightOutlined, LeftOutlined } from "@ant-design/icons";
 import { Statistic, Skeleton } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import "../../Components/Reading/RadioBtn.css";
-import { IconMicrophone } from "../../Assets/SVG/IconMicrophone";
-import { IconMicOffCircle } from "../../Assets/SVG/IconMicOff";
 import { ReactMic } from "react-mic";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  destroyNotificationState,
-  setNotification,
-} from "../../redux/slices/general";
 import { getWordDetails } from "../../redux/slices/disctionary";
 import IconsArrowLeft from "../../Assets/SVG/IconsArrowLeft";
 import IconsArrowRight from "../../Assets/SVG/IconsArrowRight";
 import { StarOutlined, StarFilled } from "@ant-design/icons";
 import { toggleBookmark } from "../../redux/slices/bookmark";
-import IconCross from "../../Assets/SVG/IconCross";
-import AssmentContainer from "../../Components/Assesment/AssmentContainer";
-import {
-  clearAssesmentResult,
-  getAssesmentResult,
-} from "../../redux/slices/assesmentResult";
-import { ShowNotification } from "../../redux/actions";
 import {
   clearGPTAssesmentResult,
   getStatResult,
@@ -32,7 +19,7 @@ import sendToWhisper from "../../utils/sendToWhisper";
 import { AssesmentContainer } from "../../Components/AssesmentGPT/AssesmentContainer";
 const { Countdown } = Statistic;
 
-export default function PracticePageSAL({ id, handleCloseModal }) {
+export default function PracticePageSAP() {
   const dispatch = useDispatch();
   let [record, setRecord] = useState(false);
   const [audioData, setAudioData] = useState();
@@ -48,63 +35,49 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
 
   const [deadline, setDeadline] = useState(0);
   const [xmTime, setxmTime] = useState(null);
-  const [thinkTime, setThinkTime] = useState(Date.now() + 0.133333 * 60000);
+  const [thinkTime, setThinkTime] = useState(undefined);
   const [showThinkTime, setShowThinkTime] = useState(true);
-  const [enableEvaluationBtn, setenableEvaluationBtn] = useState(true);
+  const [enableEvaluationBtn, setenableEvaluationBtn] = useState(false);
 
   let dataLength = listSAP.length;
-  const [isWorking, setIsWorking] = useState(false);
   const [showEvaluate, setShowEvaluate] = useState(false);
   const [bColor, setBcolor] = useState(true);
-  const [bootCounter, setbootCounter] = useState(true);
   const [loadingImage, setLoadingImg] = useState(true);
   const [feedbackState, setFeedbackState] = useState(true);
   const [recordingState, setRecordingState] = useState(true);
   const shouldSendToWhisperRef = useRef(false);
   const [audioText, setAudioText] = useState();
   const [isRecording, setIsRecording] = useState(false);
+  const [canStartRecording, setCanStartRecording] = useState(false);
 
   useEffect(() => {
-    notification.destroy();
-    if (!bootCounter) {
-      setbootCounter(true);
-      setThinkTime(undefined);
-    }
-  }, [bootCounter]);
-
-  // useEffect(() => {
-  //   setIndex(id);
-  // }, [id]);
-
-  useEffect(() => {
-    setenableEvaluationBtn(false);
     setShowEvaluate(false);
-    if (id) {
-      const data = listSAP.filter((val) => index === val.index);
-      setData(data[0]);
-      setBcolor(data[0].bookmark);
-      setDeadline(data[0]?.time * 60000);
-      setShowThinkTime(true);
-    } else {
+    stopRecording();
+    setRecord(false);
+    setAudioText(undefined);
+    setIsRecording(false);
+    setTimeDanger(false);
+    setOpenPanels([]);
+    setAudioData(undefined);
+    setLoadingImg(true);
+    setThinkTime(undefined);
+    if (listSAP.length > 0) {
       const data = listSAP.filter((val) => parseInt(rid) === val.index);
-      setDeadline(data[0]?.time * 60000);
-      setData(data[0]);
-      setBcolor(data[0].bookmark);
-      setShowThinkTime(true);
+      if (data) {
+        setDeadline(data[0]?.time * 60000);
+        setData(data[0]);
+        setBcolor(data[0].bookmark);
+        setShowThinkTime(true);
+      }
     }
-    setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       isBusy(false);
-      stopRecording(false); // Explicitly stop recording without sending to Whisper
-      setRecordingState(true);
-      stopRecording();
     }, 1000);
-  }, [data, index, busy]);
 
-  useEffect(() => {
-    if (data && !loadingImage) {
-      setThinkTime(Date.now() + 0.333333 * 60000);
-    }
-  }, [data, loadingImage]);
+    return () => {
+      clearTimeout(timeoutId); // ✅ clean up the timeout
+    };
+  }, [rid, busy]);
 
   useEffect(() => {
     if (!recordingState) {
@@ -114,57 +87,44 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
     }
   }, [recordingState]);
 
-  // const handleNext = () => {
-  //   if (index <= --dataLength) {
-  //     dispatch(clearGPTAssesmentResult());
-  //     setIndex(++index);
-  //     navigate(`/practice/sap-s/${index}`);
-  //     isBusy(true);
+  useEffect(() => {
+    return () => {
+      setRecord(false); // <-- forcibly stop mic
+      stopRecording(false);
+    };
+  }, []);
 
-  //     // setIsWorking(false);
-  //     // setIsRecording(false);
-  //     // stopRecording(false); // Explicitly stop recording without sending to Whisper
-  //     // setRecordingState(true);
-  //     // setShowThinkTime(true);
-  //     // setThinkTime(Date.now() + 0.333333 * 60000);
-  //     // setenableEvaluationBtn(false);
-  //     // setxmTime(undefined);
-  //     // setShowEvaluate(false);
-  //     // setFeedbackState(true);
-  //     // clearTimeout();
-  //   }
-  // };
-  // const handlePrev = () => {
-  //   if (index > 1) {
-  //     dispatch(clearGPTAssesmentResult());
-  //     setIndex(--index);
-  //     navigate(`/practice/sap-s/${index}`);
-  //     isBusy(true);
-
-  //     // setIsWorking(false);
-  //     // setIsRecording(false);
-  //     // stopRecording(false); // Explicitly stop recording without sending to Whisper
-  //     // setRecordingState(true);
-  //     // setShowThinkTime(true);
-  //     // setThinkTime(Date.now() + 0.333333 * 60000);
-  //     // setenableEvaluationBtn(false);
-  //     // setxmTime(undefined);
-  //     // setShowEvaluate(false);
-  //     // setFeedbackState(true);
-  //     // clearTimeout();
-  //   }
-  // };
+  const hanldeOnLoad = () => {
+    setLoadingImg(false);
+    setThinkTime(Date.now() + 0.333333 * 60000);
+  };
 
   const handleNext = () => {
     if (index <= --dataLength) {
-      const nextIndex = parseInt(index) + 1;
-      window.location.href = `/practice/sap-s/${nextIndex}`;
+      setRecord(false);
+      stopRecording(false);
+      setIsRecording(false);
+      setTimeout(() => {
+        handleRetry();
+        isBusy(true);
+        const nextIndex = parseInt(index) + 1;
+        setIndex(nextIndex);
+        navigate(`/practice/sap-s/${nextIndex}`);
+      }, 100); // small delay ensures ReactMic updates
     }
   };
+
   const handlePrev = () => {
     if (index > 1) {
-      const nextIndex = parseInt(index) - 1;
-      window.location.href = `/practice/sap-s/${nextIndex}`;
+      setRecord(false); // Tell ReactMic to stop
+      stopRecording(false); // Optional
+      setIsRecording(false);
+      setTimeout(() => {
+        handleRetry();
+        const nextIndex = parseInt(index) - 1;
+        setIndex(nextIndex);
+        navigate(`/practice/sap-s/${nextIndex}`);
+      }, 100);
     }
   };
 
@@ -184,7 +144,6 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
     if (shouldSendToWhisperRef.current) {
       setTimeout(() => {
         sendToWhisper(recordedBlob).then((res) => {
-          console.log(res.data);
           setAudioText(res.data);
           getGrammarCompletion(res.data);
         });
@@ -234,8 +193,7 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
 
   const handleRetry = () => {
     setIsRecording(false);
-    setIsWorking(false);
-    stopRecording(false); // Explicitly stop recording without sending to Whisper
+    stopRecording(false);
     setRecordingState(true);
     dispatch(clearGPTAssesmentResult());
     setShowThinkTime(true);
@@ -248,7 +206,6 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
   const handleSpeech = () => {
     if (recordingState) {
       setRecordingState(false);
-      setIsWorking(true);
     }
   };
 
@@ -262,14 +219,16 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
     dispatch(toggleBookmark(data));
   };
 
-  const handleXmTime = (e) => {
-    if (e <= 60000) {
+  const handleXmTime = (remainingTime) => {
+    if (remainingTime <= 60000) {
       setTimeDanger(true);
     }
-    if (e <= 30000) {
+
+    if (remainingTime <= 30000) {
       setenableEvaluationBtn(true);
     }
   };
+
   const handleFeedbackState = (val) => {
     setFeedbackState(val);
   };
@@ -368,19 +327,27 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
               <div className=" border-[1px] border-[#3ab6bf5f] rounded-md">
                 <div className="h-[22rem] w-full m-auto">
                   <div className="flex-col justify-center mt-5 items-end h-full w-full">
-                    <div
-                      className={`${
-                        loadingImage ? "hidden" : "block"
-                      } md:h-[16rem] md:w-[22rem] sm:h-[15rem] sm:w-[95%] m-auto`}
-                    >
+                    <div className="relative md:h-[16rem] md:w-[22rem] sm:h-[16rem] sm:w-[95%] self-center mt-[1rem] mx-auto">
                       <img
-                        onLoad={() => setLoadingImg(false)}
-                        className="h-full w-full rounded-md object-fill"
+                        onLoad={hanldeOnLoad}
+                        loading="eager"
+                        className={`h-full w-full rounded-md object-fill transition-opacity duration-300 ${
+                          loadingImage ? "opacity-0" : "opacity-100"
+                        }`}
                         src={`https://res.cloudinary.com/dvz4ewcnu/image/upload/v1745346348/${data.image}`}
-                        alt="icondummy1"
-                      ></img>
-                    </div>
+                        alt="write_about_the_photo"
+                      />
 
+                      {/* Show skeleton over image until it's loaded */}
+                      {loadingImage && (
+                        <div className="absolute top-0 w-full h-full">
+                          <Skeleton.Image
+                            style={{ width: 270, height: 240 }}
+                            active={true}
+                          />
+                        </div>
+                      )}
+                    </div>
                     <div className="flex justify-end w-full mt-5 ml-[-10px]">
                       <div className="flex gap-2">
                         <div className="mt-2">
@@ -402,7 +369,7 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
 
                             // }}
                             onChange={(e) => {
-                              setIsRecording(e <= 10000);
+                              setCanStartRecording(e <= 10000);
                             }}
                             valueStyle={
                               timeDanger ? { color: "red" } : { color: "blue" }
@@ -412,15 +379,13 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
                           />
                         </div>
                         <button
-                          disabled={!isRecording}
+                          disabled={!canStartRecording}
                           onClick={handleSpeech}
                           className={`${
-                            isRecording ? "opacity-100" : "opacity-50"
+                            canStartRecording ? "opacity-100" : "opacity-50"
                           } bg-[#3AB7BF] px-3 py-2 self-end rounded-md text-white font-[500]`}
                         >
-                          {isWorking && isRecording
-                            ? "Recording..."
-                            : "Record Now"}
+                          {isRecording ? "Recording..." : "Record Now"}
                         </button>
                       </div>
                     </div>
@@ -437,13 +402,13 @@ export default function PracticePageSAL({ id, handleCloseModal }) {
                 Retry
               </button>
               <button
-                //   disabled={!enableEvaluationBtn ? true : false}
+                disabled={!enableEvaluationBtn}
                 onClick={handleEvaluate}
                 className={`${
                   enableEvaluationBtn ? "opacity-100" : "opacity-50"
                 } bg-[#DDE9F8]  px-6 py-3 rounded-md  drop-shadow-sm`}
               >
-                {enableEvaluationBtn ? "Evaluate" : "Continue after 60 second"}
+                {enableEvaluationBtn ? "Evaluate" : "Continue after 60 seconds"}
               </button>
             </div>
 

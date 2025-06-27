@@ -57,7 +57,7 @@ export default function ConverSationContainer({
   }, [data]);
 
   const handlePlay = () => {
-    setDisabled(true);
+    ///  setDisabled(true);
     if (canPlay) {
       utterance.voice = voice;
       utterance.pitch = 1;

@@ -1,15 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Tag, Button, notification, Progress, Collapse } from "antd";
-import { RightOutlined, LeftOutlined } from "@ant-design/icons";
 import { Statistic, Skeleton } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import "../../Components/Reading/RadioBtn.css";
-import { IconMicrophone } from "../../Assets/SVG/IconMicrophone";
-import { IconMicOffCircle } from "../../Assets/SVG/IconMicOff";
 import { ReactMic } from "react-mic";
 import { useNavigate, useParams } from "react-router-dom";
-import IconCross from "../../Assets/SVG/IconCross";
-import { getWordDetails } from "../../redux/slices/disctionary";
 import IconsArrowLeft from "../../Assets/SVG/IconsArrowLeft";
 import IconsArrowRight from "../../Assets/SVG/IconsArrowRight";
 import IconMikeOn from "../../Assets/SVG/IconMikeOn";
@@ -17,16 +12,6 @@ import IconMikeOff from "../../Assets/SVG/IconMikeOff";
 import { clearStatDataError, saveStatData } from "../../redux/slices/statistic";
 import { StarOutlined, StarFilled } from "@ant-design/icons";
 import { toggleBookmark } from "../../redux/slices/bookmark";
-import {
-  destroyNotificationState,
-  setNotification,
-} from "../../redux/slices/general";
-import AssmentContainer from "../../Components/Assesment/AssmentContainer";
-import { ShowNotification } from "../../redux/actions";
-import {
-  clearAssesmentResult,
-  getAssesmentResult,
-} from "../../redux/slices/assesmentResult";
 import {
   clearGPTAssesmentResult,
   getStatResult,
@@ -37,92 +22,88 @@ const { fuzzy } = require("fast-fuzzy");
 const { Countdown } = Statistic;
 const deadline = Date.now() + 12000;
 
-export default function PracticePageSLS({ id, handleCloseModal }) {
+export default function PracticePageSLS() {
   const dispatch = useDispatch();
-  let [record, setRecord] = useState(false);
-  const [timeDanger, setTimeDanger] = useState(false);
   const [audioData, setAudioData] = useState();
-  const [busy, isBusy] = useState(true);
-  const { rid } = useParams();
-  let [index, setIndex] = useState(rid);
-  const { error } = useSelector((state) => state.statistic);
-  const { listSLS } = useSelector((state) => state.getSpeakingList);
-  let [data, setData] = useState({});
-  let [playLeft, setPlayLeft] = useState(3);
-  let dataLength = listSLS.length;
-  const [bColor, setBcolor] = useState(true);
-  let [micVoice, setMicVoice] = useState(2);
-  const [xmTime, setxmTime] = useState(null);
-  const [bootCounter, setbootCounter] = useState(true);
-  const [showEvaluate, setShowEvaluate] = useState(false);
-  let [openPanels, setOpenPanels] = useState([]);
-  const modalRef = useRef();
-  const [feedbackState, setFeedbackState] = useState(true);
-  const [recordingState, setRecordingState] = useState(true);
-  const [audioText, setAudioText] = useState();
-  const [isWorking, setIsWorking] = useState(false);
-  const [deadline, setDeadline] = useState(0);
-  const navigate = useNavigate();
-
-  // speech
-
+  let [playLeft, setPlayLeft] = useState(4);
   const [text, setText] = useState();
   const [isPaused, setIsPaused] = useState(false);
   const [utterance, setUtterance] = useState(null);
   const [voice, setVoice] = useState(null);
   const [voiceActive, setvoiceActive] = useState(false);
   const synth = window.speechSynthesis;
-  const [thinkTime, setThinkTime] = useState(Date.now() + 0.333333 * 60000);
 
+  let [record, setRecord] = useState(false);
+  const [timeDanger, setTimeDanger] = useState(false);
+  const [busy, isBusy] = useState(true);
+  const { rid } = useParams();
+  let [index, setIndex] = useState(rid);
+  const { listSLS } = useSelector((state) => state.getSpeakingList);
+  let [data, setData] = useState({});
+  let [openPanels, setOpenPanels] = useState([]);
+  const modalRef = useRef();
+  const navigate = useNavigate();
+
+  const [deadline, setDeadline] = useState(0);
+  const [xmTime, setxmTime] = useState(null);
+  const [thinkTime, setThinkTime] = useState(undefined);
   const [showThinkTime, setShowThinkTime] = useState(true);
-  const [enableEvaluationBtn, setenableEvaluationBtn] = useState(true);
+  const [enableEvaluationBtn, setenableEvaluationBtn] = useState(false);
+
+  let dataLength = listSLS.length;
+  const [showEvaluate, setShowEvaluate] = useState(false);
+  const [bColor, setBcolor] = useState(true);
+  const [feedbackState, setFeedbackState] = useState(true);
+  const [recordingState, setRecordingState] = useState(true);
   const shouldSendToWhisperRef = useRef(false);
+  const [audioText, setAudioText] = useState();
   const [isRecording, setIsRecording] = useState(false);
+  const [canStartRecording, setCanStartRecording] = useState(false);
 
   useEffect(() => {
-    notification.destroy();
-    if (!bootCounter) {
-      setbootCounter(true);
-      setThinkTime(undefined);
-    }
-  }, [bootCounter]);
-
-  // useEffect(() => {
-  //   setIndex(id);
-  // }, [id]);
-
-  useEffect(() => {
-    setenableEvaluationBtn(false);
     setShowEvaluate(false);
-    if (id) {
-      const data = listSLS.filter((val) => index === val.index);
-      setData(data[0]);
-      setBcolor(data[0].bookmark);
-      setDeadline(data[0]?.time * 60000);
-      setText(data[0].qa.q);
-      setShowThinkTime(true);
-    } else {
+    stopRecording();
+    setRecord(false);
+    setAudioText(undefined);
+    setIsRecording(false);
+    setTimeDanger(false);
+    setOpenPanels([]);
+    setAudioData(undefined);
+    setThinkTime(Date.now() + 0.333333 * 60000);
+    setPlayLeft(3);
+    if (listSLS.length > 0) {
       const data = listSLS.filter((val) => parseInt(rid) === val.index);
-      setDeadline(data[0]?.time * 60000);
-      setText(data[0].qa.q);
-      setData(data[0]);
-      setBcolor(data[0].bookmark);
-      setShowThinkTime(true);
+      if (data) {
+        setDeadline(data[0]?.time * 60000);
+        setData(data[0]);
+        setText(data[0].qa.q);
+        setBcolor(data[0].bookmark);
+        setShowThinkTime(true);
+      }
     }
-
-    setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       isBusy(false);
-      stopRecording(false); // Explicitly stop recording without sending to Whisper
-      setRecordingState(true);
-      stopRecording();
     }, 1000);
-  }, [data, index, busy]);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [rid, busy]);
+
   useEffect(() => {
-    if (data) {
-      setThinkTime(Date.now() + 0.333333 * 60000);
-      setPlayLeft(3);
+    if (!recordingState) {
+      startRecording();
+      setxmTime(Date.now() + deadline);
+      setShowThinkTime(false);
     }
-  }, [data]);
+  }, [recordingState]);
+
+  useEffect(() => {
+    return () => {
+      setRecord(false);
+      stopRecording(false);
+    };
+  }, []);
 
   useEffect(() => {
     const u = new SpeechSynthesisUtterance(text);
@@ -142,15 +123,9 @@ export default function PracticePageSLS({ id, handleCloseModal }) {
       synth.cancel();
     };
   }, [data]);
-  useEffect(() => {
-    if (!recordingState) {
-      startRecording();
-      setxmTime(Date.now() + deadline);
-      setShowThinkTime(false);
-    }
-  }, [recordingState]);
 
   const handlePlay = () => {
+    console.log("handlePlay called", playLeft);
     if (isPaused) {
       synth.resume();
     } else {
@@ -161,7 +136,7 @@ export default function PracticePageSLS({ id, handleCloseModal }) {
       utterance.volume = 1;
       synth.speak(utterance);
       utterance.onend = (event) => {
-        setPlayLeft(--playLeft);
+        setPlayLeft((prev) => prev - 1);
         setvoiceActive(false);
       };
     }
@@ -169,71 +144,38 @@ export default function PracticePageSLS({ id, handleCloseModal }) {
     setIsPaused(false);
   };
 
-  // const handleNext = () => {
-  //   if (index <= --dataLength) {
-  //     dispatch(clearGPTAssesmentResult());
-  //     setIndex(++index);
-  //     navigate(`/practice/sls-s/${index}`);
-  //     isBusy(true);
-
-  //     // setPlayLeft(3);
-  //     // setvoiceActive(false);
-  //     // setIsWorking(false);
-  //     // setIsRecording(false);
-  //     // stopRecording(false); // Explicitly stop recording without sending to Whisper
-  //     // setRecordingState(true);
-
-  //     // setShowThinkTime(true);
-  //     // setThinkTime(Date.now() + 0.333333 * 60000);
-  //     // setenableEvaluationBtn(false);
-  //     // setxmTime(undefined);
-
-  //     // setShowEvaluate(false);
-
-  //     // setFeedbackState(true);
-  //     // clearTimeout();
-  //   }
-  // };
-  // const handlePrev = () => {
-  //   if (index > 1) {
-  //     setIndex(--index);
-  //     dispatch(clearGPTAssesmentResult());
-  //     navigate(`/practice/sls-s/${index}`);
-  //     isBusy(true);
-
-  //     // setPlayLeft(3);
-  //     // setvoiceActive(false);
-  //     // setIsWorking(false);
-  //     // setIsRecording(false);
-  //     // stopRecording(false); // Explicitly stop recording without sending to Whisper
-  //     // setRecordingState(true);
-
-  //     // setShowThinkTime(true);
-  //     // setThinkTime(Date.now() + 0.333333 * 60000);
-  //     // setenableEvaluationBtn(false);
-  //     // setxmTime(undefined);
-
-  //     // setShowEvaluate(false);
-
-  //     // setFeedbackState(true);
-  //     // clearTimeout();
-  //   }
-  // };
-
   const handleNext = () => {
     if (index <= --dataLength) {
-      const nextIndex = parseInt(index) + 1;
-      window.location.href = `/practice/sls-s/${nextIndex}`;
+      setRecord(false);
+      stopRecording(false);
+      setIsRecording(false);
+      setTimeout(() => {
+        handleRetry();
+        isBusy(true);
+        const nextIndex = parseInt(index) + 1;
+        setIndex(nextIndex);
+        navigate(`/practice/sls-s/${nextIndex}`);
+      }, 100); // small delay ensures ReactMic updates
     }
   };
+
   const handlePrev = () => {
     if (index > 1) {
-      const nextIndex = parseInt(index) - 1;
-      window.location.href = `/practice/sls-s/${nextIndex}`;
+      setRecord(false); 
+      stopRecording(false); 
+      setIsRecording(false);
+      setTimeout(() => {
+        handleRetry();
+        const nextIndex = parseInt(index) - 1;
+        setIndex(nextIndex);
+        navigate(`/practice/sls-s/${nextIndex}`);
+      }, 100);
     }
   };
 
   const startRecording = () => {
+    setPlayLeft(0)
+    setvoiceActive(false)
     setThinkTime(0);
     setRecord(true);
     setIsRecording(true);
@@ -244,39 +186,31 @@ export default function PracticePageSLS({ id, handleCloseModal }) {
     shouldSendToWhisperRef.current = shouldSendToWhisper; // Update ref value
     setRecord(false);
   };
-
   const onStop = (recordedBlob) => {
-    console.log(
-      "Recording stopped, sendToWhisper: ",
-      shouldSendToWhisperRef.current
-    ); // Debugging message
-
-    if (shouldSendToWhisperRef.current) {
-      sendToWhisper(recordedBlob).then((res) => {
-        setAudioText(res.data.text);
-        getGrammarCompletion(res.data.text);
-      });
-    }
-
     setAudioData(recordedBlob);
+    if (shouldSendToWhisperRef.current) {
+      setTimeout(() => {
+        sendToWhisper(recordedBlob).then((res) => {
+          setAudioText(res.data);
+          getGrammarCompletion(res.data);
+        });
+      }, 500);
+    }
   };
+
   const getGrammarCompletion = (text) => {
-    dispatch(clearGPTAssesmentResult());
     const askData = {
       message: `
-      'question':${data.qa.q}
+      'question':${data.qa.q}${data.qa.qb}
       'passage':${text}
       `,
       type: 1,
     };
     dispatch(getStatResult(askData));
-    setOpenPanels(["1"]);
-    setShowEvaluate(true);
   };
 
-  const openNotification = () => {
+  const openNotification = (placement) => {
     stopRecording();
-
     notification.open({
       message: `Times Up`,
       placement: "top",
@@ -288,63 +222,36 @@ export default function PracticePageSLS({ id, handleCloseModal }) {
   };
 
   const handleEvaluate = () => {
-    setvoiceActive(false);
-
     setxmTime(0);
     setIsRecording(false);
-    stopRecording(true); // Explicitly stop recording and send to Whisper
+    stopRecording(true); // onStop will handle sending
     setenableEvaluationBtn(false);
     setShowThinkTime(false);
     dispatch(clearGPTAssesmentResult());
     setOpenPanels(["1"]);
     setShowEvaluate(true);
 
-    setTimeout(() => {
-      if (shouldSendToWhisperRef.current) {
-        sendToWhisper(audioData).then((res) => {
-          setAudioText(res.data.text);
-          getGrammarCompletion(res.data.text);
-        });
-      }
-    }, 3000);
-
-    modalRef.current?.scrollIntoView({
-      behavior: "smooth",
-      block: "end",
-      inline: "nearest",
-    });
+    modalRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
 
     setTimeout(() => {
-      modalRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-        inline: "nearest",
-      });
+      modalRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
     }, 1000);
   };
 
   const handleRetry = () => {
     setIsRecording(false);
-    stopRecording(false); // Explicitly stop recording without sending to Whisper
+    stopRecording(false);
     setRecordingState(true);
     dispatch(clearGPTAssesmentResult());
     setShowThinkTime(true);
     setThinkTime(Date.now() + 0.333333 * 60000);
     setenableEvaluationBtn(false);
-    setIsWorking(false);
     setxmTime(undefined);
     setFeedbackState(true);
     setShowEvaluate(false);
-
     setPlayLeft(3);
-    setMicVoice(2);
-
-    setvoiceActive(false);
   };
   const handleSpeech = () => {
-    setShowThinkTime(false);
-    setMicVoice(--micVoice);
-
     if (recordingState) {
       setRecordingState(false);
     }
@@ -359,33 +266,17 @@ export default function PracticePageSLS({ id, handleCloseModal }) {
     };
     dispatch(toggleBookmark(data));
   };
-  const closeModalWindow = () => {
-    setIsWorking(false);
-    setIsRecording(false);
-    setbootCounter(false);
-    setShowThinkTime(true);
-    stopRecording(false); // Explicitly stop recording without sending to Whisper
-    setRecordingState(true);
 
-    clearTimeout();
-    setxmTime(undefined);
-    setenableEvaluationBtn(false);
-    setShowEvaluate(false);
-    dispatch(clearGPTAssesmentResult());
-    setFeedbackState(true);
-
-    // setData([])
-    handleCloseModal();
-  };
-
-  const handleXmTime = (e) => {
-    if (e <= 60000) {
+  const handleXmTime = (remainingTime) => {
+    if (remainingTime <= 60000) {
       setTimeDanger(true);
     }
-    if (e <= 30000) {
+
+    if (remainingTime <= 30000) {
       setenableEvaluationBtn(true);
     }
   };
+
   const handleFeedbackState = (val) => {
     setFeedbackState(val);
   };
@@ -485,20 +376,29 @@ export default function PracticePageSLS({ id, handleCloseModal }) {
               <div className="md:w-[90%] sm:w-[90%] m-auto h-[20rem]">
                 <div className="flex flex-col gap-4 justify-center mt-7">
                   <button
-                    disabled={playLeft > 0 ? false : true}
-                    onClick={!isWorking ? handlePlay : null}
-                    className="m-auto bg-[#C0DBFC] rounded-full px-6 py-6 cursor-pointer"
+                    disabled={playLeft === 0 || voiceActive}
+                    onClick={handlePlay}
+                    aria-label="Play Voice Prompt"
+                    className={`m-auto flex items-center justify-center rounded-full  transition-all duration-300
+    ${
+      playLeft === 0
+        ? "bg-[#C0DBFC] cursor-not-allowed px-6 py-6"
+        : "m-auto bg-[#C0DBFC] rounded-full px-6 py-6  hover:bg-[#accdf5] active:scale-95 shadow-sm"
+    }`}
                   >
                     {voiceActive ? (
-                      <div>
-                        <IconMikeOn height="5rem" width="5rem"></IconMikeOn>
-                      </div>
+                      <IconMikeOn height="5rem" width="5rem"></IconMikeOn>
                     ) : (
-                      <div className="mr-1">
-                        <IconMikeOff height="5rem" width="5rem"></IconMikeOff>
+                      <div className="">
+                        <IconMikeOff
+                          fill="#ffff"
+                          height="5rem"
+                          width="5rem"
+                        ></IconMikeOff>
                       </div>
                     )}
                   </button>
+
                   <p className="text-[17px] font-thin text-center">
                     Number of replays left: {playLeft}
                   </p>
@@ -519,12 +419,8 @@ export default function PracticePageSLS({ id, handleCloseModal }) {
                         className={`${showThinkTime ? "relative" : "hidden"}`}
                       >
                         <Countdown
-                          // onFinish={()=> {
-                          //   setIsRecording(true)
-
-                          // }}
                           onChange={(e) => {
-                            setIsRecording(e <= 10000);
+                            setCanStartRecording(e <= 10000);
                           }}
                           valueStyle={
                             timeDanger ? { color: "red" } : { color: "blue" }
@@ -534,15 +430,13 @@ export default function PracticePageSLS({ id, handleCloseModal }) {
                         />
                       </div>
                       <button
-                        disabled={!isRecording}
+                        disabled={!canStartRecording}
                         onClick={handleSpeech}
                         className={`${
-                          isRecording ? "opacity-100" : "opacity-50"
+                          canStartRecording ? "opacity-100" : "opacity-50"
                         } bg-[#3AB7BF] px-3 py-2 self-end rounded-md text-white font-[500]`}
                       >
-                        {isWorking && isRecording
-                          ? "Recording..."
-                          : "Record Now"}
+                        {isRecording ? "Recording..." : "Record Now"}
                       </button>
                     </div>
                   </div>

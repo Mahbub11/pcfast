@@ -33,7 +33,9 @@ export const AssesmentContainerIW = ({
   const [tr, settr] = useState(0);
   const [overall, setOverall] = useState(0);
   const { statistic, loading } = useSelector((state) => state.gptAssmentResult);
-  const { feedbackloading,followUpfeedbackloading } = useSelector((state) => state.gptAssmentResult);
+  const { feedbackloading, followUpfeedbackloading } = useSelector(
+    (state) => state.gptAssmentResult
+  );
   const { userInfo } = useSelector((state) => state.auth);
   const [loadingStep, setLoadingStep] = useState(20);
   const [sectionName, setSectionName] = useState(1);
@@ -85,10 +87,12 @@ export const AssesmentContainerIW = ({
 
   useEffect(() => {
     if (sectionName === 1) {
-      feedbackloading ? dispatch(getFeedbackResult(userAns)):''
+      feedbackloading ? dispatch(getFeedbackResult(userAns)) : "";
       setResultState(1);
     } else if (sectionName === 2) {
-      followUpfeedbackloading? dispatch(getFollowUpFeedbackResult(followUpAns)):""
+      followUpfeedbackloading
+        ? dispatch(getFollowUpFeedbackResult(followUpAns))
+        : "";
       setResultState(2);
     }
   }, [sectionName]);
@@ -133,10 +137,13 @@ export const AssesmentContainerIW = ({
                   <div className="flex flex-col mt-[13px] justify-center gap-3 w-[10rem] h-[5rem] m-auto">
                     <Progress
                       className="m-auto"
-                      type="circle"
+                      type="dashboard"
                       percent={Math.floor(overall)}
+                      strokeLinecap="square"
+                      status="active"
+                      trailColor="#DDE9F8"
                       size={100}
-                      strokeColor="green"
+                      strokeColor="#103f5eb3"
                       strokeWidth={13}
                     />
                     <h1 className="text-center font-[500] font-montserrat">
@@ -146,16 +153,16 @@ export const AssesmentContainerIW = ({
                   <div className="mt-5 drop-shadow-sm">
                     <Progress
                       className="text-[18px] font-[600] underline font-poppins"
-                      strokeColor={{
-                        from: "#108ee9",
-                        to: "#87d068",
-                      }}
+                      strokeLinecap="square"
+                      strokeColor="#103f5eb3"
+                      trailColor="#DDE9F8"
                       percent={overall}
                       format={(percent) =>
                         `${Math.round((percent / 100) * 160)} -160`
                       }
-                      size="mideum"
+                      size="default"
                       status="active"
+                      strokeWidth={10}
                     />
                   </div>
                 </div>
@@ -169,7 +176,11 @@ export const AssesmentContainerIW = ({
                 <div className="flex flex-col justify-center gap-3 md:w-[10rem]  m-auto">
                   <Progress
                     className="m-auto"
-                    type="circle"
+                    type="dashboard"
+                    strokeLinecap="square"
+                    status="active"
+                    trailColor="#DDE9F8"
+                    strokeColor="#103f5eb3"
                     percent={ga?.value}
                     size={65}
                     strokeWidth={10}
@@ -181,7 +192,11 @@ export const AssesmentContainerIW = ({
                 <div className="flex flex-col justify-center gap-3 md:w-[10rem] h-auto m-auto">
                   <Progress
                     className="m-auto"
-                    type="circle"
+                    type="dashboard"
+                    strokeLinecap="square"
+                    status="active"
+                    trailColor="#DDE9F8"
+                    strokeColor="#103f5eb3"
                     percent={Math.floor(gc?.value)}
                     size={65}
                     strokeWidth={10}
@@ -193,7 +208,11 @@ export const AssesmentContainerIW = ({
                 <div className="flex flex-col justify-center gap-3 md:w-[10rem] h-auto m-auto">
                   <Progress
                     className="m-auto"
-                    type="circle"
+                    type="dashboard"
+                    strokeLinecap="square"
+                    status="active"
+                    trailColor="#DDE9F8"
+                    strokeColor="#103f5eb3"
                     percent={Math.floor(ls?.value)}
                     size={65}
                     strokeWidth={10}
@@ -205,7 +224,11 @@ export const AssesmentContainerIW = ({
                 <div className="flex flex-col justify-center gap-3 md:w-[10rem] mt-[27px] h-auto m-auto">
                   <Progress
                     className="m-auto"
-                    type="circle"
+                    type="dashboard"
+                    strokeLinecap="square"
+                    status="active"
+                    trailColor="#DDE9F8"
+                    strokeColor="#103f5eb3"
                     percent={Math.floor(ld?.value)}
                     size={65}
                     strokeWidth={10}
@@ -222,7 +245,11 @@ export const AssesmentContainerIW = ({
                   >
                     <Progress
                       className="m-auto"
-                      type="circle"
+                      type="dashboard"
+                      strokeLinecap="square"
+                      status="active"
+                      trailColor="#DDE9F8"
+                      strokeColor="#103f5eb3"
                       percent={length}
                       size={65}
                       strokeWidth={10}
@@ -251,7 +278,11 @@ export const AssesmentContainerIW = ({
                 <div className="flex flex-col justify-center gap-3 md:w-[10rem] h-auto m-auto">
                   <Progress
                     className="m-auto"
-                    type="circle"
+                    type="dashboard"
+                    strokeLinecap="square"
+                    status="active"
+                    trailColor="#DDE9F8"
+                    strokeColor="#103f5eb3"
                     percent={Math.floor(tr?.value)}
                     size={65}
                     strokeWidth={10}

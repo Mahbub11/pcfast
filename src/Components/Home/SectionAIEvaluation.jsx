@@ -39,7 +39,7 @@ export const SectionAIEvaluation = () => {
         </div>
 
         <div className=" w-full h-auto md:mt-[5rem] sm:mt-[2rem] ">
-          <div className="md:w-[80%] md:flex md:flex-row sm:flex sm:flex-col gap-10 justify-center  h-auto m-auto overflow-hidden ">
+          <div className="md:w-[88%] md:flex md:flex-row sm:flex sm:flex-col gap-10 justify-center  h-auto m-auto overflow-hidden ">
             <div className="h-full md:w-[60%] sm:w-full">
               <div
                 className="overflow-hidden w-full sm:text-justify md:text-left "
@@ -47,10 +47,10 @@ export const SectionAIEvaluation = () => {
                >
                 <div className="w-full sm:w-full flex gap-10">
                   <div className="sm:ml-[1rem] md:ml-[3rem] ">
-                    <div className="h-auto md:w-[40rem] sm:w-[21rem] shadow-md">
+                    <div className="h-auto md:w-[50rem] sm:w-[21rem] ">
                       <img
                       title="Duolingo Speaking Evaluation"
-                        className="md:h-[25rem] md:w-[40rem] sm:h-[17rem] sm:w-[21rem] rounded-md"
+                        className="md:h-[28rem] md:w-[50rem] sm:h-[17rem] sm:w-[21rem] "
                         alt="writing evaluation duoling"
                         src={speaking}
                       ></img>
@@ -58,20 +58,20 @@ export const SectionAIEvaluation = () => {
                   </div>
 
                   <div className=" ml-[3rem] ">
-                    <div className="h-auto md:w-[40rem] sm:w-[21rem]">
+                    <div className="h-auto md:w-[50rem] sm:w-[21rem]">
                       <img
                       title="Writing Evaluation Duolingo"
-                        className="md:h-[25rem] md:w-[40rem] sm:h-[17rem] sm:w-[21rem] rounded-md"
+                        className="md:h-[28rem] md:w-[50rem] sm:h-[17rem] sm:w-[21rem] rounded-md"
                         alt="writing evaluation duoling"
                         src={writing}
                       ></img>
                     </div>
                   </div>
                   <div className=" ml-[3rem] ">
-                    <div className="h-auto md:w-[40rem] sm:w-[21rem]">
+                    <div className="h-auto md:w-[50rem] sm:w-[21rem]">
                       <img
                       title="Progress Track Duolingo"
-                        className="md:h-[25rem] md:w-[40rem] sm:h-[17rem] sm:w-[21rem] rounded-md"
+                        className="md:h-[28rem] md:w-[50rem] sm:h-[17rem] sm:w-[21rem] rounded-md"
                         alt="Progress Track Duolingo"
                         src={Progress}
                       ></img>
@@ -79,10 +79,10 @@ export const SectionAIEvaluation = () => {
                   </div>
 
                   <div className=" ml-[3rem] ">
-                    <div className="h-auto md:w-[40rem] sm:w-[21rem]">
+                    <div className="h-auto md:w-[50rem] sm:w-[21rem]">
                       <img
                       title="Average Performance Duolingo"
-                        className="md:h-[25rem] md:w-[40rem] sm:h-[17rem] sm:w-[21rem] rounded-md"
+                        className="md:h-[28rem] md:w-[55rem] sm:h-[17rem] sm:w-[21rem] rounded-md"
                         alt="Average Score Duolingo"
                         src={avgScore}
                       ></img>

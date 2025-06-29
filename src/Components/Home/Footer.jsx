@@ -58,18 +58,18 @@ export default function Footer() {
                h-[2.5rem] lg:h-[5.5rem] md:h-[3.5rem] rounded-l-md  border-none outline-none m-auto font-montserrat"
               ></input>
 
-              <div className="bg-[#D1D0D0] md:w-[7rem] sm:w-[3.5rem] cursor-pointer">
+              <div className="bg-[#D1D0D0] hover:bg-[#dedddd] md:w-[7rem] sm:w-[3.5rem] cursor-pointer">
                 <span
                   onClick={subsCribe}
                   className="sm:hidden md:flex h-full mt-4 drop-shadow-sm  justify-center m-auto"
                 >
-                  <IconSubsCribe height="3rem" width="3rem"></IconSubsCribe>
+                 <span className='hover:scale-110 transition-transform '> <IconSubsCribe height="3rem" width="3rem"></IconSubsCribe></span>
                 </span>
                 <span
                   onClick={subsCribe}
                   className="sm:flex md:hidden h-full mt-2 drop-shadow-sm justify-center m-auto"
                 >
-                  <IconSubsCribe height="2rem" width="2rem"></IconSubsCribe>
+                  <IconSubsCribe className='hover:scale-105' height="2rem" width="2rem"></IconSubsCribe>
                 </span>
               </div>
             </div>
@@ -134,9 +134,9 @@ export default function Footer() {
                         Terms & Conditions
                       </Link>
                     </li>
-                    <li className=" text-tahiti   hover:underline cursor-pointer">
+                    {/* <li className=" text-tahiti   hover:underline cursor-pointer">
                       <Link to={"/pc/internal/team"}> Team</Link>
-                    </li>
+                    </li> */}
                   </ul>
                 </div>
 
@@ -250,9 +250,9 @@ export default function Footer() {
                         Terms & Conditions
                       </Link>
                     </li>
-                    <li className=" text-tahiti   hover:underline cursor-pointer">
+                    {/* <li className=" text-tahiti   hover:underline cursor-pointer">
                       <Link to={"/pc/internal/team"}> Team</Link>
-                    </li>
+                    </li> */}
                   </ul>
                 </div>
 

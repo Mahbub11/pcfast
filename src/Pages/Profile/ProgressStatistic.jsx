@@ -4,8 +4,9 @@ import { DatePicker, Space } from "antd";
 import { useSelector } from "react-redux";
 import moment from "moment";
 import Chart from "chart.js/auto";
-import { Line } from "react-chartjs-2";
+import { Line, Bar } from "react-chartjs-2";
 import { Skeleton, Collapse } from "antd";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 const { RangePicker } = DatePicker;
 
 export default function ProgressStatistic() {
@@ -35,15 +36,13 @@ export default function ProgressStatistic() {
       {
         label: "Vocabularay",
         data: statVocabulary.map((data) => data.result),
-        backgroundColor: [
-          "rgba(75,192,192,1)",
-          "#ecf0f1",
-          "#50AF95",
-          "#f3ba2f",
-          "#2a71d0",
-        ],
+        backgroundColor: "#d0e1f6",
         borderColor: "black",
         borderWidth: 2,
+        fill: true,
+        fillcolor: "#d0e1f6",
+        hoverBackgroundColor: "rgba(75,192,192,0.6)",
+        tension: 0.4,
       },
     ],
   });
@@ -52,7 +51,7 @@ export default function ProgressStatistic() {
     if (statVocabulary.length > 0) {
       setBusy(false);
     }
-    setLastSevenday();
+    //  setLastSevenday();
   }, [busy, statVocabulary]);
 
   const setLastSevenday = () => {
@@ -67,6 +66,10 @@ export default function ProgressStatistic() {
 
     setDateRange(dateRange);
   };
+  useEffect(() => {
+  setQuickRange(7); // Default: Last 7 Days
+}, []);
+
 
   useEffect(() => {
     if (flag === 6) {
@@ -80,15 +83,11 @@ export default function ProgressStatistic() {
           {
             label: "Vocabularay",
             data: sortedData.map((data) => data.result),
-            backgroundColor: [
-              "rgba(75,192,192,1)",
-              "#ecf0f1",
-              "#50AF95",
-              "#f3ba2f",
-              "#2a71d0",
-            ],
+            backgroundColor: "#d0e1f6",
             borderColor: "black",
             borderWidth: 2,
+            fill: true,
+            tension: 0.4,
           },
         ],
       });
@@ -102,15 +101,11 @@ export default function ProgressStatistic() {
           {
             label: "Reading",
             data: sortedData.map((data) => data.result),
-            backgroundColor: [
-              "rgba(75,192,192,1)",
-              "#ecf0f1",
-              "#50AF95",
-              "#f3ba2f",
-              "#2a71d0",
-            ],
+            backgroundColor: "#d0e1f6",
             borderColor: "black",
             borderWidth: 2,
+            fill: true,
+            tension: 0.4,
           },
         ],
       });
@@ -124,15 +119,11 @@ export default function ProgressStatistic() {
           {
             label: "Writing",
             data: sortedData.map((data) => data.result),
-            backgroundColor: [
-              "rgba(75,192,192,1)",
-              "#ecf0f1",
-              "#50AF95",
-              "#f3ba2f",
-              "#2a71d0",
-            ],
+            backgroundColor: "#d0e1f6",
             borderColor: "black",
             borderWidth: 2,
+            fill: true,
+            tension: 0.4,
           },
         ],
       });
@@ -146,15 +137,11 @@ export default function ProgressStatistic() {
           {
             label: "Speaking",
             data: sortedData.map((data) => data.result),
-            backgroundColor: [
-              "rgba(75,192,192,1)",
-              "#ecf0f1",
-              "#50AF95",
-              "#f3ba2f",
-              "#2a71d0",
-            ],
+            backgroundColor: "#d0e1f6",
             borderColor: "black",
             borderWidth: 2,
+            fill: true,
+            tension: 0.4,
           },
         ],
       });
@@ -168,15 +155,11 @@ export default function ProgressStatistic() {
           {
             label: "Listening",
             data: sortedData.map((data) => data.result),
-            backgroundColor: [
-              "rgba(75,192,192,1)",
-              "#ecf0f1",
-              "#50AF95",
-              "#f3ba2f",
-              "#2a71d0",
-            ],
+            backgroundColor: "#d0e1f6",
             borderColor: "black",
             borderWidth: 2,
+            fill: true,
+            tension: 0.4,
           },
         ],
       });
@@ -190,15 +173,11 @@ export default function ProgressStatistic() {
           {
             label: "Literacy",
             data: sortedData.map((data) => data.result),
-            backgroundColor: [
-              "rgba(75,192,192,1)",
-              "#ecf0f1",
-              "#50AF95",
-              "#f3ba2f",
-              "#2a71d0",
-            ],
+            backgroundColor: "#d0e1f6",
             borderColor: "black",
             borderWidth: 2,
+            fill: true,
+            tension: 0.4,
           },
         ],
       });
@@ -212,15 +191,11 @@ export default function ProgressStatistic() {
           {
             label: "Comprehension",
             data: sortedData.map((data) => data.result),
-            backgroundColor: [
-              "rgba(75,192,192,1)",
-              "#ecf0f1",
-              "#50AF95",
-              "#f3ba2f",
-              "#2a71d0",
-            ],
+            backgroundColor: "#d0e1f6",
             borderColor: "black",
             borderWidth: 2,
+            fill: true,
+            tension: 0.4,
           },
         ],
       });
@@ -234,15 +209,11 @@ export default function ProgressStatistic() {
           {
             label: "Production",
             data: sortedData.map((data) => data.result),
-            backgroundColor: [
-              "rgba(75,192,192,1)",
-              "#ecf0f1",
-              "#50AF95",
-              "#f3ba2f",
-              "#2a71d0",
-            ],
+            backgroundColor: "#d0e1f6",
             borderColor: "black",
             borderWidth: 2,
+            fill: true,
+            tension: 0.4,
           },
         ],
       });
@@ -256,15 +227,11 @@ export default function ProgressStatistic() {
           {
             label: "Conversation",
             data: sortedData.map((data) => data.result),
-            backgroundColor: [
-              "rgba(75,192,192,1)",
-              "#ecf0f1",
-              "#50AF95",
-              "#f3ba2f",
-              "#2a71d0",
-            ],
+            backgroundColor: "#d0e1f6",
             borderColor: "black",
             borderWidth: 2,
+            fill: true,
+            tension: 0.4,
           },
         ],
       });
@@ -273,18 +240,23 @@ export default function ProgressStatistic() {
 
   function getData(start, end, data) {
     const startTime = new Date(start).getTime();
-    const endTime = new Date(end).getTime();
+    const endTime = new Date(end + " 23:59:59").getTime();
 
     return data.filter((item) => {
-      console.log(item);
       const itemTime = new Date(item.createdAt).getTime();
-
       return itemTime >= startTime && itemTime <= endTime;
     });
   }
 
   const onChange = (date, dateString) => {
     setDateRange(dateString);
+    setDefaultDateShow(false);
+  };
+
+  const setQuickRange = (days) => {
+    const end = moment();
+    const start = moment().subtract(days - 1, "days");
+    setDateRange([start.format("YYYY-MM-DD"), end.format("YYYY-MM-DD")]);
     setDefaultDateShow(false);
   };
 
@@ -303,21 +275,129 @@ export default function ProgressStatistic() {
             >
               <div className=" px-2 rounded-sm py-3 sm:w-[20rem] md:w-[45rem]">
                 <Space direction="vertical">
-                  <RangePicker
-                    // value={dateRange}
-                    // defaultValue={[moment("2024-01-11"), moment("2018-02-19")]}
-                    onChange={onChange}
-                    size={size}
-                  />
+                  <div className="flex gap-2 mb-2 font-montserrat md:ml-3 sm:ml-[-1rem]">
+                    <Button
+                      onClick={() => setQuickRange(7)}
+                      type="default"
+                      size="middle"
+                      style={{
+                        backgroundColor:
+                          dateRange.length === 2 &&
+                          moment(dateRange[1]).diff(dateRange[0], "days") === 6
+                            ? "#3AB7BF"
+                            : "#fff",
+                        color:
+                          dateRange.length === 2 &&
+                          moment(dateRange[1]).diff(dateRange[0], "days") === 6
+                            ? "#fff"
+                            : "#000",
+                        borderColor:
+                          dateRange.length === 2 &&
+                          moment(dateRange[1]).diff(dateRange[0], "days") === 6
+                            ? "#3AB7BF"
+                            : "#d9d9d9",
+                      }}
+                    >
+                      Last 7 Days
+                    </Button>
+
+                    <Button
+                      onClick={() => setQuickRange(14)}
+                      type="default"
+                      size="middle"
+                      style={{
+                        backgroundColor:
+                          dateRange.length === 2 &&
+                          moment(dateRange[1]).diff(dateRange[0], "days") === 13
+                            ? "#3AB7BF"
+                            : "#fff",
+                        color:
+                          dateRange.length === 2 &&
+                          moment(dateRange[1]).diff(dateRange[0], "days") === 13
+                            ? "#fff"
+                            : "#000",
+                        borderColor:
+                          dateRange.length === 2 &&
+                          moment(dateRange[1]).diff(dateRange[0], "days") === 13
+                            ? "#3AB7BF"
+                            : "#d9d9d9",
+                      }}
+                    >
+                      Last 14 Days
+                    </Button>
+
+                    <Button
+                      onClick={() => setQuickRange(30)}
+                      type="default"
+                      size="middle"
+                      style={{
+                        backgroundColor:
+                          dateRange.length === 2 &&
+                          moment(dateRange[1]).diff(dateRange[0], "days") === 29
+                            ? "#3AB7BF"
+                            : "#fff",
+                        color:
+                          dateRange.length === 2 &&
+                          moment(dateRange[1]).diff(dateRange[0], "days") === 29
+                            ? "#fff"
+                            : "#000",
+                        borderColor:
+                          dateRange.length === 2 &&
+                          moment(dateRange[1]).diff(dateRange[0], "days") === 29
+                            ? "#3AB7BF"
+                            : "#d9d9d9",
+                      }}
+                    >
+                      Last 30 Days
+                    </Button>
+                  </div>
                 </Space>
-                <h2
-                  className={`${
-                    defaultDataShow ? "block" : "hidden"
-                  } text-[15px] ml-1 mt-2`}
-                >
-                  Last 7 Days Data(Default)
-                </h2>
-                <Line data={data}></Line>
+
+                <Line
+                  data={data}
+                  plugins={[ChartDataLabels]}
+                  options={{
+                    plugins: {
+                      datalabels: {
+                        display: true,
+
+                        color: "#103f5eb3",
+                        align: "top",
+                        anchor: "end",
+                        font: {
+                          weight: "bold",
+                        },
+                        formatter: (value) => value,
+                      },
+                      legend: {
+                        display: false,
+                      },
+                    },
+
+                    scales: {
+                      y: {
+                        display: false,
+                        suggestedMax: 110,
+                      },
+                    },
+                    elements: {
+                      line: {
+                        tension: 0.4,
+                        borderWidth: 3,
+                        borderColor: "black",
+                        backgroundColor: "rgba(75,192,192,0.4)",
+                      },
+                      point: {
+                        radius: 5,
+                        backgroundColor: "black",
+                        borderWidth: 1,
+                        borderColor: "#fff",
+                        hoverRadius: 7,
+                        hoverBorderWidth: 2,
+                      },
+                    },
+                  }}
+                />
               </div>
             </div>
             <div className="flex  md:w-[30%] sm:w-full  rounded-sm ">

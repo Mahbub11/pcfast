@@ -1,25 +1,25 @@
 /** @type {import('tailwindcss').Config} */
-const colors = require('tailwindcss/colors')
+const colors = require("tailwindcss/colors");
 module.exports = {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     screens: {
-      sm: '360px',
-      msm: '428px',
-      md: '768px',
-      lg: '1024px',
-      xl: '1280px',
-      xxl:'1536px',
-      xxxl:'1650px'
+      sm: "360px",
+      msm: "428px",
+      md: "768px",
+      lg: "1024px",
+      xl: "1280px",
+      xxl: "1536px",
+      xxxl: "1650px",
     },
     colors: {
-      'midnight': '#093756',
-      'tahiti': '#3ab7bf',
-      'modt':'#103f5eb3',
-      'home':'#B4D6FD',
-      'header':'#d0e1f6',
-      transparent: 'transparent',
-      current: 'currentColor',
+      midnight: "#093756",
+      tahiti: "#3ab7bf",
+      modt: "#103f5eb3",
+      home: "#B4D6FD",
+      header: "#d0e1f6",
+      transparent: "transparent",
+      current: "currentColor",
       black: colors.black,
       white: colors.white,
       gray: colors.gray,
@@ -32,27 +32,25 @@ module.exports = {
       red: colors.red,
     },
     fontFamily: {
-      sans: ['Graphik', 'sans-serif'],
-      serif: ['Merriweather', 'serif'],
-      robotomono:['RobotoMono'],
-      montserrat:['Montserrat'],
-      opensans:['Opensans'],
-      worksans:['Worksans'],
-      lobster:['LobSter'],
-      poppins:['Poppins'],
-      poppinsBold:['PoppinsBold'],
-
-    
+      sans: ["Graphik", "sans-serif"],
+      serif: ["Merriweather", "serif"],
+      robotomono: ["RobotoMono"],
+      montserrat: ["Montserrat"],
+      opensans: ["Opensans"],
+      worksans: ["Worksans"],
+      lobster: ["LobSter"],
+      poppins: ["Poppins"],
+      poppinsBold: ["PoppinsBold"],
     },
     extend: {
       spacing: {
-        '128': '32rem',
-        '144': '36rem',
+        128: "32rem",
+        144: "36rem",
       },
       borderRadius: {
-        '4xl': '2rem',
-      }
-    }
+        "4xl": "2rem",
+      },
+    },
   },
   plugins: [],
-}
+};

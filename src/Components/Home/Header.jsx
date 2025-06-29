@@ -212,7 +212,7 @@ export default function Header() {
               </div>
               <span className={`cursor-pointer`}>Materials</span>
             </Link>
-            <Link to={"/duolingo/pricing"}>
+            {/* <Link to={"/duolingo/pricing"}>
               <div
                 className={`${
                   location.pathname === "/duolingo/pricing"
@@ -223,7 +223,7 @@ export default function Header() {
                 <div className="bg-[#3AB7BF] h-[2.5rem] w-[1rem] ml-5"></div>
               </div>
               <span className={`cursor-pointer`}>Pricing</span>
-            </Link>
+            </Link> */}
             <Link
               className={`${userInfo ? "hidden" : "block"}`}
               to={"/articals"}

@@ -16,6 +16,7 @@
     "antd": "^5.9.4",
     "axios": "^1.5.1",
     "chart.js": "^4.4.1",
+    "chartjs-plugin-datalabels": "^2.2.0",
     "embla-carousel-autoplay": "^8.0.0-rc14",
     "embla-carousel-react": "^8.0.0-rc14",
     "fast-fuzzy": "^1.12.0",

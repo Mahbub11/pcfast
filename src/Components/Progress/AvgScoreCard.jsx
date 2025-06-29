@@ -32,13 +32,12 @@ export default function AvgScoreCard({ inner_type, module }) {
     statLIL,
   } = useSelector((state) => state.statistic);
 
-
   return (
-    <div className="bg-[#ECECEC] md:w-[15rem] md:h-[12rem] rounded-md font-montserrat">
+    <div className="bg-[#d0e1f6b5] md:w-[15rem] md:h-[12rem] rounded-md font-montserrat text-gray-800">
       <div className="px-2 py-2">
         <h1 className="text-center text-[17px]">{module}</h1>
         <h1 className="text-center text-[17px]">
-          Total Practiced:
+          Practiced:
           {inner_type === 31
             ? statRCL
             : inner_type === 32
@@ -71,7 +70,7 @@ export default function AvgScoreCard({ inner_type, module }) {
         <div className="flex flex-col justify-center gap-3  m-auto mt-[1.5rem]">
           <Progress
             className="m-auto"
-            type="circle"
+            type="dashboard"
             percent={
               inner_type === 31
                 ? statRC
@@ -103,6 +102,10 @@ export default function AvgScoreCard({ inner_type, module }) {
             }
             size={65}
             strokeWidth={10}
+            strokeLinecap="square"
+            status="active"
+            trailColor="#FFF"
+            strokeColor="#103f5eb3"
           />
         </div>
       </div>

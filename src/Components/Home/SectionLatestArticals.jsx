@@ -70,7 +70,7 @@ export const SectionLatestArticals = () => {
                   </Link>
                 </div>
                 <div
-                  className="md:w-[25%] sm:w-[40%] m-auto bg-[#FFFF] h-auto 
+                  className="md:w-[25%] sm:w-[40%] m-auto bg-[#eff2f6] h-auto 
                   md:mt-[-8rem] sm:mt-[-1.5rem] absolute md:ml-4 sm:ml-[5px] shadow-sm rounded-lg
                     md:flex justify-center md:px-2 md:py-5 sm:hidden"
                 >
@@ -126,7 +126,7 @@ export const SectionLatestArticals = () => {
                   </Link>
                 </div>
                 <div
-                  className="md:w-[25%] sm:w-[40%] m-auto bg-[#FFFF] h-auto 
+                  className="md:w-[25%] sm:w-[40%] m-auto bg-[#eff2f6] h-auto 
                   md:mt-[-8rem] sm:mt-[-1.5rem] absolute md:ml-4 sm:ml-[5px] shadow-sm rounded-lg
                     md:flex justify-center md:px-2 md:py-5 sm:hidden"
                 >
@@ -185,7 +185,7 @@ export const SectionLatestArticals = () => {
                   </Link>
                 </div>
                 <div
-                  className="md:w-[25%] sm:w-[40%] m-auto bg-[#FFFF] h-auto 
+                  className="md:w-[25%] sm:w-[40%] m-auto bg-[#eff2f6] h-auto 
                   md:mt-[-8rem] sm:mt-[-1.5rem] absolute md:ml-4 sm:ml-[5px] shadow-sm rounded-lg
                     md:flex justify-center md:px-2 md:py-5 sm:hidden"
                 >
@@ -240,7 +240,7 @@ export const SectionLatestArticals = () => {
                   </Link>
                 </div>
                 <div
-                  className="md:w-[25%] sm:w-[40%] m-auto bg-[#FFFF] h-auto 
+                  className="md:w-[25%] sm:w-[40%] m-auto bg-[#eff2f6] h-auto 
                   md:mt-[-8rem] sm:mt-[-1.5rem] absolute md:ml-4 sm:ml-[5px] shadow-sm rounded-lg
                     md:flex justify-center md:px-2 md:py-5 sm:hidden"
                 >
